@@ -1,0 +1,23 @@
+Multiple dimensions game on a planet with different surface (e.g. on a mountain, so there is vector against/for our direction of walk)
+paths to get to end point
+enemies
+weapons
+defence weapons
+steps walking (directions)
+energy + how hard it is to walk, hit, and defend
+
+
+Store all weapons and Aids in a (binary) tree format, since it will already be implemented, you'll only need to have an integer which will direct you to the right weapon/aid when you assign weapon at each level to your character.
+You do not build a tree each time you need something, but only once in the beginning, so it is always there, this way you can also choose multiple weapons to your enemies, and just pull a weapon from the tree, instead of creating it each time.
+
+Within the dunder call method, you can define that for each action (s.a. sword swinging, defending or walking, the energy level decreases)
+
+Actions that will most likely repeat:
+Unlock stage (for weapons and shields)
+Option of choosing a weapon, a shield and an aid(after certain stage is unlocked)
+Assigning a tool to a character (good or bad)
+Assigning who can a character attack (good can only attack bad and bad good, but a good cannot attack good and bad cannot attack bad)
+Preferably keep the notation that a decorating function will not take over the decorated function (i.e. that at the end we'll still remember the original function) by using functools
+Decorators with inputs
+Create a function factory that for each fight it'll produce a function which will compute how much damage each attack impacts the character as a function of the attacking weapon and the defending shield.
+
