@@ -4,6 +4,9 @@ from src.Armor.Armor import Armor
 class Shield(Armor):
 
     """
+    ATTENSION!! THE STRENGTH FROM SHIELD SHOULD CHANGE, SINCE IT IS USED TO PROTECT FROM AN ATTACK
+    WE NEED TO THINK OF A FORMULA, WHERE IT WILL ONLY REDUCE THE DAMAGE FROM AN ATTACK!!
+
     In this class, efficient=True means that the shield is a body-shield, else it is a hand-shield.
     The goal of this class is to:
     Assign that the subclasses here are defence armors/shields.

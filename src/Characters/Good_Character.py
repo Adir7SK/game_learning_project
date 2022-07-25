@@ -9,14 +9,6 @@ class GoodCharacter(Character):
         self._shield = shield
         self._items = list(items)
 
-    def life_remain(self):
-        """Getter method - returns life character currently has left"""
-        super().life_remain
-
-    def life_remain(self, damage):
-        """Setter method - updates life after attack"""
-        super().life_remain(damage)
-
     def items(self):                  # This kind of character must have a weapon, shield, and potentially a few items.
         """List of items that character carries"""
         raise NotImplementedError
