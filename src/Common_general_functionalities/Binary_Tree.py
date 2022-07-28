@@ -102,7 +102,7 @@ class AVL:
         self.preorder(tree.left)
         self.preorder(tree.right)
 
-    # Print the tree
+    # Prints the tree
     def print_helper(self, curr_ptr, indent="", last=True):
         """Call this method as follows: AVL().print_helper(tree)"""
         if curr_ptr is not None:
