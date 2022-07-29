@@ -1,4 +1,4 @@
-from Weapon import Weapon
+from src.Armor.Weapon import Weapon
 from src.Common_general_functionalities.Binary_Tree import AVL
 from src.Common_general_functionalities import common_strings as cs
 
@@ -26,3 +26,5 @@ if __name__ == "__main__":
     w.insert_weapon("Another Weapon", 1, cs.wood_african_mahogany, 20, cs.slim + " " + cs.even, False, "Woosh")
     w.insert_weapon("Strong Weapon", 1, cs.iron, 70, cs.slim + " " + cs.even, True, "Baam")
     w.print_helper()
+    ww = Weapon("Something", 1, cs.wood_african_mahogany, 20, cs.slim + " " + cs.even, False, "Woosh")
+    print(w.search(ww.serial_number_int()).name())

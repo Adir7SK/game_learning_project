@@ -17,7 +17,7 @@ class ArmorDetails:
         if (not isinstance(args[1], (float, int))) or args[1] <= 0 or type(args[1]) == bool:
             raise ValueError("The weight must be a positive float.")
         if (not isinstance(args[2], (float, int))) or type(args[2]) == bool or not 0 < args[2] < 100:
-            raise ValueError("The density must be a positive float.")
+            raise ValueError("The density must be a positive number smaller than 100.")
         if type(args[3]) != str or len(args[3].split(" ")) != 2:
             raise ValueError("The shape must consist of a two words string.")
         detail1, detail2 = args[3].split(" ")
