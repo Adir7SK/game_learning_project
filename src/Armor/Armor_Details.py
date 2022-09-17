@@ -33,8 +33,11 @@ class ArmorDetails:
 
     def __getattr__(self, name):
         private_name = '_' + name  # With this we don't need to add underscore when we are looking for the attribute
-        # return object.__getattribute__(self, private_name)
-        return getattr(self, private_name)
+        try:
+            return self.__dict__[private_name]
+        except KeyError:
+            raise AttributeError('{!r} object has no attribute {!r}'.format(self.__class__, name))
+        #return getattr(self, private_name)
 
     def __setattr__(self, key, value):
         if key in self.__dict__ and key not in fa.flexible_in_armor:
@@ -45,6 +48,10 @@ class ArmorDetails:
     def __delattr__(self, name):  # The method added
         raise AttributeError(
             "Can't delete attribute {!r}".format(name))  # Error message when trying to delete attribute
+
+    def __repr__(self):
+        return "{}({})".format(self.__class__.__name__, ', '.join(
+            "{k}={v}".format(k=k[1:], v=self.__dict__[k]) for k in sorted(self.__dict__.keys())))
 
     def get_strength(self):
         """

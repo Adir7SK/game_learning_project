@@ -10,8 +10,8 @@ class WeaponCollection:
         self.weapon_collection = AVL().insert(None, w.serial_number_int(), w)
 
     def insert_weapon(self, name, weight, material, density, shape, efficient, sound):
-        obj = Weapon(name, weight, material, density, shape, efficient, sound)
-        self.weapon_collection = AVL().insert(self.weapon_collection, obj.serial_number_int(), obj)
+        w = Weapon(name, weight, material, density, shape, efficient, sound)
+        self.weapon_collection = AVL().insert(self.weapon_collection, w.serial_number_int(), w)
 
     def search(self, serial_number):
         return AVL().search(self.weapon_collection, serial_number)
@@ -26,5 +26,5 @@ if __name__ == "__main__":
     w.insert_weapon("Another Weapon", 1, cs.wood_african_mahogany, 20, cs.slim + " " + cs.even, False, "Woosh")
     w.insert_weapon("Strong Weapon", 1, cs.iron, 70, cs.slim + " " + cs.even, True, "Baam")
     w.print_helper()
-    ww = Weapon("Something", 1, cs.wood_african_mahogany, 20, cs.slim + " " + cs.even, False, "Woosh")
+    ww = Weapon("Something", 1, cs.wood_african_mahogany, 20, cs.slim + " " + cs.even, False, "Woosh") # Showing that creating another object with the same values as another one will have the same serial number
     print(w.search(ww.serial_number_int()).name())
