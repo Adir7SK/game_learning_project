@@ -3,7 +3,6 @@ from pathlib import Path
 
 from src.Armor.Shield_Collection import ShieldCollection
 from src.Armor.Weapon_Collection import WeaponCollection
-from src.Armor.Weapon import Weapon
 from src.Common_general_functionalities import common_strings as cs
 
 
