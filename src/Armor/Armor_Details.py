@@ -37,7 +37,6 @@ class ArmorDetails:
             return self.__dict__[private_name]
         except KeyError:
             raise AttributeError('{!r} object has no attribute {!r}'.format(self.__class__, name))
-        #return getattr(self, private_name)
 
     def __setattr__(self, key, value):
         if key in self.__dict__ and key not in fa.flexible_in_armor:
