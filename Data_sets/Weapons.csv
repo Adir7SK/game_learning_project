@@ -1,0 +1,9 @@
+Name,Weight,Material,Density,Shape,Efficient,Sound,,,,,,Name,Weapon's name - String
+Heavy Abaci Gun,5,Wood Abaci,20,Broad Even,TRUE,Klook,,,,,,Weight,Weapon's weight - float
+Iron Gun,1,Iron,70,Slim Even,TRUE,Bam,,,,,,Density,Weapon's density - float
+Inconel Heavy Sword,15,Inconel,10,Broad Even,FALSE,Woooh,,,,,,Shape,Weapon's shape - String
+Iron Light Sword,0.15,Iron,50,Slim Even,FALSE,Shiing,,,,,,Efficient,is it a modern weapon - Boolean
+Titanium Gun,0.5,Titanium,99.9,Slim Short,FALSE,Shiii,,,,,,Sound,Weapon's sound when it hits - String
+Ebony Heavy Sword,25,Wood Ebony,1,Medium-length Even,FALSE,Wooh,,,,,,Serial Number,Weapon's unique serial number - String
+Titanium Light Gun,0.1,Titanium,1,Broad Even,TRUE,Baam,,,,,,Strngth,Weapon's strength - float
+Inconel Heavy Gun,30,Inconel,33,Broad Long,TRUE,Baam,,,,,,Speed,Weapon's speed - float

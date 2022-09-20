@@ -1,0 +1,9 @@
+Name,Weight,Material,Density,Shape,Efficient,Sound
+Heavy Abaci Body Shield,5,Wood Abaci,20,Broad Even,TRUE,Klook
+Iron Body Shield,1,Iron,70,Slim Even,TRUE,Bam
+Inconel Heavy Hand Shield,15,Inconel,10,Broad Even,FALSE,Woooh
+Iron Light Hand Shield,0.15,Iron,50,Slim Even,FALSE,Shiing
+Titanium Body Shield,0.5,Titanium,99.9,Slim Short,FALSE,Shiii
+Ebony Heavy Hand Shield,25,Wood Ebony,1,Medium-length Even,FALSE,Wooh
+Titanium Light Body Shield,0.1,Titanium,1,Broad Even,TRUE,Baam
+Inconel Heavy Body Shield,30,Inconel,33,Broad Long,TRUE,Baam
