@@ -286,22 +286,6 @@ def test_correct_armor_efficiency_update(name, weight, material, density, shape,
     assert round(weapon.armor_efficiency(), 5) == expected
 
 
-@pytest.mark.parametrize("name, weight, material, density, shape, efficient, sound, repetitions, expected",
-                         [("Some Weapon", 2.1, cs.wood_african_mahogany, 10, cs.broad + " " + cs.even, False, "Hello", 4, 91.6),
-                          ("Some Weapon", 1, cs.wood_ebony, 2, cs.medium_broad + " " + cs.medium_length, True, "Paam", 3, 97),
-                          ("Some Weapon", 6.0, cs.inconel, 40, cs.broad + " " + cs.even, False, "Swoosh", 10, 40),
-                          ("Some Weapon", 0.5, cs.titanium, 60.5, cs.slim + " " + cs.short, True, "Boom", 10, 95),
-                          ])
-def test_energy_after_action(name, weight, material, density, shape, efficient, sound, repetitions, expected):
-    """
-    Testing that the armor's energy is correct after several changes.
-    """
-    weapon = Weapon(name, weight, material, density, shape, efficient, sound)
-    for _ in range(repetitions):
-        weapon.energy_after_action()
-    assert round(weapon.energy(), 5) == expected
-
-
 @pytest.mark.parametrize("name, weight, material, density, shape, efficient, sound, damage, repetitions",
                          [("Some Weapon", 2.1, cs.wood_african_mahogany, 10, cs.broad + " " + cs.even, False, "Hello", .4, 5),
                           ("Some Weapon", 1, cs.wood_ebony, 2, cs.medium_broad + " " + cs.medium_length, True, "Paam", .3, 2),
@@ -317,23 +301,6 @@ def test_renew_armor_efficiency(name, weight, material, density, shape, efficien
         weapon.armor_efficiency_update(damage)
     weapon.renew_armor_efficiency()
     assert round(weapon.armor_efficiency(), 5) == 1
-
-
-@pytest.mark.parametrize("name, weight, material, density, shape, efficient, sound, repetitions",
-                         [("Some Weapon", 2.1, cs.wood_african_mahogany, 10, cs.broad + " " + cs.even, False, "Hello", 4),
-                          ("Some Weapon", 1, cs.wood_ebony, 2, cs.medium_broad + " " + cs.medium_length, True, "Paam", 3),
-                          ("Some Weapon", 6.0, cs.inconel, 40, cs.broad + " " + cs.even, False, "Swoosh", 10),
-                          ("Some Weapon", 0.5, cs.titanium, 60.5, cs.slim + " " + cs.short, True, "Boom", 10),
-                          ])
-def test_renew_energy(name, weight, material, density, shape, efficient, sound, repetitions):
-    """
-    Testing that the armor's energy is correct after several changes and then renewing/re-initiating its energy.
-    """
-    weapon = Weapon(name, weight, material, density, shape, efficient, sound)
-    for _ in range(repetitions):
-        weapon.energy_after_action()
-    weapon.renew_energy()
-    assert round(weapon.energy(), 5) == 100
 
         
 class WeaponTest(unittest.TestCase):

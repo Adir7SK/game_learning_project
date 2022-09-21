@@ -8,7 +8,6 @@ class Weapon(Armor):
     The goal of this class is to:
     Assign that the subclasses here are offence/attacking weapons
     Have an indirect getter and setter methods (without using property decorator) to update the armor's efficiency
-    Give a cost of energy after each attack
 
     Also consider adding every new object to the tree
     """
@@ -67,19 +66,3 @@ class Weapon(Armor):
     def renew_armor_efficiency(self):
         """Returns the armor's efficiency to full."""
         self._armor_efficiency = 1
-
-    def energy(self):
-        """Each armor costs some energy when it is used. This method calculates the energy used."""
-        return self._energy
-
-    def energy_after_action(self):
-        """The amount of energy being subtracted at for each attack."""
-        if self._weight >= self._energy:
-            self._energy = 0
-            self._armor_efficiency = 0
-        else:
-            self._energy -= self._weight
-
-    def renew_energy(self):
-        """Returns the armor's energy to full."""
-        self._energy = 100

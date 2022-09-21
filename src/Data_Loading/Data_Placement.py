@@ -28,7 +28,3 @@ class DataFromLastSave:
 
     def get_armor_data(self):
         return {"Weapons": self.load_weapons(), "Shields": self.load_shields()}
-
-if __name__ == "__main__":
-    w = DataFromLastSave().get_armor_data()
-    print(w["Weapons"].print_helper())

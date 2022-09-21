@@ -84,17 +84,3 @@ class Armor(ArmorDetails, metaclass=ABCMeta):
     def serial_number(self):
         """This method navigates to which subtree we should go to: weapon/shield and sword/gun or hand/body shield"""
         pass
-
-    @abstractmethod
-    def energy(self):
-        """Each armor costs some energy when it is used. This method calculates the energy used."""
-        pass
-
-    @abstractmethod
-    def energy_after_action(self):
-        pass
-
-    @abstractmethod
-    def renew_energy(self):
-        """Returns the armor's energy to full."""
-        pass

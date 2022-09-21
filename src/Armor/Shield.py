@@ -68,19 +68,3 @@ class Shield(Armor):
     def renew_armor_efficiency(self):
         """Returns the armor's efficiency to full."""
         self._armor_efficiency = 1
-
-    def energy(self):
-        """Each armor costs some energy when it is used. This method calculates the energy used."""
-        return self._energy
-
-    def energy_after_action(self):
-        """The amount of energy being subtracted at for each attack."""
-        if self._weight >= self._energy:
-            self._energy = 0
-            self._armor_efficiency = 0
-        else:
-            self._energy -= self._weight
-
-    def renew_energy(self):
-        """Returns the armor's energy to full."""
-        self._energy = 100

@@ -8,8 +8,8 @@ class Character(metaclass=ABCMeta):
     """
 
     def __init__(self, life):
-        if not isinstance(life, (float, int)) or life <= 0:
-            raise TypeError("Character's life must be a positive number.")
+        if life <= 0 or not type(life) in [float, int]:
+            raise TypeError("Character's life must be a positive number: {!r}, {!r}".format(life, type(life)))
         self._life = life
 
     @property

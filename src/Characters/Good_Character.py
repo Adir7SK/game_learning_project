@@ -1,5 +1,8 @@
-from Character import Character
-from src.Final.Data_Placement import DataFromLastSave
+from src.Armor.Aid import Aid
+from src.Armor.Shield import Shield
+from src.Armor.Weapon import Weapon
+from src.Characters.Character import Character
+from src.Data_Loading.Data_Placement import DataFromLastSave
 
 
 class GoodCharacter(Character):
@@ -31,53 +34,48 @@ class GoodCharacter(Character):
     def __init__(self, life, undercover,  *items):
         if type(undercover) != bool:
             raise TypeError("Character's undercover value must be a boolean value.")
-        self._weapon_serial, self._shield_serial, self.aids_serial = None, None, []
         self._weapon, self._shield, self.aids = None, None, []
-        for code_and_object in items:
-            if len(code_and_object) != 2:
-                raise AttributeError("All inputs after undercover attribute must be a list of 2 items.")
-            serial_number = code_and_object[0]
+        for item in items:
+            if not isinstance(item, (Aid, Shield, Weapon)):
+                raise AttributeError("Attributes after undercover must be either Aid, Weapon, or Shield type.")
+            serial_number = item.serial_number()
             if serial_number[:6] not in ["Weapon", "Shield"] and serial_number[:3] != "Aid":
-                raise ValueError("The items a character can carry are either a Weapon, Shield, or an Aid.")
+                raise AttributeError("The items a character can carry are either a Weapon, Shield, or an Aid.")
             if serial_number[:6] == "Weapon":
-                if self._weapon_serial:
+                if self._weapon:
                     raise AttributeError("Character must have one weapon at most.")
                 else:
-                    self._weapon_serial = serial_number
-                    self._weapon = code_and_object[1]
+                    self._weapon = item
             elif serial_number[:6] == "Shield":
-                if self._shield_serial:
+                if self._shield:
                     raise AttributeError("Character must have one shield at most.")
                 else:
-                    self._shield_serial = serial_number
-                    self._shield = code_and_object[1]
+                    self._shield = item
             else:
-                self.aids_serial.append(serial_number)
-                self.aids.append(code_and_object[1])
+                self.aids.append(item)
 
-        if not self._weapon_serial:
+        if not self._weapon:
             weapons = (DataFromLastSave().get_armor_data())["Weapons"]
             i = 1
             while not weapons.search(i):
                 i += 1
             self._weapon = weapons.search(i)
-            self._weapon_serial = self._weapon.serial_number()
-        if not self._shield_serial:
+        if not self._shield:
             shields = (DataFromLastSave().get_armor_data())["Shields"]
             i = 1
             while not shields.search(i):
                 i += 1
             self._shield = shields.search(i)
-            self._shield_serial = self._shield.serial_number()
 
         super().__init__(life)
         self._undercover = undercover
+        self._energy = 100
 
     def items(self):                  # This kind of character must have a weapon, shield, and potentially more items.
         """List of items that character carries"""
-        available_items = [self._weapon.name(), self._shield.name()]
+        available_items = [(self._weapon.name(), self._weapon.serial_number()), (self._shield.name(), self._shield.serial_number())]
         for item in self.aids:
-            available_items.append(item.name())
+            available_items.append((item.name(), item.serial_number()))
         return available_items
 
     @property
@@ -94,7 +92,7 @@ class GoodCharacter(Character):
         if isinstance(value, bool):
             self._undercover = value
         else:
-            raise ValueError("The undercover value must be boolean.")
+            raise TypeError("The undercover value must be boolean.")
 
     @property
     def weapon(self):
@@ -102,6 +100,8 @@ class GoodCharacter(Character):
 
     @weapon.setter
     def weapon(self, serial_number):
+        if serial_number[:6] != "Weapon":
+            raise ValueError("Invalid weapon serial number. Valid example: Weapon460.")
         weapons = (DataFromLastSave().get_armor_data())["Weapons"]
         if weapons.search(int(serial_number[6:])):
             self._weapon = weapons.search(int(serial_number[6:]))
@@ -118,6 +118,8 @@ class GoodCharacter(Character):
 
     @shield.setter
     def shield(self, serial_number):
+        if serial_number[:6] != "Shield":
+            raise ValueError("Invalid shield serial number. Valid example: Shield460.")
         shields = (DataFromLastSave().get_armor_data())["Shields"]
         if shields.search(int(serial_number[6:])):
             self._shield = shields.search(int(serial_number[6:]))
@@ -129,11 +131,45 @@ class GoodCharacter(Character):
         raise AttributeError("Character must have a shield, and you are trying to delete it.")
 
     @property
+    def energy(self):
+        """Using armor costs some energy. This method returns the remaining energy."""
+        return self._energy
+
+    @energy.setter
+    def energy(self, value):
+        """
+        The amount of energy being subtracted for each attack or step.
+        Here we consider the possibility that the character might just take a step in the current planet,
+        which leads to energy reduction of gravity divided by 5. In this case, the input should be True and
+        the gravity of the planet (positive float value). The other possibility is an attack/defence. If so,
+        the reduction will be the weight of the corresponding armor. If it is an attack, the input will be
+        [False, 1], if it is defence, the input will be [False, 0].
+        """
+        if len(value) != 2:
+            raise AttributeError("There must be a list with two inputs.")
+        if type(value[0]) != bool:
+            raise TypeError("The first input must be a boolean: True for step and False for attack/defence.")
+        if not isinstance(value[1], (float, int)):
+            raise TypeError("The second input must be a number (int/float).")
+        if value[0]:
+            self._energy = max(self._energy - (value[1]/5), 0)
+        elif value[1] == 1:
+            self._energy = max(self._energy - self._weapon.weight(), 0)
+        else:
+            self._energy = max(self._energy - self._shield.weight(), 0)
+
+    @energy.deleter
+    def energy(self):
+        raise AttributeError("You are not allowed to delete the energy attribute.")
+
+    def renew_energy(self):
+        """Returns the armor's energy to full."""
+        self._energy = 100
+
     def attack(self):
         """Here we return the speed and strength of the weapon"""
         return self._weapon.speed(), self._weapon.strength()
 
-    @property
     def defend(self):
         """Here we return the speed and strength of the shield"""
         return self._shield.speed(), self._shield.strength()
@@ -167,13 +203,4 @@ class GoodCharacter(Character):
     def aids_info(self):
         """This should return relevant information about all the aids this character has."""
         raise NotImplementedError
-
-
-if __name__ == '__main__':
-    character = GoodCharacter(1200, True)
-    character.life_remain = 12
-    print(character.life_remain)
-    print(character.attack)
-    character.weapon_info()
-    # del character.life_remain
 

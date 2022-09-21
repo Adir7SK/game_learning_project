@@ -294,26 +294,6 @@ def test_correct_armor_efficiency_update(name, weight, material, density, shape,
     assert round(shield.armor_efficiency(), 5) == expected
 
 
-@pytest.mark.parametrize("name, weight, material, density, shape, efficient, sound, repetitions, expected",
-                         [(
-                          "Some Shield", 2.1, cs.wood_african_mahogany, 10, cs.broad + " " + cs.even, False, "Hello", 4,
-                          91.6),
-                          (
-                          "Some Shield", 1, cs.wood_ebony, 2, cs.medium_broad + " " + cs.medium_length, True, "Paam", 3,
-                          97),
-                          ("Some Shield", 6.0, cs.inconel, 40, cs.broad + " " + cs.even, False, "Swoosh", 10, 40),
-                          ("Some Shield", 0.5, cs.titanium, 60.5, cs.slim + " " + cs.short, True, "Boom", 10, 95),
-                          ])
-def test_energy_after_action(name, weight, material, density, shape, efficient, sound, repetitions, expected):
-    """
-    Testing that the armor's energy is correct after several changes.
-    """
-    shield = Shield(name, weight, material, density, shape, efficient, sound)
-    for _ in range(repetitions):
-        shield.energy_after_action()
-    assert round(shield.energy(), 5) == expected
-
-
 @pytest.mark.parametrize("name, weight, material, density, shape, efficient, sound, damage, repetitions",
                          [("Some Shield", 2.1, cs.wood_african_mahogany, 10, cs.broad + " " + cs.even, False, "Hello",
                            .4, 5),
@@ -331,25 +311,6 @@ def test_renew_armor_efficiency(name, weight, material, density, shape, efficien
         shield.armor_efficiency_update(damage)
     shield.renew_armor_efficiency()
     assert round(shield.armor_efficiency(), 5) == 1
-
-
-@pytest.mark.parametrize("name, weight, material, density, shape, efficient, sound, repetitions",
-                         [("Some Shield", 2.1, cs.wood_african_mahogany, 10, cs.broad + " " + cs.even, False, "Hello",
-                           4),
-                          ("Some Shield", 1, cs.wood_ebony, 2, cs.medium_broad + " " + cs.medium_length, True, "Paam",
-                           3),
-                          ("Some Shield", 6.0, cs.inconel, 40, cs.broad + " " + cs.even, False, "Swoosh", 10),
-                          ("Some Shield", 0.5, cs.titanium, 60.5, cs.slim + " " + cs.short, True, "Boom", 10),
-                          ])
-def test_renew_energy(name, weight, material, density, shape, efficient, sound, repetitions):
-    """
-    Testing that the armor's energy is correct after several changes and then renewing/re-initiating its energy.
-    """
-    shield = Shield(name, weight, material, density, shape, efficient, sound)
-    for _ in range(repetitions):
-        shield.energy_after_action()
-    shield.renew_energy()
-    assert round(shield.energy(), 5) == 100
 
 
 class ShieldTest(unittest.TestCase):
@@ -399,7 +360,3 @@ class ShieldTest(unittest.TestCase):
     def test_armor_efficiency(self, armor=wooden_sword):
         """Validating that we get the pre-defined armor's efficiency."""
         self.assertEqual(armor.armor_efficiency(), 1)
-
-    def test_energy(self, armor=wooden_sword):
-        """Validating that we get the pre-defined energy."""
-        self.assertEqual(armor.energy(), 100)
