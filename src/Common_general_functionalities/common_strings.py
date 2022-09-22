@@ -38,3 +38,11 @@ even = "Even"
 not_even = "Not-Even"
 
 possible_shapes = {broad: 2, medium_broad: 1, slim: 3, long: 2, medium_length: 1, short: 3, even: 2, not_even: 1}
+
+# Aid types
+health = "Health-Kit"
+energy = "Energy-Kit"
+strength = "Strength-Boost"
+speed = "Speed-Boost"
+shield = "Magical-Shield"
+aid_types = [health, energy, strength, speed, shield]
