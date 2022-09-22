@@ -32,7 +32,7 @@ class DataFromLastSave:
 
 if __name__ == "__main__":
     a1 = DataFromLastSave().get_armor_data()
-    a2 = DataFromLastSave().get_armor_data('Shields - Copy.csv', 'Weapons - Copy.csv')
+    a2 = DataFromLastSave().get_armor_data('Shields_Copy.csv', 'Weapons_Copy.csv')
 
     a1['Weapons'].print_helper()
     print()
