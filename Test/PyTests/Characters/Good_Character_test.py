@@ -1,4 +1,5 @@
 import pytest
+from src.Data_Loading.Data_Placement import DataFromLastSave
 from src.Armor.Weapon import Weapon
 from src.Armor.Shield import Shield
 from src.Armor.Aid import Aid
@@ -16,8 +17,8 @@ Here we shall test the following:
     6. Validating getter and setter for energy                              v
     7. Validating renew-energy                                              v
 """
-global_weapon = Weapon("Wep", 15, cs.inconel, 10, cs.broad + " " + cs.even, False, "Woooh")
-global_shield = Shield("Shi", 15, cs.inconel, 10, cs.broad + " " + cs.even, False, "Woooh")
+global_weapon = (DataFromLastSave().get_armor_data())["Weapons"].search(Weapon("Wep", 15, cs.inconel, 10, cs.broad + " " + cs.even, False, "Woooh").serial_number_int())
+global_shield = (DataFromLastSave().get_armor_data())["Shields"].search(Shield("Wep", 15, cs.inconel, 10, cs.broad + " " + cs.even, False, "Woooh").serial_number_int())
 global_aid = Aid("Cure")
 
 
@@ -151,7 +152,29 @@ def test_weapon(example_good_character, setget, correct, relevant_object):
                 del example_good_character.weapon
         else:
             weapon_value = example_good_character.weapon
-            print(weapon_value)
+
+
+@pytest.mark.parametrize("tree, damage, repetitions, expected",
+                         [(True, 0.1, 3, 1),
+                          (True, 0.05, 1, 1),
+                          (True, 0.2, 0, 1),
+                          (False, 0.06, 4, 0.78074896),
+                          (False, 0.35, 1, 0.65),
+                          (False, 0.05, 3, 0.857375),
+                          ])
+def test_weapon_not_changing_in_tree(example_good_character, tree, damage, repetitions, expected):
+    """
+    Here we check that if the details in a weapon are changing, it will not affect the weapon in the tree.
+    We also check the calculation of weapon's effectiveness.
+    """
+    example_good_character.weapon.renew_armor_efficiency()
+    for _ in range(repetitions):
+        example_good_character.weapon.armor_efficiency_update(damage)
+    if tree:
+        ser = example_good_character.weapon.serial_number_int()
+        assert ((DataFromLastSave().get_armor_data())["Weapons"].search(ser)).armor_efficiency() == expected
+    else:
+        assert round(example_good_character.weapon.armor_efficiency(), 8) == expected
 
 
 @pytest.mark.parametrize("setget, correct, relevant_object",
@@ -185,6 +208,29 @@ def test_shield(example_good_character, setget, correct, relevant_object):
         else:
             shield_value = example_good_character.shield
             print(shield_value)
+
+
+@pytest.mark.parametrize("tree, damage, repetitions, expected",
+                         [(True, 0.1, 3, 1),
+                          (True, 0.05, 1, 1),
+                          (True, 0.2, 0, 1),
+                          (False, 0.06, 4, 0.78074896),
+                          (False, 0.35, 1, 0.65),
+                          (False, 0.05, 3, 0.857375),
+                          ])
+def test_shield_not_changing_in_tree(example_good_character, tree, damage, repetitions, expected):
+    """
+    Here we check that if the details in a shield are changing, it will not affect the weapon in the tree.
+    We also check the calculation of weapon's effectiveness.
+    """
+    example_good_character.shield.renew_armor_efficiency()
+    for _ in range(repetitions):
+        example_good_character.shield.armor_efficiency_update(damage)
+    if tree:
+        ser = example_good_character.shield.serial_number_int()
+        assert ((DataFromLastSave().get_armor_data())["Weapons"].search(ser)).armor_efficiency() == expected
+    else:
+        assert round(example_good_character.shield.armor_efficiency(), 8) == expected
 
 
 @pytest.mark.parametrize("step, repetitions, value, expected",

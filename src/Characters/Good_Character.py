@@ -160,12 +160,12 @@ class GoodCharacter(Character):
         self._energy = 100
 
     def attack(self):
-        """Here we return the speed and strength of the weapon"""
-        return self._weapon.speed(), self._weapon.strength()
+        """Here we return the speed, strength, and weapon's efficiency of the weapon"""
+        return self._weapon.speed(), self._weapon.strength(), self._weapon.armor_efficiency()
 
     def defend(self):
-        """Here we return the speed and strength of the shield"""
-        return self._shield.speed(), self._shield.strength()
+        """Here we return the speed, strength, and shield's efficiency of the shield"""
+        return self._shield.speed(), self._shield.strength(), self._shield.armor_efficiency()
 
     def weapon_info(self):
         """This should return relevant information about the weapon."""

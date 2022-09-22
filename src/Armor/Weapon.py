@@ -4,12 +4,10 @@ from src.Armor.Armor import Armor
 class Weapon(Armor):
 
     """
-    In this class, efficient=True means that the weapon is a gun, else it is a sword.
+    In this class, efficient=True means that the weapon is a gun, False means it is a sword.
     The goal of this class is to:
     Assign that the subclasses here are offence/attacking weapons
     Have an indirect getter and setter methods (without using property decorator) to update the armor's efficiency
-
-    Also consider adding every new object to the tree
     """
 
     def name(self):
