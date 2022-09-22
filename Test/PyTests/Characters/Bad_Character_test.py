@@ -15,7 +15,7 @@ Here we shall test the following:
 """
 global_weapon = Weapon("Wep", 15, cs.inconel, 10, cs.broad + " " + cs.even, False, "Woooh")
 global_shield = Shield("Shi", 15, cs.inconel, 10, cs.broad + " " + cs.even, False, "Woooh")
-global_aid = Aid("Cure")
+global_aid = Aid("Cure", cs.health, 3)
 
 
 @pytest.mark.parametrize("undercover", ["True", [1], -1.0, None])

@@ -19,7 +19,7 @@ Here we shall test the following:
 """
 global_weapon = (DataFromLastSave().get_armor_data())["Weapons"].search(Weapon("Wep", 15, cs.inconel, 10, cs.broad + " " + cs.even, False, "Woooh").serial_number_int())
 global_shield = (DataFromLastSave().get_armor_data())["Shields"].search(Shield("Wep", 15, cs.inconel, 10, cs.broad + " " + cs.even, False, "Woooh").serial_number_int())
-global_aid = Aid("Cure")
+global_aid = Aid("Cure", cs.health, 3)
 
 
 class WrongClass:
