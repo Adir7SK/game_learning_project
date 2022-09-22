@@ -23,13 +23,6 @@ class GoodCharacter(Character):
     the map. There is also a method for attack and defend. Both return the speed and strength of the weapon the
     character possesses. These will later determine how much damage they cause to the opponent and how much they
     reduce an attack from the opponent.
-
-    Note!! Weapon class has also energy attribute that hasn't been used anywere (except for in the testing the class).
-    This is good to have for the characters, so each movement/attack/defend will reduce the energy. Please look at the
-    implementation in Weapon class.
-
-    The items (which you can add as many as you want when initiating a character class) are a collection of
-    Weapon, Shield, and Aids. Each such item will consist of a list with 2 elements: serial code and object
     """
     def __init__(self, life, undercover,  *items):
         if type(undercover) != bool:
