@@ -1,0 +1,11 @@
+Name,Weight,Material,Density,Shape,Efficient,Sound
+Heavy Abaci Gun,5,Wood Abaci,20,Broad Even,TRUE,Klook
+Iron Gun,1,Iron,70,Slim Even,TRUE,Bam
+Inconel Heavy Sword,15,Inconel,10,Broad Even,FALSE,Woooh
+Iron Light Sword,0.15,Iron,50,Slim Even,FALSE,Shiing
+Titanium Gun,0.5,Titanium,99.9,Slim Short,FALSE,Shiii
+Ebony Heavy Sword,25,Wood Ebony,1,Medium-length Even,FALSE,Wooh
+Titanium Light Gun,0.1,Titanium,1,Broad Even,TRUE,Baam
+Inconel Heavy Gun,30,Inconel,33,Broad Long,TRUE,Baam
+Mahogany Sword,3,Wood African Mahogany,50,Broad Even,TRUE,Boom
+Titanium Gun,3333,Titanium,99.9,Slim Long,FALSE,Baam
