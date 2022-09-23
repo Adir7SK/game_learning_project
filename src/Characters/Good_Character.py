@@ -24,7 +24,7 @@ class GoodCharacter(Character):
     character possesses. These will later determine how much damage they cause to the opponent and how much they
     reduce an attack from the opponent.
     """
-    def __init__(self, life, undercover,  *items):
+    def __init__(self, life, undercover, *items):
         if type(undercover) != bool:
             raise TypeError("Character's undercover value must be a boolean value.")
         self._weapon, self._shield, self.aids = None, None, []
