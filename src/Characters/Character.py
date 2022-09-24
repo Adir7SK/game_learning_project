@@ -8,25 +8,50 @@ class Character(metaclass=ABCMeta):
     """
 
     def __init__(self, life):
-        if life <= 0 or not type(life) in [float, int]:
+        if (not type(life) in [float, int]) or life <= 0:
             raise TypeError("Character's life must be a positive number: {!r}, {!r}".format(life, type(life)))
         self._life = life
+        self._full_life = life
+        self._alive = True
 
     @property
-    def life_remain(self):
+    def life(self):
         """Getter method - returns life character currently has left"""
         return self._life
 
-    @life_remain.setter
-    def life_remain(self, damage):
+    @life.setter
+    def life(self, damage):
         """Setter method to updates life after attack"""
-        if type(damage) != int and type(damage) != float:
+        if not type(damage) in [int, float]:
             raise TypeError("The attack is from a wrong data type.")
-        self._life -= damage
+        self._life = max(0, self._life - damage)
+        if self._life == 0:
+            self._alive = False
 
-    @life_remain.deleter
-    def life_remain(self):
+    @life.deleter
+    def life(self):
         raise AttributeError("Life remaining is an attribute that cannot be deleted.")
+
+    @property
+    def alive(self):
+        """Getter method - returns whether a character is alive or not."""
+        return self._alive
+
+    @alive.setter
+    def alive(self, resurrect):
+        """Setter method to updates maximum life this character can have."""
+        if type(resurrect) == bool:
+            self._alive = resurrect
+            if resurrect:
+                self._life = self._full_life
+            else:
+                self._life = 0
+        else:
+            raise TypeError("Input for character alive or dead can only be True or False")
+
+    @alive.deleter
+    def alive(self):
+        raise AttributeError("Maximum life is an attribute that cannot be deleted.")
 
     @abc.abstractmethod
     def items(self):

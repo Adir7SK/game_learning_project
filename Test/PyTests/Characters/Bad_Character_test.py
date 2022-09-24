@@ -64,15 +64,15 @@ def test_wrong_type_input_items(item1, item2):
 
 
 @pytest.fixture
-def example_good_character():
+def example_bad_character():
     """This function gives a BadCharacter data fixture."""
     return BadCharacter(100, False, global_weapon, global_shield)
 
 
 @pytest.mark.parametrize("fixture", [True, False])
-def test_item_function(example_good_character, fixture):
+def test_item_function(example_bad_character, fixture):
     if fixture:
-        ite = example_good_character.items()
+        ite = example_bad_character.items()
     else:
         ite = BadCharacter(1200, True).items()
     assert ite is None
@@ -86,15 +86,15 @@ def test_item_function(example_good_character, fixture):
                           (True, 3),
                           (True, "True"),
                           ])
-def test_undercover(example_good_character, setget, value):
+def test_undercover(example_bad_character, setget, value):
     if setget:
         if type(value) == bool:
-            example_good_character.undercover = value
+            example_bad_character.undercover = value
         else:
             with pytest.raises(TypeError):
-                example_good_character.undercover = value
+                example_bad_character.undercover = value
     else:
-        undercover_value = example_good_character.undercover
+        undercover_value = example_bad_character.undercover
         print(undercover_value)
 
 
@@ -108,7 +108,7 @@ def test_undercover(example_good_character, setget, value):
                           (False, False, None),
                           (False, True, None),
                           ])
-def test_weapon(example_good_character, setget, correct, relevant_object):
+def test_weapon(example_bad_character, setget, correct, relevant_object):
     """
     Comprehensive testing of the weapon attribute:
     1. It is possible to update character's weapon, if it exists in the data (cases 1-2).
@@ -118,16 +118,16 @@ def test_weapon(example_good_character, setget, correct, relevant_object):
     """
     if setget:
         if correct:
-            example_good_character.weapon = relevant_object.serial_number()
+            example_bad_character.weapon = relevant_object.serial_number()
         else:
             with pytest.raises(ValueError):
-                example_good_character.weapon = relevant_object.serial_number()
+                example_bad_character.weapon = relevant_object.serial_number()
     else:
         if correct:
             with pytest.raises(AttributeError):
-                del example_good_character.weapon
+                del example_bad_character.weapon
         else:
-            weapon_value = example_good_character.weapon
+            weapon_value = example_bad_character.weapon
             print(weapon_value)
 
 
@@ -141,7 +141,7 @@ def test_weapon(example_good_character, setget, correct, relevant_object):
                           (False, False, None),
                           (False, True, None),
                           ])
-def test_shield(example_good_character, setget, correct, relevant_object):
+def test_shield(example_bad_character, setget, correct, relevant_object):
     """
     Comprehensive testing of the shield attribute:
     1. It is possible to update character's shield, if it exists in the data (cases 1-2).
@@ -151,14 +151,80 @@ def test_shield(example_good_character, setget, correct, relevant_object):
     """
     if setget:
         if correct:
-            example_good_character.shield = relevant_object.serial_number()
+            example_bad_character.shield = relevant_object.serial_number()
         else:
             with pytest.raises(ValueError):
-                example_good_character.shield = relevant_object.serial_number()
+                example_bad_character.shield = relevant_object.serial_number()
     else:
         if correct:
             with pytest.raises(AttributeError):
-                del example_good_character.shield
+                del example_bad_character.shield
         else:
-            shield_value = example_good_character.shield
+            shield_value = example_bad_character.shield
             print(shield_value)
+
+
+@pytest.mark.parametrize("legal, damage, expected",
+                         [(True, 5.5, 94.5),
+                          (True, 82, 18),
+                          (True, 252, 0),
+                          (False, [6], 0),
+                          (False, "23", 1),
+                          (False, None, 0),
+                          (False, True, 1),
+                          ])
+def test_updating_legal_and_illegal_life(example_bad_character, legal, damage, expected):
+    """
+    Testing that the updating character's life operates correctly.
+    """
+    if legal:
+        example_bad_character.life = damage
+        assert expected == example_bad_character.life
+    else:
+        with pytest.raises(TypeError):
+            example_bad_character.life = damage
+
+
+@pytest.mark.parametrize("damage, repetitions, expected_life, expected_alive",
+                         [(5.5, 20, 0, False),
+                          (82, 18, 0, False),
+                          (252, 1, 0, False),
+                          (20, 3, 40, True),
+                          (5.5, 5, 72.5, True),
+                          ])
+def test_repetitive_attack(example_bad_character, damage, repetitions, expected_life, expected_alive):
+    """
+    Testing that the updating character's life operates correctly.
+    """
+    for _ in range(repetitions):
+        example_bad_character.life = damage
+    assert example_bad_character.life == expected_life and example_bad_character.alive == expected_alive
+
+
+@pytest.mark.parametrize("life", [True, False])
+def test_delete_life_and_alive(example_bad_character, life):
+    """Verifying that the delete functions works."""
+    with pytest.raises(AttributeError):
+        if life:
+            del example_bad_character.life
+        else:
+            del example_bad_character.alive
+
+
+@pytest.mark.parametrize("resurrect", [True, False, "True", [True], None, 1])
+def test_alive_setter(example_bad_character, resurrect):
+    """
+    Testing that the updating character's alive operates correctly.
+    """
+    current_life = example_bad_character.life
+    if type(resurrect) == bool:
+        if resurrect:
+            example_bad_character.life = 5 + current_life
+            example_bad_character.alive = resurrect
+            assert example_bad_character.life == current_life
+        else:
+            example_bad_character.alive = resurrect
+            assert example_bad_character.life == 0
+    else:
+        with pytest.raises(TypeError):
+            example_bad_character.alive = resurrect

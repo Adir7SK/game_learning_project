@@ -70,11 +70,6 @@ class GoodCharacter(Character):
         for item in self.aids:
             available_items.append((item.name(), item.serial_number()))
         return available_items
-
-    @property
-    def symbol(self):
-        """The symbol on the printed maze that identifies the character"""
-        raise NotImplementedError
     
     @property
     def undercover(self):
@@ -146,7 +141,7 @@ class GoodCharacter(Character):
             raise TypeError("The second input must be a number (int/float).")
         if value[0]:
             self._energy = max(self._energy - (value[1]/5), 0)
-        elif value[1] == 1:
+        elif value[1]:
             self._energy = max(self._energy - self._weapon.weight(), 0)
         else:
             self._energy = max(self._energy - self._shield.weight(), 0)
@@ -167,33 +162,9 @@ class GoodCharacter(Character):
         """Here we return the speed, strength, and shield's efficiency of the shield"""
         return self._shield.speed(), self._shield.strength(), self._shield.armor_efficiency()
 
-    def weapon_info(self):
-        """This should return relevant information about the weapon."""
-        print("Your weapon has the following details:")
-        print("Name:           ", self._weapon.name())
-        print("Serial Number:  ", self._weapon.serial_number())
-        print("Speed:          ", self._weapon.speed())
-        print("Strength:       ", self._weapon.strength())
-        print("Weapon's state: ", self._weapon.armor_efficiency()*100)
-        print("Weight:         ", self._weapon.weight())
-        print("Shape:          ", self._weapon.shape())
-        print("Material:       ", self._weapon.material())
-        print("Density:        ", self._weapon.density())
-
-    def shield_info(self):
-        """This should return relevant information about the shield."""
-        print("Your shield has the following details:")
-        print("Name:           ", self._shield.name())
-        print("Serial Number:  ", self._shield.serial_number())
-        print("Speed:          ", self._shield.speed())
-        print("Strength:       ", self._shield.strength())
-        print("Shield's state: ", self._shield.armor_efficiency() * 100)
-        print("Weight:         ", self._shield.weight())
-        print("Shape:          ", self._shield.shape())
-        print("Material:       ", self._shield.material())
-        print("Density:        ", self._shield.density())
-
-    def aids_info(self):
-        """This should return relevant information about all the aids this character has."""
-        raise NotImplementedError
-
+    def symbol(self):
+        """
+        Most good characters will not have a symbol,
+        except for the main character that the player controls directly.
+        """
+        pass

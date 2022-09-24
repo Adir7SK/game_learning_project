@@ -294,3 +294,69 @@ def test_renew_energy(example_good_character, step, repetitions, value):
         example_good_character.energy = [step, value]
     example_good_character.renew_energy()
     assert round(example_good_character.energy, 5) == 100
+
+
+@pytest.mark.parametrize("legal, damage, expected",
+                         [(True, 5.5, 94.5),
+                          (True, 82, 18),
+                          (True, 252, 0),
+                          (False, [6], 0),
+                          (False, "23", 1),
+                          (False, None, 0),
+                          (False, True, 1),
+                          ])
+def test_updating_legal_and_illegal_life(example_good_character, legal, damage, expected):
+    """
+    Testing that the damaging character's life operates correctly.
+    """
+    if legal:
+        example_good_character.life = damage
+        assert expected == example_good_character.life
+    else:
+        with pytest.raises(TypeError):
+            example_good_character.life = damage
+
+
+@pytest.mark.parametrize("damage, repetitions, expected_life, expected_alive",
+                         [(5.5, 20, 0, False),
+                          (82, 18, 0, False),
+                          (252, 1, 0, False),
+                          (20, 3, 40, True),
+                          (5.5, 5, 72.5, True),
+                          ])
+def test_repetitive_attack(example_good_character, damage, repetitions, expected_life, expected_alive):
+    """
+    Testing that repetitive damage to character's life operates correctly.
+    """
+    for _ in range(repetitions):
+        example_good_character.life = damage
+    assert example_good_character.life == expected_life and example_good_character.alive == expected_alive
+
+
+@pytest.mark.parametrize("life", [True, False])
+def test_delete_life_and_alive(example_good_character, life):
+    """Verifying that the delete functions works."""
+    with pytest.raises(AttributeError):
+        if life:
+            del example_good_character.life
+        else:
+            del example_good_character.alive
+
+
+@pytest.mark.parametrize("resurrect", [True, False, "True", [True], None, 1])
+def test_alive_setter(example_good_character, resurrect):
+    """
+    Testing that the updating character's alive operates correctly.
+    """
+    current_life = example_good_character.life
+    if type(resurrect) == bool:
+        if resurrect:
+            example_good_character.life = 5 + current_life
+            example_good_character.alive = resurrect
+            assert example_good_character.life == current_life
+        else:
+            example_good_character.alive = resurrect
+            assert example_good_character.life == 0
+    else:
+        with pytest.raises(TypeError):
+            example_good_character.alive = resurrect

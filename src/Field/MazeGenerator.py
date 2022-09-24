@@ -26,9 +26,12 @@ def carve_maze(grid, height, width):
     j = 0
   return output_grid
 
+
 from colorama import init, Fore
 # colorama needs to be initialized in order to be used
 init()
+
+
 def print_maze(maze):
     """
     Here we print the initial maze
@@ -67,8 +70,8 @@ def create_maze(height, width, p=0.5):
     first_row[first_row == 1] = 0
     grid[0] = first_row
     
-    for i in range(1,height):
-        grid[i,width-1] = 1
+    for i in range(1, height):
+        grid[i, width-1] = 1
     
     maze = carve_maze(grid, height, width)
     

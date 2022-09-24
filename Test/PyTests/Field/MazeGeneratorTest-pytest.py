@@ -1,6 +1,6 @@
 import pytest
 import numpy.testing as npt
-from src.Field.MazeGenerator import dim, create_maze
+from src.Field.MazeGenerator import dim, create_maze, print_maze
 
 
 @pytest.mark.parametrize("height, width, p, expected_dimensions",
@@ -24,7 +24,8 @@ def test_dimensions(height, width, p, expected_dimensions):
                           (11, 7, "R"),
                           ])
 def test_edges(height, width, edge):
-    """Testing that all the edges of a maze are always walls (represented by #)
+    """
+    Testing that all the edges of a maze are always walls (represented by #)
     First 4 tests are for a 4 X 5 size maze and the last 4 tests are for 11 X 7 size maze:
     Case 1: Testing whether the most right edge of the maze is solely a wall.
     Case 2: Testing whether the lowest edge of the maze is solely a wall.
@@ -40,6 +41,7 @@ def test_edges(height, width, edge):
     elif edge == "B": correct_edge, maze_part = ['#'] * len(maze[0]), maze[len(maze)-1]
     elif edge == "R": correct_edge, maze_part = ['#'] * len(maze), maze[:, len(maze[0]) - 1]
     elif edge == "L": correct_edge, maze_part = ['#'] * len(maze), maze[:, 0]
+    else: correct_edge, maze_part = 0, 0
     npt.assert_array_equal(maze_part, correct_edge)
 
 
@@ -81,6 +83,7 @@ def test_illegal_dimension_inputs(height, width, p):
     Case 4: Non-integer width.
     Case 5: Non-integer p.
     """
+    m = create_maze(5, 4, 0.8)
+    print_maze(m)
     with pytest.raises(TypeError):
         create_maze(height, width, p)
-

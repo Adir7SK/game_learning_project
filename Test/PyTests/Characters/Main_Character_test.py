@@ -346,3 +346,146 @@ def test_repetitive_moves(example_good_character, case, move, repetitions, expec
         illegal_move = random.choice([None, "Hello", (1, 3)])
         with pytest.raises(AssertionError):
             example_good_character.position = illegal_move
+
+
+@pytest.mark.parametrize("legal, damage, expected",
+                         [(True, 5.5, 94.5),
+                          (True, 82, 18),
+                          (True, 252, 0),
+                          (False, [6], 0),
+                          (False, "23", 1),
+                          (False, None, 0),
+                          (False, True, 1),
+                          ])
+def test_updating_legal_and_illegal_life(example_good_character, legal, damage, expected):
+    """
+    Testing that the updating character's life operates correctly.
+    """
+    if legal:
+        example_good_character.life = damage
+        assert expected == example_good_character.life
+    else:
+        with pytest.raises(TypeError):
+            example_good_character.life = damage
+
+
+@pytest.mark.parametrize("damage, repetitions, expected_life, expected_alive",
+                         [(5.5, 20, 0, False),
+                          (82, 18, 0, False),
+                          (252, 1, 0, False),
+                          (20, 3, 40, True),
+                          (5.5, 5, 72.5, True),
+                          ])
+def test_repetitive_attack(example_good_character, damage, repetitions, expected_life, expected_alive):
+    """
+    Testing that the updating character's life operates correctly.
+    """
+    for _ in range(repetitions):
+        example_good_character.life = damage
+    assert example_good_character.life == expected_life and example_good_character.alive == expected_alive
+
+
+@pytest.mark.parametrize("life", [True, False])
+def test_delete_life_and_alive(example_good_character, life):
+    """Verifying that the delete functions works."""
+    with pytest.raises(AttributeError):
+        if life:
+            del example_good_character.life
+        else:
+            del example_good_character.alive
+
+
+@pytest.mark.parametrize("resurrect", [True, False, "True", [True], None, 1])
+def test_alive_setter(example_good_character, resurrect):
+    """
+    Testing that the updating character's alive operates correctly.
+    """
+    current_life = example_good_character.life
+    if type(resurrect) == bool:
+        if resurrect:
+            example_good_character.life = 5 + current_life
+            example_good_character.alive = resurrect
+            assert example_good_character.life == current_life
+        else:
+            example_good_character.alive = resurrect
+            assert example_good_character.life == 0
+    else:
+        with pytest.raises(TypeError):
+            example_good_character.alive = resurrect
+
+
+@pytest.mark.parametrize("damage, repetitions, recharge, expected",
+                         [(5.5, 20, 50, 0),
+                          (82, 1, 20, 38),
+                          (22, 3, 500, 100),
+                          (20, 3, 40, 80),
+                          ])
+def test_recharge_life(example_good_character, damage, repetitions, recharge, expected):
+    """
+    Testing that the updating character's life operates correctly.
+    """
+    for _ in range(repetitions):
+        example_good_character.life = damage
+    example_good_character.recharge_life(recharge)
+    assert example_good_character.life == expected
+
+
+@pytest.mark.parametrize("damage, repetitions, recharge, expected",
+                         [(5.5, 20, 50, 0),
+                          (82, 1, 20, 38),
+                          (22, 3, 500, 100),
+                          (20, 3, 40, 80),
+                          (True, 3, 40, 80),
+                          (None, 3, 40, 80),
+                          ([20], 3, 40, 80),
+                          (82, 1, None, 38),
+                          (22, 3, True, 100),
+                          (20, 3, [40], 80),
+                          ])
+def test_recharge_life(example_good_character, damage, repetitions, recharge, expected):
+    """
+    Testing that the recharging character's life operates correctly. Checking that recharging gives the
+    correct life amount. That an error occurs when recharging with invalid value.
+    """
+    if type(damage) != int and type(damage) != float:
+        with pytest.raises(TypeError):
+            example_good_character.recharge_life(damage)
+    else:
+        for _ in range(repetitions):
+            example_good_character.life = damage
+        if type(recharge) != int and type(recharge) != float:
+            with pytest.raises(TypeError):
+                example_good_character.recharge_life(recharge)
+        else:
+            example_good_character.recharge_life(recharge)
+            assert example_good_character.life == expected
+
+
+@pytest.mark.parametrize("redefine_life, new_max",
+                         [(True, 5.5),
+                          (True, 82),
+                          (True, 252),
+                          (True, [6]),
+                          (True, "23"),
+                          (True, None),
+                          (True, True),
+                          (False, True),
+                          ])
+def test_updating_legal_and_illegal_life(example_good_character, redefine_life, new_max):
+    """
+    Testing that the updating character's life operates correctly.
+    """
+    if redefine_life:
+        if type(new_max) in [int, float] and new_max > 0:
+            example_good_character.full_life = new_max
+            assert new_max == example_good_character.full_life
+        else:
+            with pytest.raises(TypeError):
+                example_good_character.full_life = new_max
+    else:
+        with pytest.raises(AttributeError):
+            del example_good_character.full_life
+
+#Must implement everything for full_life
+
+#Must implement symbol and aids_info methods
