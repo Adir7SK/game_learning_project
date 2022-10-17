@@ -162,16 +162,3 @@ class Maze:
                 else:
                     print(Fore.RED, f'{maze[i][j]}', end="")
             print('\n')
-
-
-if __name__ == "__main__":
-    m = Maze(20, 5).generate_maze()
-    print("Done")
-    t1 = Maze(6, 7).generate_maze()
-    print("Done")
-    t2 = Maze(14, 15).generate_maze()
-    print("Done")
-    print(m)
-    print(t1)
-    print(t2)
-    Maze.print_maze(m)
