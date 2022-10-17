@@ -31,6 +31,10 @@ def test_illegal_dimensions(height, width):
     Case 2: Negative Height.
     Case 3: Zero height.
     Case 4: Zero Width.
+    Case 5: Not integer Width.
+    Case 6: Not integer Height.
+    Case 7: String height.
+    Case 8: String Width.
     """
     with pytest.raises(AttributeError):
         Maze(height, width)
