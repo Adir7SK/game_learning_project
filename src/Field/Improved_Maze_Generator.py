@@ -3,17 +3,42 @@ import operator
 import time
 from colorama import init, Fore
 
-from src.Field.PlanetConditions import planets
-
 
 class Maze:
+    """
+    This class primary function is to provide a maze.
 
-    def __init__(self, dim_x, dim_y, planet_name):
+    Initiate the object with the amount of rows and amount of columns (first y-dimension then x-dimension).
+
+    The returned 2-D array, with the assumption that the top left corner is the start point and the cell
+    with value 2 is the end point of the maze. The cells with value 0 are walls (so the player cannot step
+    on them) and the cells with value 1 or 3 are normal paths. The route with values 1 is the original route
+    from start point to end point.
+
+    The methods available here:
+    illegal_position - getting the field's dimensions and a position, and returns True if the position is out of bound.
+    in_the_neighborhood - getting 2 positions and returning True if there are one step (including diagonally) from
+                            each other.
+    is_one_in_neighborhood - gets the maze and a position, and returns True if there is exactly one cell that its
+                             value is 1 in the position's neighborhood (excluding diagonal). Since 1 is a path that
+                             the player can walk on (and 0 is a wall/no-path), and since it's impossible to walk
+                             diagonally, this function returns True if there is exactly one path that leads to the
+                             input position.
+                             This function make use of a Function Factory that manipulates the illegal_position method
+                             and help us to avoid inserting the dimensions of the maze, and returns the opposite results
+                             of illegal_position. This method also uses a function that provides all the positions that
+                             are within the boundaries of the maze and are neighbouring to the input position (without
+                             diagonals).
+    generate_maze - This is the main method. It uses all the above methods to generate a maze with the required
+                    dimensions.
+    print_maze - Prints the maze with pre-determined colour coded.
+    """
+    def __init__(self, dim_y, dim_x, time_limit=7):
         if type(dim_x) != int or type(dim_y) != int or dim_x < 1 or dim_y < 1:
             raise AttributeError("Invalid maze dimensions.")
         self.dim_x = dim_x
         self.dim_y = dim_y
-        self.planet = planets[planet_name.lower()]
+        self.time_limit = time_limit
 
     @staticmethod
     def illegal_position(dim_x, dim_y, position):
@@ -69,6 +94,7 @@ class Maze:
 
     def generate_maze(self):
         zero_grid = [[0 for _ in range(self.dim_x)] for _ in range(self.dim_y)]
+        # print("Horizontal length: {!r}, Vertical length: {!r}".format(len(zero_grid[0]), len(zero_grid)))
         moves = {"Up": (1, 0), "Down": (-1, 0), "Right": (0, 1), "Left": (0, -1)}
         zero_grid[0][0] = 1
         winning_path = []
@@ -77,10 +103,10 @@ class Maze:
             pointer_position = (0, 0)
             saved_pointer_position = pointer_position
             if sum(sum(row) for row in zero_grid) == 1:                            # Here we construct the winner path which is the first path we create
-                while sum(sum(row) for row in zero_grid) != 3 * max(self.dim_x, self.dim_y) - 1:    # Defines the length of the winning path
+                while len(winning_path) != 3 * max(self.dim_x, self.dim_y) - 1:    # Defines the length of the winning path
                     impass_counter = -1
                     # The while loop ensures that the next step in the path will make sense
-                    while self.illegal_position(self.dim_x, self.dim_y, pointer_position) or zero_grid[pointer_position[0]][pointer_position[1]] == 1 or self.is_one_in_neighborhood(zero_grid, pointer_position):
+                    while self.illegal_position(self.dim_y, self.dim_x, pointer_position) or zero_grid[pointer_position[0]][pointer_position[1]] == 1 or self.is_one_in_neighborhood(zero_grid, pointer_position):
                         impass_counter += 1
                         if impass_counter == 20:        # This means that we can not make the path longer
                             zero_grid = [[0 for _ in range(self.dim_x)] for _ in range(self.dim_y)]
@@ -88,23 +114,21 @@ class Maze:
                             impass_counter = -1
                             pointer_position = (0, 0)
                             saved_pointer_position = pointer_position
+                            winning_path = []
                         pointer_position = saved_pointer_position
                         move = random.choice(list(moves.keys()))
                         pointer_position = tuple(map(operator.add, pointer_position, moves[move]))
-                    print("Path current place is: [{!r}, {!r}]".format(pointer_position[0], pointer_position[1]))
                     zero_grid[pointer_position[0]][pointer_position[1]] = 1
                     saved_pointer_position = pointer_position
                     winning_path.append(pointer_position)
                     destination = pointer_position
+                    # print("Path current place is: [{!r}, {!r}]".format(pointer_position[1], pointer_position[0]))
             else:                                        # Here we build other paths which don't lead to the destination
                 this_round_start_point = random.choice(winning_path)
                 pointer_position = this_round_start_point
-                iter = random.choice(range(self.dim_x, self.dim_x * 2))
-                l = 0
-                print("Circle")
-                while l < self.dim_x:
+                for _ in range(1 + int(3.5*min(self.dim_x, self.dim_y))):
                     impass_counter = -1
-                    while self.in_the_neighborhood(pointer_position, destination) or self.illegal_position(self.dim_x, self.dim_y, pointer_position) or zero_grid[pointer_position[0]][pointer_position[1]] == 1:
+                    while self.in_the_neighborhood(pointer_position, destination) or self.illegal_position(self.dim_y, self.dim_x, pointer_position) or zero_grid[pointer_position[0]][pointer_position[1]] == 1:
                         impass_counter += 1
                         if impass_counter == 20:
                             pointer_position = this_round_start_point
@@ -114,13 +138,11 @@ class Maze:
                         if self.in_the_neighborhood(pointer_position, destination):
                             pointer_position = this_round_start_point
                             impass_counter = -1
-                        if time.clock() - start_time > 7:
+                        if time.clock() - start_time > self.time_limit:
                             zero_grid[destination[0]][destination[1]] = 2
-                            print("We got here")
                             return zero_grid
                     if zero_grid[pointer_position[0]][pointer_position[1]] != 1:
                         zero_grid[pointer_position[0]][pointer_position[1]] = 3
-                    l += 1
 
         zero_grid[destination[0]][destination[1]] = 2
         return zero_grid
@@ -143,7 +165,13 @@ class Maze:
 
 
 if __name__ == "__main__":
-    maze_try = Maze(15, 15, "PLUTO")
-    m = maze_try.generate_maze()
+    m = Maze(20, 5).generate_maze()
+    print("Done")
+    t1 = Maze(6, 7).generate_maze()
+    print("Done")
+    t2 = Maze(14, 15).generate_maze()
+    print("Done")
     print(m)
+    print(t1)
+    print(t2)
     Maze.print_maze(m)
