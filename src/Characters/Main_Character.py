@@ -1,5 +1,6 @@
 import operator
 from src.Characters.Good_Character import GoodCharacter
+import src.Common_general_functionalities.common_strings as cs
 
 
 class MainCharacter(GoodCharacter):
@@ -38,11 +39,11 @@ class MainCharacter(GoodCharacter):
     shield_info - Directly prints all the information about the character's shield.
     character_info - Directly prints all the information about the character.
     """
-    def __init__(self, life, undercover, ns_position, we_position, *items):
+    def __init__(self, life, ns_position, we_position, *items):
         if items == ():
-            super().__init__(life, undercover)
+            super().__init__(life, False)
         else:
-            super().__init__(life, undercover, *items)
+            super().__init__(life, False, *items)
         self._position = (ns_position, we_position)
 
     def recharge_life(self, recharge_pack):
@@ -86,7 +87,7 @@ class MainCharacter(GoodCharacter):
     @property
     def symbol(self):
         """The symbol on the printed maze that identifies the character"""
-        return "*"
+        return cs.main_character
 
     def weapon_info(self):
         """This should return relevant information about the weapon."""

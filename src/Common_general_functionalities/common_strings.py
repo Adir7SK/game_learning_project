@@ -46,3 +46,13 @@ strength = "Strength-Boost"
 speed = "Speed-Boost"
 shield = "Magical-Shield"
 aid_types = [health, energy, strength, speed, shield]
+
+# Character's symbols
+unknown = "?"
+main_character = "@"
+boss = "B"
+regular_enemy = "E"
+fight = "X"
+aid = "H"
+path = "O"
+no_path = "|"

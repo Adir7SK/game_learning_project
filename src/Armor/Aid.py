@@ -1,6 +1,7 @@
 import random
 from src.Common_general_functionalities.common_strings import aid_types
 from src.Common_general_functionalities.Gaussian_generated_data import scaled_data
+import src.Common_general_functionalities.common_strings as cs
 
 
 class Aid:
@@ -32,6 +33,18 @@ class Aid:
     @aid_type.setter
     def aid_type(self, value):
         raise AttributeError("It is illegal to change the aid to a different type after creation.")
+
+    @property
+    def symbol(self):
+        return cs.aid
+
+    @symbol.setter
+    def symbol(self, val):
+        raise AttributeError("Attribute symbol cannot be changed!")
+
+    @symbol.deleter
+    def symbol(self):
+        raise AttributeError("Attribute symbol cannot be removed from aid.")
 
     def activate(self):
         return self._aid_type, self._magnitude

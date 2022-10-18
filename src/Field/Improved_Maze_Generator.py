@@ -36,6 +36,8 @@ class Maze:
     def __init__(self, dim_y, dim_x, time_limit=7):
         if type(dim_x) != int or type(dim_y) != int or dim_x < 1 or dim_y < 1:
             raise AttributeError("Invalid maze dimensions.")
+        if dim_x < 8 or dim_y < 8:
+            raise ValueError("The dimensions must be bigger than 8 in each direction.")
         self.dim_x = dim_x
         self.dim_y = dim_y
         self.time_limit = time_limit
