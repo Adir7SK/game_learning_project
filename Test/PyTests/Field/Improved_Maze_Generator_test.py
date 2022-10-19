@@ -4,7 +4,7 @@ from src.Field.Improved_Maze_Generator import Maze
 
 
 @pytest.mark.parametrize("height, width, expected_dimensions",
-                         [(6, 7, (6, 7)),
+                         [(8, 9, (8, 9)),
                           (11, 12, (11, 12)),
                           (100, 150, (100, 150)),
                           ])

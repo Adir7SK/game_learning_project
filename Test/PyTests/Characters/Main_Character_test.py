@@ -39,14 +39,8 @@ wrong_object = WrongClass()
 
 
 @pytest.mark.parametrize("undercover", ["True", [1], -1.0, None])
-def test_undercover_wrong_input_data_type(undercover):
-    with pytest.raises(TypeError):
-        MainCharacter(1200, undercover, 1, 1)
-
-
-@pytest.mark.parametrize("undercover", ["True", [1], -1.0, None])
 def test_change_undercover_wrong_input_data_type(undercover):
-    c = MainCharacter(1200, True, 1, 1)
+    c = MainCharacter(1200, 1, 1)
     with pytest.raises(TypeError):
         c.undercover = undercover
 
@@ -61,7 +55,7 @@ def test_change_undercover_wrong_input_data_type(undercover):
                           ])
 def test_wrong_input_items(item1, item2, item3, item4):
     with pytest.raises(AttributeError):
-        MainCharacter(1200, True, 1, 1, item1, item2, item3, item4)
+        MainCharacter(1200, 1, 1, item1, item2, item3, item4)
 
 
 @pytest.mark.parametrize("item1, item2",
@@ -73,19 +67,21 @@ def test_wrong_input_items(item1, item2, item3, item4):
                           (100, "Nothing"),
                           ])
 def test_no_input_items(item1, item2):
-    with pytest.raises(TypeError):
-        if item1 is None:
+    if item1 is None:
+        with pytest.raises(TypeError):
             MainCharacter()
-        elif item2 is None:
+    elif item2 is None:
+        with pytest.raises(TypeError):
             MainCharacter(item1)
-        else:
+    else:
+        with pytest.raises(AttributeError):
             MainCharacter(item1, item2, 1, 1)
 
 
 @pytest.fixture
 def example_good_character():
     """This function gives a MainCharacter data fixture."""
-    return MainCharacter(100, False, 1, 1, global_aid, global_weapon, global_shield, global_aid, global_aid)
+    return MainCharacter(100, 1, 1, global_aid, global_weapon, global_shield, global_aid, global_aid)
 
 
 @pytest.mark.parametrize("fixture", [True, False])
@@ -94,7 +90,7 @@ def test_item_function(example_good_character, fixture):
     if fixture:
         ite = example_good_character.items()
     else:
-        ite = MainCharacter(1200, True, 1, 1).items()
+        ite = MainCharacter(1200, 1, 1).items()
     print(ite)
     for i in ite:
         if (i[1])[:6] not in ["Weapon", "Shield"] and (i[1])[:3] != "Aid":

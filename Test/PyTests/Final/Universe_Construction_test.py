@@ -4,11 +4,12 @@ from src.Final.Universe_Construction import Universe
 
 """
 test illegal input types (for init and all the other methods)       V
-test illegal moves
-test field property
-test energy_spent_per_step
-test legal_to_move
-test update_field
+test illegal moves                                                  V
+test field property                                                 V
+test energy_spent_per_step                                          V
+test legal_to_move                                                  V
+test update_field                                                   V
+test whether all the functions work when they should
 """
 
 
@@ -68,3 +69,43 @@ def test_legal_to_move_illegal_move(example_universe, move):
     with pytest.raises(AttributeError):
         example_universe.legal_to_move(move)
 
+
+@pytest.mark.parametrize("delORset, field",
+                         [(0, 0),
+                          (1, 1.5),
+                          (1, 1),
+                          (1, "0"),
+                          (1, [0]),
+                          (1, None),
+                          (1, 2),
+                          ])
+def test_field_properties(example_universe, delORset, field):
+    """Trying to verify a move from a certain position that do not match the player's current position."""
+    example_universe.initialize_field()
+    if not delORset:
+        with pytest.raises(AttributeError):
+            del example_universe.field
+    else:
+        with pytest.raises(AttributeError):
+            if field != 2:
+                example_universe.field = field
+            else:
+                example_universe.field = [[0 for _ in range(10)] for _ in range(10)]
+
+
+@pytest.mark.parametrize("delORset, energy",
+                         [(0, 0),
+                          (1, 1.5),
+                          (1, 1),
+                          (1, "0"),
+                          (1, [0]),
+                          (1, None),
+                          ])
+def test_field_properties(example_universe, delORset, energy):
+    """Trying to verify a move from a certain position that do not match the player's current position."""
+    example_universe.initialize_field()
+    with pytest.raises(AttributeError):
+        if delORset:
+            example_universe.energy_spent_per_step = energy
+        else:
+            del example_universe.energy_spent_per_step

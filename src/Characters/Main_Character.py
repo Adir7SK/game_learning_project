@@ -44,6 +44,8 @@ class MainCharacter(GoodCharacter):
             super().__init__(life, False)
         else:
             super().__init__(life, False, *items)
+        if type(ns_position) != int or ns_position < 0 or type(we_position) != int or we_position < 0:
+            raise TypeError("The position of the player must be a valid input.")
         self._position = (ns_position, we_position)
 
     def recharge_life(self, recharge_pack):
