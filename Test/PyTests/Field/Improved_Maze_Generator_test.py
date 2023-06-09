@@ -38,3 +38,24 @@ def test_illegal_dimensions(height, width):
     """
     with pytest.raises(AttributeError):
         Maze(height, width)
+
+
+@pytest.mark.parametrize("height, width",
+                         [(8, 9),
+                          (11, 12),
+                          (100, 150),
+                          ])
+def test_paths_in_maze(height, width):
+    """
+    This test validates that the paths in the maze are making sense. There are 4 asserts:
+    1. Validates that the length of the winning path from beginning to boss is the right length.
+    2. Validates that there is exactly 1 boss.
+    3. Validates that there are walls (i.e. that the main character has places it cannot go to).
+    4. That the first position is available (because later that's the start point of the main character).
+    """
+    temp = Maze(height, width, time_limit=2).generate_maze()
+    winning_path_len = sum(x.count(1) for x in temp)
+    assert winning_path_len == 3 * max(width, height) - 1
+    assert sum(x.count(2) for x in temp) == 1
+    assert sum(x.count(0) for x in temp) > 0
+    assert temp[0][0] == 1

@@ -11,10 +11,10 @@ class Universe(Maze):
     """
     This class creates and accommodate the universe/field/maze suitable to the level the player is at.
     Upon initialization, we insert the field's dimensions, planet, and level.
-    initialize_field - initialize field from start to end with all the characteristics of that level.
-    legal_to_move - given player's current position, this method validates the position and returns all the legal moves
-                    from that position.
-    update_field - given a move, this method will update the field (i.e. the position of the player).
+    _initialize_field - initialize field from start to end with all the characteristics of that level. This method
+                        should not be called, except within this class. This is called only within field attribute below
+    legal_to_move - returns all the legal moves from player's current position.
+    update_field - given a move, this method will update the field (i.e. the player's new position).
     update_after_fight_victory - used after winning a fight with some enemy, the field and corresponding symbols will
                                  be updated.
     print_field - colour coded printed field adjusted to every character on the board.
@@ -29,9 +29,12 @@ class Universe(Maze):
             raise AttributeError("This planet does not exist.")
         self._planet = planets[planet.lower()]
         self._field = []
+        self._main_character_position = (0, 0)
 
     @property
     def field(self):
+        if not self._field:
+            self._initialize_field()
         return self._field
 
     @field.setter
@@ -42,7 +45,7 @@ class Universe(Maze):
     def field(self):
         raise AttributeError("It is impossible to delete the field!")
 
-    def initialize_field(self):
+    def _initialize_field(self):
         """
         Here we initialize the field given the level.
         Field initialization includes changing the cells value of the printed field, to symbolize the positions of
@@ -51,6 +54,8 @@ class Universe(Maze):
         Enemies, and Aid kits.
 
         Still missing: dealing with more types of enemies, adding helper characters, adding undercover characters.
+
+        Currently, the number of aids and enemies is the same as the level.
         """
         maze = super().generate_maze()
         boss_position = [(row, col) for row, row_vals in enumerate(maze) for col, cell_val in enumerate(row_vals) if
@@ -64,17 +69,21 @@ class Universe(Maze):
                 enemies_positions.append(location)
         potential_aid_positions = [(row, col) for row, row_vals in enumerate(maze) for col, cell_val in
                                    enumerate(row_vals) if cell_val == 3]
+        if not potential_aid_positions:
+            potential_aid_positions = list(filter(lambda i: i not in enemies_positions, potential_enemies_positions))
         aid_positions = []
         for _ in range(self.level):
             location = random.choice(potential_aid_positions)
             if location != (0, 0):
                 aid_positions.append(location)
+        del potential_enemies_positions, potential_aid_positions
+        # From here we start replacing the numbers with the symbols of the game's different characters
         maze[boss_position[0]][boss_position[1]] = cs.boss
         for location in enemies_positions:
             maze[location[0]][location[1]] = cs.regular_enemy
         for location in aid_positions:
             maze[location[0]][location[1]] = cs.aid
-        maze[0][0] = cs.main_character
+        maze[self.main_character_position[0]][self.main_character_position[1]] = cs.main_character
         for row in range(len(maze)):
             for col in range(len(maze[0])):
                 if maze[row][col] == 0:
@@ -82,7 +91,7 @@ class Universe(Maze):
                 elif maze[row][col] in [1, 3]:
                     maze[row][col] = cs.path
         self._field = maze
-        return boss_position, enemies_positions, aid_positions
+        # return boss_position, enemies_positions, aid_positions
 
     @property
     def energy_spent_per_step(self):
@@ -90,7 +99,7 @@ class Universe(Maze):
 
     @energy_spent_per_step.setter
     def energy_spent_per_step(self, val):
-        raise AttributeError("The energy spent per step cannot be changed, as it is dependent on the gravity of the planet!")
+        raise AttributeError("Energy spent per step depends on plant's gravity and can not be changed!")
 
     @energy_spent_per_step.deleter
     def energy_spent_per_step(self):
@@ -98,22 +107,22 @@ class Universe(Maze):
     
     @property
     def main_character_position(self):
-        return [(row, col) for row, row_vals in enumerate(self._field) for col, cell_val in
-                enumerate(row_vals) if cell_val == cs.main_character or cell_val == cs.fight][0]
+        return self._main_character_position
+
+    @main_character_position.setter
+    def main_character_position(self, new_position):
+        self._main_character_position = new_position
 
     @main_character_position.deleter
     def main_character_position(self):
         raise AttributeError("It is impossible to remove the main character from the field.")
 
-    def legal_to_move(self, position):
+    def legal_moves(self):
         """
-        This method returns all the legal moves that are allowed to do from given current position in given current
-        field.
+        This method returns all the legal moves that are allowed to do from main character's current position.
         """
-        if position != self.main_character_position:
-            raise AttributeError("The given position is not the main character's position.")
-        if self._field[position[0]][position[1]] == cs.fight:
-            return False
+        if self._field[self.main_character_position[0]][self.main_character_position[1]] == cs.fight:
+            return []
 
         def legal_position(g):
             """
@@ -123,14 +132,15 @@ class Universe(Maze):
             def positions(p):
                 if 0 <= p[0] < self.dim_x and 0 <= p[1] < self.dim_y and g[p[0]][p[1]] != cs.no_path:
                     return True
-                return False
+                else:
+                    return False
             return positions
 
         possible_moves = [(1, 0), (-1, 0), (0, 1), (0, -1)]
         adjusted_legal_position_checker = legal_position(self._field)
         legal_moves = []
         for pm in possible_moves:
-            potential_allowed_position = tuple(map(operator.add, position, pm))
+            potential_allowed_position = tuple(map(operator.add, self.main_character_position, pm))
             if adjusted_legal_position_checker(potential_allowed_position):
                 legal_moves.append(pm)
         return legal_moves
@@ -141,17 +151,18 @@ class Universe(Maze):
         If the move was allowed, this method will return True, otherwise it'll return False.
         """
         if type(move) != tuple or len(move) != 2 or move[0] not in [-1, 0, 1] or move[1] not in [-1, 0, 1]:
-            raise AttributeError("Illegal move. Move must be a tuple of two integers where each must be either -1, 0, or 1.")
-        if not self.legal_to_move(self.main_character_position) or move not in self.legal_to_move(self.main_character_position):
-            return False
+            raise AssertionError("Illegal move. Move must be a tuple of two integers: -1, 0, or 1.")
+        if not self.legal_moves() or move not in self.legal_moves():
+            print("This is an illegal move. The legal moves are: {!r}. Your position is: {!r}."
+                  .format(self.legal_moves(), self.main_character_position))
+            return
         previous_position = self.main_character_position
-        new_position = tuple(map(operator.add, self.main_character_position, move))
-        if self._field[new_position[0]][new_position[1]] in [cs.regular_enemy, cs.boss]:
-            self._field[new_position[0]][new_position[1]] = cs.fight
+        self.main_character_position = tuple(map(operator.add, self.main_character_position, move))
+        if self._field[self.main_character_position[0]][self.main_character_position[1]] in [cs.regular_enemy, cs.boss]:
+            self._field[self.main_character_position[0]][self.main_character_position[1]] = cs.fight
         else:
-            self._field[new_position[0]][new_position[1]] = cs.main_character
+            self._field[self.main_character_position[0]][self.main_character_position[1]] = cs.main_character
         self._field[previous_position[0]][previous_position[1]] = cs.path
-        return True
 
     def update_after_fight_victory(self):
         self._field[self.main_character_position[0]][self.main_character_position[1]] = cs.main_character
@@ -179,7 +190,7 @@ class Universe(Maze):
 
 if __name__ == "__main__":
     u = Universe(10, 10, "mArS", 5)
-    b, e, a = u.initialize_field()
+    b, e, a = u._initialize_field()
     u.print_field()
     while u.main_character_position != b:
         if u.field[u.main_character_position[0]][u.main_character_position[1]] == "X":

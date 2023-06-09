@@ -40,7 +40,7 @@ wrong_object = WrongClass()
 
 @pytest.mark.parametrize("undercover", ["True", [1], -1.0, None])
 def test_change_undercover_wrong_input_data_type(undercover):
-    c = MainCharacter(1200, 1, 1)
+    c = MainCharacter(1200)
     with pytest.raises(TypeError):
         c.undercover = undercover
 
@@ -55,7 +55,7 @@ def test_change_undercover_wrong_input_data_type(undercover):
                           ])
 def test_wrong_input_items(item1, item2, item3, item4):
     with pytest.raises(AttributeError):
-        MainCharacter(1200, 1, 1, item1, item2, item3, item4)
+        MainCharacter(1200, item1, item2, item3, item4)
 
 
 @pytest.mark.parametrize("item1, item2",
@@ -71,8 +71,8 @@ def test_no_input_items(item1, item2):
         with pytest.raises(TypeError):
             MainCharacter()
     elif item2 is None:
-        with pytest.raises(TypeError):
-            MainCharacter(item1)
+        with pytest.raises(AttributeError):
+            MainCharacter(item1, item2)
     else:
         with pytest.raises(AttributeError):
             MainCharacter(item1, item2, 1, 1)
@@ -81,7 +81,7 @@ def test_no_input_items(item1, item2):
 @pytest.fixture
 def example_good_character():
     """This function gives a MainCharacter data fixture."""
-    return MainCharacter(100, 1, 1, global_aid, global_weapon, global_shield, global_aid, global_aid)
+    return MainCharacter(100, global_aid, global_weapon, global_shield, global_aid, global_aid)
 
 
 @pytest.mark.parametrize("fixture", [True, False])
@@ -90,7 +90,7 @@ def test_item_function(example_good_character, fixture):
     if fixture:
         ite = example_good_character.items()
     else:
-        ite = MainCharacter(1200, 1, 1).items()
+        ite = MainCharacter(1200).items()
     print(ite)
     for i in ite:
         if (i[1])[:6] not in ["Weapon", "Shield"] and (i[1])[:3] != "Aid":
@@ -289,59 +289,6 @@ def test_renew_energy(example_good_character, step, repetitions, value):
         example_good_character.energy = [step, value]
     example_good_character.renew_energy()
     assert round(example_good_character.energy, 5) == 100
-
-
-@pytest.mark.parametrize("case, move, expected",
-                         [(1, (1, 1), (2, 2)),
-                          (1, (-1, 1), (0, 2)),
-                          (1, (0, 1), (1, 2)),
-                          (1, (-1, 0), (0, 1)),
-                          (2, None, 1),
-                          (3, None, 1),
-                          (3, (-5, 0), 1),
-                          (3, (0, 1.1), 1),
-                          (3, (1, 3), 1),
-                          (3, [1, 1], 1),
-                          (3, 1, 1),
-                          (3, "Hello", 1),
-                          (3, True, 1),
-                          ])
-def test_legal_and_illegal_moves(example_good_character, case, move, expected):
-    """
-    Testing the different operations with a character's position. A character moves in the right direction given
-    the instruction. Illegal move is raising an error. Delete character's position is impossible.
-    """
-    if case == 1:
-        example_good_character.position = move
-        assert example_good_character.position == expected
-    elif case == 2:
-        with pytest.raises(AttributeError):
-            del example_good_character.position
-    elif case == 3:
-        with pytest.raises(AssertionError):
-            example_good_character.position = move
-
-
-@pytest.mark.parametrize("case, move, repetitions, expected",
-                         [(True, (1, 1), 5, (5, 6)),
-                          (True, (-1, 1), 8, (-8, 9)),
-                          (False, (0, 1), 4, (1, 2)),
-                          (False, (-1, 0), 8, (0, 1)),
-                          ])
-def test_repetitive_moves(example_good_character, case, move, repetitions, expected):
-    """
-    Testing that a character can repeat a certain move, and have a combination of moves.
-    Validating that in the case of a wrong input data type, an assertion error is raised.
-    """
-    for _ in range(repetitions):
-        example_good_character.position = move
-    if case:
-        example_good_character.position = (-1, 0)
-        assert example_good_character.position == expected
-    else:
-        illegal_move = random.choice([None, "Hello", (1, 3)])
-        with pytest.raises(AssertionError):
-            example_good_character.position = illegal_move
 
 
 @pytest.mark.parametrize("legal, damage, expected",

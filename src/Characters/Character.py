@@ -6,7 +6,6 @@ class Character(metaclass=ABCMeta):
     """
     Here we will define all the characteristics of a character in the game (all types of characters).
     """
-
     def __init__(self, life):
         if (not type(life) in [float, int]) or life <= 0:
             raise TypeError("Character's life must be a positive number: {!r}, {!r}".format(life, type(life)))
@@ -21,7 +20,7 @@ class Character(metaclass=ABCMeta):
 
     @life.setter
     def life(self, damage):
-        """Setter method to updates life after attack"""
+        """Setter method updates life after attack"""
         if not type(damage) in [int, float]:
             raise TypeError("The attack is from a wrong data type.")
         self._life = max(0, self._life - damage)

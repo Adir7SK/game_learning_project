@@ -9,13 +9,15 @@ from src.Common_general_functionalities import common_strings as cs
 
 """
 Here we shall test the following:
-    1. Attribute undercover datatype testing                                v
-    2. Initializing with wrong items                                        v
-    3. Does the item function returns all the items                         v
-    4. Is undercover getter and setter works                                v
-    5. Validating getter and setter for weapon and shield                   v
-    6. Validating getter and setter for energy                              v
-    7. Validating renew-energy                                              v
+    1. Attribute undercover datatype testing                                
+    2. Initializing with wrong items                                        
+    3. Does the item function returns all the items                         
+    4. Is undercover getter and setter works                                
+    5. Validating getter and setter for weapon and shield                   
+    6. Validating getter and setter for energy                              
+    7. Validating renew-energy                                              
+    8. Validate the functionalities of life attribute (that couldn't be tested in the abstract parent class Character)
+    9. Validate the functionalities of alive attribute (that couldn't be tested in the abstract parent class Character)
 """
 global_weapon = (DataFromLastSave().get_armor_data())["Weapons"].search(Weapon("Wep", 15, cs.inconel, 10, cs.broad + " " + cs.even, False, "Woooh").serial_number_int())
 global_shield = (DataFromLastSave().get_armor_data())["Shields"].search(Shield("Wep", 15, cs.inconel, 10, cs.broad + " " + cs.even, False, "Woooh").serial_number_int())
@@ -360,3 +362,34 @@ def test_alive_setter(example_good_character, resurrect):
     else:
         with pytest.raises(TypeError):
             example_good_character.alive = resurrect
+
+
+@pytest.mark.parametrize("start_life, damage, life_left",
+                         [(100, 50, 50),
+                          (23.3, 10, 13.3),
+                          ])
+def test_life(start_life, damage, life_left):
+    c = GoodCharacter(start_life, False)
+    c.life = damage
+    assert c._full_life == start_life
+    assert c.life == life_left
+
+
+@pytest.mark.parametrize("start_life", ["100", [100], -45, 0])
+def test_wrong_life_initialization(start_life):
+    with pytest.raises(TypeError):
+        c = GoodCharacter(start_life, False)
+
+
+@pytest.mark.parametrize("start_life, damage", [(100, 500), (23.3, 23.3)])
+def test_alive(start_life, damage):
+    c = GoodCharacter(start_life, False)
+    assert c.alive
+    c.life = damage
+    assert not c.alive
+
+
+@pytest.mark.parametrize("undercover, symbol", [(True, cs.aid), (False, cs.helper_character)])
+def test_character_symbol(undercover, symbol):
+    c = GoodCharacter(100, undercover)
+    assert c.symbol() == symbol

@@ -46,6 +46,7 @@ strength = "Strength-Boost"
 speed = "Speed-Boost"
 shield = "Magical-Shield"
 aid_types = [health, energy, strength, speed, shield]
+amount_of_possible_magnitudes = 5
 
 # Character's symbols
 unknown = "?"
@@ -54,5 +55,8 @@ boss = "B"
 regular_enemy = "E"
 fight = "X"
 aid = "H"
+helper_character = 'C'
 path = "O"
 no_path = "|"
+
+amount_of_possible_levels = 5

@@ -1,6 +1,6 @@
-import operator
 from src.Characters.Good_Character import GoodCharacter
 import src.Common_general_functionalities.common_strings as cs
+from src.Armor.Aid import Aid
 
 
 class MainCharacter(GoodCharacter):
@@ -11,8 +11,6 @@ class MainCharacter(GoodCharacter):
 
     Life = The initial amount of life and maximum life the character has (int/float).
     undercover = Whether the character is undercover (boolean).
-    ns_position = Character's north-south position, i.e. which row on the board is it in (integer).
-    we_position = Character's west-east position, i.e. which column on the board is it in (integer).
     items = List of all the items the character can carry - character can carry up to one weapon and one shield,
                 but unlimited aid items (Aid, Weapon, or Shield class)
 
@@ -23,7 +21,8 @@ class MainCharacter(GoodCharacter):
     items - List of tuples with all the items the character has. Each tuple has item's name and item's serial number.
     symbol - Character's symbol on the map (String).
     undercover - Whether the character is undercover or not - this is still subject for change, since this character
-                 will never be undercover (boolean).
+                 will never be undercover (boolean) - perhaps in the future an element of invisible to the enemies will
+                 come to play.
     weapon - Getter, setter, and deleter to return/change the weapon the character is using (Weapon Object)
     shield - Getter, setter, and deleter to return/change the shield the character is using (Shield Object)
     energy - Getter, setter, and deleter to return/change the character's energy (float/int between 0-100).
@@ -39,14 +38,11 @@ class MainCharacter(GoodCharacter):
     shield_info - Directly prints all the information about the character's shield.
     character_info - Directly prints all the information about the character.
     """
-    def __init__(self, life, ns_position, we_position, *items):
+    def __init__(self, life, *items):
         if items == ():
             super().__init__(life, False)
         else:
             super().__init__(life, False, *items)
-        if type(ns_position) != int or ns_position < 0 or type(we_position) != int or we_position < 0:
-            raise TypeError("The position of the player must be a valid input.")
-        self._position = (ns_position, we_position)
 
     def recharge_life(self, recharge_pack):
         """This method gives the option to recharge a character's life, with the upper bound of maximum life."""
@@ -54,6 +50,16 @@ class MainCharacter(GoodCharacter):
             raise TypeError("The recharge amount must be float or int.")
         elif self._alive:
             self._life = min(self._full_life, self._life + recharge_pack)
+
+    def add_item(self, item):
+        """This gives the possibility for a character to have more items in their bag."""
+        if not isinstance(item, Aid):
+            raise TypeError("You can only add Aid type items.")
+        self.aids.append((item.name(), item.serial_number()))
+
+    def remove_item(self, item_name, item_id):
+        """This is a method to remove item from the bag collection."""
+        self.aids.remove((item_name, item_id))
 
     @property
     def full_life(self):
@@ -70,21 +76,6 @@ class MainCharacter(GoodCharacter):
     @full_life.deleter
     def full_life(self):
         raise AttributeError("Maximum life is an attribute that cannot be deleted.")
-
-    @property
-    def position(self):
-        return self._position
-
-    @position.setter
-    def position(self, direction):
-        if type(direction) != tuple or len(direction) != 2 or not (direction[0] in [-1, 0, 1] and direction[1] in [-1, 0, 1]):
-            raise AssertionError("Invalid move.")
-        else:
-            self._position = tuple(map(operator.add, self._position, direction))
-
-    @position.deleter
-    def position(self):
-        raise AttributeError("Position attribute cannot be deleted.")
 
     @property
     def symbol(self):
@@ -116,6 +107,18 @@ class MainCharacter(GoodCharacter):
         print("Shape:          ", self._shield.shape())
         print("Material:       ", self._shield.material())
         print("Density:        ", self._shield.density())
+
+    def short_armor_info(self):
+        print("Shield Info:")
+        print("Name:           ", self._shield.name())
+        print("Speed:          ", self._shield.speed())
+        print("Strength:       ", self._shield.strength())
+        print("Shield's state: ", self._shield.armor_efficiency() * 100)
+        print("Weapon Info:")
+        print("Name:           ", self._weapon.name())
+        print("Speed:          ", self._weapon.speed())
+        print("Strength:       ", self._weapon.strength())
+        print("Weapon's state: ", self._weapon.armor_efficiency() * 100)
 
     def character_info(self):
         """This should return relevant information about the shield."""

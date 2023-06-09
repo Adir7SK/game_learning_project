@@ -3,6 +3,7 @@ from src.Armor.Shield import Shield
 from src.Armor.Weapon import Weapon
 from src.Characters.Character import Character
 from src.Data_Loading.Data_Placement import DataFromLastSave
+import src.Common_general_functionalities.common_strings as cs
 
 
 class GoodCharacter(Character):
@@ -17,12 +18,14 @@ class GoodCharacter(Character):
     and shield. There are getters, setters and (anti) deleter for weapon, shield and undercover.
 
     There are methods to get a list of all the items the character has, and methods to get full information
-    about the character's weapon and shield.
+    about the character's armor.
 
     For the practical implementation, there is a method that should return the symbol of the current character on
     the map. There is also a method for attack and defend. Both return the speed and strength of the weapon the
     character possesses. These will later determine how much damage they cause to the opponent and how much they
     reduce an attack from the opponent.
+    Class attributes: life, alive, symbol, undercover, weapon, shield, energy, items
+    Methods: renew_energy, attack, defend, symbol
     """
     def __init__(self, life, undercover, *items):
         if type(undercover) != bool:
@@ -167,4 +170,7 @@ class GoodCharacter(Character):
         Most good characters will not have a symbol,
         except for the main character that the player controls directly.
         """
-        pass
+        if self.undercover:
+            return cs.aid
+        else:
+            return cs.helper_character

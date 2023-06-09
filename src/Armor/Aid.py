@@ -6,11 +6,18 @@ import src.Common_general_functionalities.common_strings as cs
 
 class Aid:
 
-    amount_of_possible_magnitudes = 5
+    amount_of_possible_magnitudes = cs.amount_of_possible_magnitudes
 
     def __init__(self, name, aidtype, magnitude):
+        """
+        Provided aidtype and magnitude, the initializer will immediately create the following:
+                    Aid type to specify which kind help the object will provide
+                    Magnitude which is calculated (with random factor) relative to the magnitude input
+                    Serial number to get the specific aid ID
+        """
         if not (aidtype in aid_types or magnitude in range(self.amount_of_possible_magnitudes)):
             raise ValueError("The magnitude must be between 0-{!r} (including), and the aid type must be a known aid.".format(self.amount_of_possible_magnitudes - 1))
+        # The following 3 lines takes appropriate block of random numbers from scaled_data corresponding to magnitude
         episode = int(len(scaled_data)/self.amount_of_possible_magnitudes)
         lower = episode*magnitude
         upper = lower + episode
@@ -47,4 +54,6 @@ class Aid:
         raise AttributeError("Attribute symbol cannot be removed from aid.")
 
     def activate(self):
-        return self._aid_type, self._magnitude
+        a, m = self._aid_type, self._magnitude
+        self._aid_type, self._magnitude = None, 0
+        return a, m

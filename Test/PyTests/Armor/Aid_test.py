@@ -27,6 +27,7 @@ def test_activate(name, aid_number, mag):
     aid = Aid(name, aid_types[aid_number], mag)
     a, m = aid.activate()
     assert a in aid_types and 0 < m < 100
+    assert (None, 0) == (aid.activate())
 
 
 @pytest.mark.parametrize("name, aid_number, mag",

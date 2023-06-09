@@ -40,4 +40,4 @@ if __name__ == "__main__":
     print("This is the new updated data:")
     print()
     print()
-    a2['Weapons'].print_helper()
+    a2['Shields'].print_helper()

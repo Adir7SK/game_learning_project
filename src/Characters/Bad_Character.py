@@ -16,8 +16,8 @@ class BadCharacter(Character):
         and shield. There are getters, setters and (anti) deleter for weapon, shield and undercover.
 
         For the practical implementation, there is a method that should return the symbol of the current character on
-        the map. There is also a method for attack and defend. Both return the speed and strength of the weapon the
-        character possesses. These will later determine how much damage they cause to the opponent and how much they
+        the map. There is also a method for attack and defend. Both return the speed and strength of the weapon/shield
+        the character possesses. These will later determine how much damage they cause to the opponent and how much they
         reduce an attack from the opponent.
         """
 
