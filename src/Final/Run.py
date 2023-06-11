@@ -36,7 +36,7 @@ if __name__ == "__main__":
 Notice!! Before closing it down, we did not commit and upload all the dummy changes (that are not working correctly)
 and that were done quickly without testing/good testing just so there will be some game to run. The modules that
 you must go through, change/upgrade/add testing/improve testings are: Movable_Actions, Data_Placement,
-Last_Save, Aid, Live_Actions, Assigning_Characters.
+Last_Save, Live_Actions, Assigning_Characters.
 
 Notice also that we used to have the folder containing this entire project on the desktup, and now we moved it to be
 in some folder instead! maybe this can create some problems. If you delete this text, then the program should run,

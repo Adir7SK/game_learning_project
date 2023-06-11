@@ -15,6 +15,18 @@ class WeaponCollection:
     def search(self, serial_number):
         return AVL().search(self.weapon_collection, serial_number)
 
+    def best_weapon(self):
+        temp_tree = self.weapon_collection
+        while temp_tree.right is not None:
+            temp_tree = temp_tree.right
+        return temp_tree.serial_number
+
+    def worst_weapon(self):
+        temp_tree = self.weapon_collection
+        while temp_tree.left is not None:
+            temp_tree = temp_tree.left
+        return temp_tree.serial_number
+
     def print_helper(self):
         """Call this method as follows: TREE_OBJECT_NAME.print_helper()"""
         AVL().print_helper(self.weapon_collection)

@@ -141,3 +141,15 @@ def test_search_invalid_serial_number_data_type_raises_type_error(example_shield
     """Searching an invalid serial number raises a Type Error."""
     with pytest.raises(TypeError):
         example_shield_tree.search(serial_n)
+
+
+@pytest.mark.parametrize("expected", [5000])
+def test_best_shield(example_shield_tree, expected):
+    """Verifying that the method gives the correct best shield."""
+    assert example_shield_tree.best_shield() == expected
+
+
+@pytest.mark.parametrize("expected", [398])
+def test_worst_shield(example_shield_tree, expected):
+    """Verifying that the method gives the correct worst shield."""
+    assert example_shield_tree.worst_shield() == expected

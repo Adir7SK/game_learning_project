@@ -141,3 +141,15 @@ def test_search_invalid_serial_number_data_type_raises_type_error(example_weapon
     """Searching an invalid serial number raises a Type Error."""
     with pytest.raises(TypeError):
         example_weapon_tree.search(serial_n)
+
+
+@pytest.mark.parametrize("expected", [5000])
+def test_best_weapon(example_weapon_tree, expected):
+    """Verifying that the method gives the correct best weapon."""
+    assert example_weapon_tree.best_weapon() == expected
+
+
+@pytest.mark.parametrize("expected", [398])
+def test_worst_weapon(example_weapon_tree, expected):
+    """Verifying that the method gives the correct worst weapon."""
+    assert example_weapon_tree.worst_weapon() == expected
