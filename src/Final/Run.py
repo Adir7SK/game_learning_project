@@ -42,4 +42,6 @@ Notice also that we used to have the folder containing this entire project on th
 in some folder instead! maybe this can create some problems. If you delete this text, then the program should run,
 but ater a bit there should come errors (sometimes errors come immediately, then just run again, and it should be fine).
 If this does not work, then move the entire projects folder back to the desktop.
+
+Note that it's impossible to add another item with the same serial number as an item that is already in the items bag
 """
