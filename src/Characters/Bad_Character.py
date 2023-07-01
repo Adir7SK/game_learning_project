@@ -2,6 +2,7 @@ from src.Armor.Shield import Shield
 from src.Armor.Weapon import Weapon
 from src.Characters.Character import Character
 from src.Data_Loading.Data_Placement import DataFromLastSave
+import src.Common_general_functionalities.common_strings as cs
 
 
 class BadCharacter(Character):
@@ -29,14 +30,14 @@ class BadCharacter(Character):
             if not isinstance(item, (Shield, Weapon)):
                 raise AttributeError("Attributes after undercover must be either Weapon, or Shield type.")
             serial_number = item.serial_number()
-            if serial_number[:6] not in ["Weapon", "Shield"]:
+            if serial_number[:6] not in [cs.weapon, cs.shield]:
                 raise AttributeError("The items a character can carry are either a Weapon or Shield.")
-            if serial_number[:6] == "Weapon":
+            if serial_number[:6] == cs.weapon:
                 if self._weapon:
                     raise AttributeError("Character must have one weapon at most.")
                 else:
                     self._weapon = item
-            elif serial_number[:6] == "Shield":
+            elif serial_number[:6] == cs.shield:
                 if self._shield:
                     raise AttributeError("Character must have one shield at most.")
                 else:
@@ -83,7 +84,7 @@ class BadCharacter(Character):
 
     @weapon.setter
     def weapon(self, serial_number):
-        if serial_number[:6] != "Weapon":
+        if serial_number[:6] != cs.weapon:
             raise ValueError("Invalid weapon serial number. Valid example: Weapon460.")
         weapons = (DataFromLastSave().get_armor_data())["Weapons"]
         if weapons.search(int(serial_number[6:])):
@@ -101,7 +102,7 @@ class BadCharacter(Character):
 
     @shield.setter
     def shield(self, serial_number):
-        if serial_number[:6] != "Shield":
+        if serial_number[:6] != cs.shield:
             raise ValueError("Invalid shield serial number. Valid example: Shield460.")
         shields = (DataFromLastSave().get_armor_data())["Shields"]
         if shields.search(int(serial_number[6:])):

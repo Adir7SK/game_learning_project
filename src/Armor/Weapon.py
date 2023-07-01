@@ -1,4 +1,5 @@
 from src.Armor.Armor import Armor
+import src.Common_general_functionalities.common_strings as cs
 
 
 class Weapon(Armor):
@@ -15,7 +16,7 @@ class Weapon(Armor):
 
     def serial_number(self):
         """This method gives the serial number sequence (with the string 'Weapon' in the beginning)"""
-        return "Weapon" + str(self._serial_number)
+        return cs.weapon + str(self._serial_number)
 
     def serial_number_int(self):
         """Returns only the integer of the serial_number which is then used to assign the weapon in the tree"""

@@ -1,4 +1,3 @@
-import random
 import pytest
 from src.Data_Loading.Data_Placement import DataFromLastSave
 from src.Armor.Weapon import Weapon
@@ -18,8 +17,8 @@ Here we shall test the following:
     6. Validating getter and setter for energy                              v
     7. Validating renew-energy                                              v
 """
-global_weapon = (DataFromLastSave().get_armor_data())["Weapons"].search(Weapon("Wep", 15, cs.inconel, 10, cs.broad + " " + cs.even, False, "Woooh").serial_number_int())
-global_shield = (DataFromLastSave().get_armor_data())["Shields"].search(Shield("Wep", 15, cs.inconel, 10, cs.broad + " " + cs.even, False, "Woooh").serial_number_int())
+global_weapon = (DataFromLastSave().get_armor_data())["Weapons"].search(Weapon("Wep", 15, cs.inconel, 10, cs.broad + " " + cs.even, False, "Woooh").serial_number_int())  # noqa
+global_shield = (DataFromLastSave().get_armor_data())["Shields"].search(Shield("Wep", 15, cs.inconel, 10, cs.broad + " " + cs.even, False, "Woooh").serial_number_int())  # noqa
 global_aid = Aid("Cure", cs.health, 3)
 
 
@@ -93,7 +92,7 @@ def test_item_function(example_good_character, fixture):
         ite = MainCharacter(1200).items()
     print(ite)
     for i in ite:
-        if (i[1])[:6] not in ["Weapon", "Shield"] and (i[1])[:3] != "Aid":
+        if (i[1])[:6] not in [cs.weapon, cs.shield] and (i[1])[:3] != "Aid":
             raise ValueError("There is an invalid item in among the items: {!r}".format(i))
 
 
@@ -429,6 +428,122 @@ def test_updating_legal_and_illegal_life(example_good_character, redefine_life, 
         with pytest.raises(AttributeError):
             del example_good_character.full_life
 
-#Must implement everything for full_life
 
-#Must implement symbol and aids_info methods
+@pytest.mark.parametrize("legal, damage",
+                         [(True, 5.5),
+                          (True, 82),
+                          (True, 252),
+                          (False, None),
+                          ])
+def test_full_life_remains_cannot_be_deleted(example_good_character, legal, damage):
+    """
+    Testing that the updating character's life doesn't change full_life. Also, that full_life cannot be deleted.
+    """
+    if legal:
+        example_good_character.life = damage
+        assert 100.0 == example_good_character.full_life
+    else:
+        with pytest.raises(AttributeError):
+            del example_good_character.full_life
+
+
+@pytest.mark.parametrize("legal, update_full_life",
+                         [(True, 500),
+                          (True, 820),
+                          (True, 25),
+                          (False, [6]),
+                          (False, "23"),
+                          (False, None),
+                          (False, True),
+                          ])
+def test_full_life_change_only_with_correct_input(example_good_character, legal, update_full_life):
+    if legal:
+        example_good_character.full_life = update_full_life
+        assert example_good_character.full_life == update_full_life
+    else:
+        with pytest.raises(TypeError):
+            example_good_character.full_life = update_full_life
+
+
+@pytest.mark.parametrize("s_case, c",
+                         [(True, 50),
+                          (True, 81),
+                          (True, 2),
+                          (False, [6]),
+                          (False, "23"),
+                          (False, None),
+                          (False, True),
+                          (None, None),
+                          ])
+def test_change_correctly_and_delete_strength(example_good_character, s_case, c):
+    """
+    Testing methods to delete or change with illegal value the strength. Also testing if updating strength is possible.
+    """
+    if s_case is None:
+        with pytest.raises(AttributeError):
+            del example_good_character.strength
+    elif s_case:
+        example_good_character.strength = c
+        assert example_good_character.strength == c + 5
+    else:
+        with pytest.raises(TypeError):
+            example_good_character.strength = c
+
+
+@pytest.mark.parametrize("s_case, c",
+                         [(True, 50),
+                          (True, 81),
+                          (True, 2),
+                          (False, [6]),
+                          (False, "23"),
+                          (False, None),
+                          (False, True),
+                          (None, None),
+                          ])
+def test_change_correctly_and_delete_speed(example_good_character, s_case, c):
+    """
+    Testing methods to delete or change with illegal value the speed. Also testing if updating speed is possible.
+    """
+    if s_case is None:
+        with pytest.raises(AttributeError):
+            del example_good_character.speed
+    elif s_case:
+        example_good_character.speed = c
+        assert example_good_character.speed == c + 5
+    else:
+        with pytest.raises(TypeError):
+            example_good_character.speed = c
+
+
+@pytest.mark.parametrize("s_case, c",
+                         [(cs.weapon, 50),
+                          (cs.shield, 81),
+                          ("Use_aid", 2),
+                          (False, "Use_aid"),
+                          (False, 55),
+                          (False, 55.5),
+                          ])
+def test_use_aid(example_good_character, s_case, c):
+    """
+    Testing changing weapon, shield, using existing aid, and trying to use non-existing aid.
+    """
+    if not s_case:
+        items = example_good_character.items()
+        example_good_character.use_aid(c)
+        assert items == example_good_character.items()  # Verify that the item list (aids and armor) didn't change
+    elif s_case == cs.weapon:
+        temp_weapon = Weapon("Hand", 1, cs.possible_materials[0], 1, cs.medium_broad + " " + cs.medium_length, False, 'hh')  # noqa
+        example_good_character.add_item(temp_weapon)
+        example_good_character.use_aid(temp_weapon.serial_number())
+        assert example_good_character.weapon.serial_number() != global_weapon.serial_number()
+        assert example_good_character.weapon.serial_number() == temp_weapon.serial_number()
+    elif s_case == cs.shield:
+        temp_shield = Shield("Hand", 1, cs.possible_materials[0], 1, cs.medium_broad + " " + cs.medium_length, False, 'hh')  # noqa
+        example_good_character.add_item(temp_shield)
+        example_good_character.use_aid(temp_shield.serial_number())
+        assert example_good_character.shield.serial_number() != global_shield.serial_number()
+        assert example_good_character.shield.serial_number() == temp_shield.serial_number()
+    elif s_case == "Use_aid":
+        example_good_character.life = 70
+        example_good_character.use_aid(global_aid.activate()[0])
+        assert example_good_character.life == 30+global_aid.activate()[1]

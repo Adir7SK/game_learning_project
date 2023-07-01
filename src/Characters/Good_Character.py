@@ -30,25 +30,25 @@ class GoodCharacter(Character):
     def __init__(self, life, undercover, *items):
         if type(undercover) != bool:
             raise TypeError("Character's undercover value must be a boolean value.")
-        self._weapon, self._shield, self.aids = None, None, []
+        self._weapon, self._shield, self.aids = None, None, dict()
         for item in items:
             if not isinstance(item, (Aid, Shield, Weapon)):
                 raise AttributeError("Attributes after undercover must be either Aid, Weapon, or Shield type.")
             serial_number = item.serial_number()
-            if serial_number[:6] not in ["Weapon", "Shield"] and serial_number[:3] != "Aid":
+            if serial_number[:6] not in [cs.weapon, cs.shield] and serial_number[:3] != "Aid":
                 raise AttributeError("The items a character can carry are either a Weapon, Shield, or an Aid.")
-            if serial_number[:6] == "Weapon":
+            if serial_number[:6] == cs.weapon:
                 if self._weapon:
                     raise AttributeError("Character must have one weapon at most.")
                 else:
                     self._weapon = item
-            elif serial_number[:6] == "Shield":
+            elif serial_number[:6] == cs.shield:
                 if self._shield:
                     raise AttributeError("Character must have one shield at most.")
                 else:
                     self._shield = item
             else:
-                self.aids.append(item)
+                self.aids[item.serial_number()] = item
 
         if not self._weapon:
             weapons = (DataFromLastSave().get_armor_data())["Weapons"]
@@ -70,7 +70,7 @@ class GoodCharacter(Character):
     def items(self):                  # This kind of character must have a weapon, shield, and potentially more items.
         """List of items that character carries"""
         available_items = [(self._weapon.name(), self._weapon.serial_number()), (self._shield.name(), self._shield.serial_number())]
-        for item in self.aids:
+        for item in self.aids.values():
             available_items.append((item.name(), item.serial_number()))
         return available_items
     
@@ -91,7 +91,7 @@ class GoodCharacter(Character):
 
     @weapon.setter
     def weapon(self, serial_number):
-        if serial_number[:6] != "Weapon":
+        if serial_number[:6] != cs.weapon:
             raise ValueError("Invalid weapon serial number. Valid example: Weapon460.")
         weapons = (DataFromLastSave().get_armor_data())["Weapons"]
         if weapons.search(int(serial_number[6:])):
@@ -109,7 +109,7 @@ class GoodCharacter(Character):
 
     @shield.setter
     def shield(self, serial_number):
-        if serial_number[:6] != "Shield":
+        if serial_number[:6] != cs.shield:
             raise ValueError("Invalid shield serial number. Valid example: Shield460.")
         shields = (DataFromLastSave().get_armor_data())["Shields"]
         if shields.search(int(serial_number[6:])):
@@ -171,6 +171,6 @@ class GoodCharacter(Character):
         except for the main character that the player controls directly.
         """
         if self.undercover:
-            return cs.aid
+            return cs.unknown
         else:
             return cs.helper_character

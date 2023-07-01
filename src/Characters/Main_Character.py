@@ -1,6 +1,8 @@
 from src.Characters.Good_Character import GoodCharacter
 import src.Common_general_functionalities.common_strings as cs
 from src.Armor.Aid import Aid
+from src.Armor.Shield import Shield
+from src.Armor.Weapon import Weapon
 
 
 class MainCharacter(GoodCharacter):
@@ -43,6 +45,8 @@ class MainCharacter(GoodCharacter):
             super().__init__(life, False)
         else:
             super().__init__(life, False, *items)
+        self._strength = 5
+        self._speed = 5
 
     def recharge_life(self, recharge_pack):
         """This method gives the option to recharge a character's life, with the upper bound of maximum life."""
@@ -53,13 +57,16 @@ class MainCharacter(GoodCharacter):
 
     def add_item(self, item):
         """This gives the possibility for a character to have more items in their bag."""
-        if not isinstance(item, Aid):
+        if not (isinstance(item, Aid) or isinstance(item, Weapon) or isinstance(item, Shield)):
             raise TypeError("You can only add Aid type items.")
-        self.aids.append((item.name(), item.serial_number()))
+        if item.serial_number() in self.aids.keys():
+            print("You cannot have twice an item with the same serial number.")
+        else:
+            self.aids[item.serial_number()] = item
 
-    def remove_item(self, item_name, item_id):
-        """This is a method to remove item from the bag collection."""
-        self.aids.remove((item_name, item_id))
+    def _remove_item(self, item_id):
+        """This is a method to remove item from the bag collection. Input is item's serial number."""
+        del self.aids[item_id]
 
     @property
     def full_life(self):
@@ -82,13 +89,81 @@ class MainCharacter(GoodCharacter):
         """The symbol on the printed maze that identifies the character"""
         return cs.main_character
 
+    @property
+    def speed(self):
+        return self._speed
+
+    @speed.setter
+    def speed(self, improvement):
+        if type(improvement) not in [int, float]:
+            raise TypeError("Strength must be integer or float.")
+        if self._speed + improvement < 0:
+            self._speed = 0
+        else:
+            self._speed += improvement
+
+    @speed.deleter
+    def speed(self):
+        raise AttributeError("Speed attribute cannot be deleted.")
+
+    @property
+    def strength(self):
+        return self._strength
+
+    @strength.setter
+    def strength(self, improvement):
+        if type(improvement) not in [int, float]:
+            raise TypeError("Strength must be integer or float.")
+        if self._strength + improvement < 0:
+            self._strength = 0
+        else:
+            self._strength += improvement
+
+    @strength.deleter
+    def strength(self):
+        raise AttributeError("Strength attribute cannot be deleted.")
+
+    def attack(self):
+        w_speed, w_strength, w_efficiency = super().attack()
+        return w_speed+self.speed, w_strength+self.strength, w_efficiency
+
+    def defend(self):
+        s_speed, s_strength, s_efficiency = super().defend()
+        return s_speed+self.speed, s_strength+self.strength, s_efficiency
+
+    def use_aid(self, aid_serial):
+        """
+        aid is a tuple of 2 elements, name and serial number.
+        This method activates the aid for the benefit of the player.
+        """
+        if aid_serial not in self.aids.keys():
+            return
+        aid = self.aids[aid_serial]
+        if aid_serial.startswith('Aid'):
+            aid_type, magnitude = aid.activate()
+            if aid_type == cs.health:
+                self.recharge_life(magnitude)
+            elif aid_type == cs.energy:
+                self.renew_energy()
+            elif aid_type == cs.strength:
+                self.strength += magnitude
+            elif aid_type == cs.speed:
+                self.speed += magnitude
+            elif aid_type == cs.full_life:
+                self.full_life += magnitude
+        elif aid_serial.startswith(cs.weapon):
+            self.weapon = aid_serial
+        elif aid_serial.startswith(cs.shield):
+            self.shield = aid_serial
+        self._remove_item(aid_serial)
+
     def weapon_info(self):
         """This should return relevant information about the weapon."""
         print("Your weapon has the following details:")
         print("Name:           ", self._weapon.name())
         print("Serial Number:  ", self._weapon.serial_number())
-        print("Speed:          ", self._weapon.speed())
-        print("Strength:       ", self._weapon.strength())
+        print("Speed:          ", self._weapon.speed() + self._speed)
+        print("Strength:       ", self._weapon.strength() + self._strength)
         print("Weapon's state: ", self._weapon.armor_efficiency()*100)
         print("Weight:         ", self._weapon.weight())
         print("Shape:          ", self._weapon.shape())
@@ -125,6 +200,8 @@ class MainCharacter(GoodCharacter):
         print("Thies character's details are:")
         print("Life remaining:    ", self._life)
         print("Max possible Life: ", self._full_life)
+        print("Strength:          ", self._strength)
+        print("Speed:             ", self._speed)
         print("Energy left:       ", self._energy)
         print("Items:             ", self.items())
         print("Shield name: {0}. It's Serial Number: {1}".format(self._shield.name(), self._shield.serial_number()))

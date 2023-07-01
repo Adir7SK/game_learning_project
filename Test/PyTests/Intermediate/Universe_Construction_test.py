@@ -2,7 +2,7 @@ import pytest
 import time
 import src.Common_general_functionalities.common_strings as cs
 
-from src.Final.Universe_Construction import Universe
+from src.Intermediate.Universe_Construction import Universe
 
 """
 test illegal input types (for init and all the other methods)       V

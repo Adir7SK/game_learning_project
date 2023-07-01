@@ -44,8 +44,10 @@ health = "Health-Kit"
 energy = "Energy-Kit"
 strength = "Strength-Boost"
 speed = "Speed-Boost"
-shield = "Magical-Shield"
-aid_types = [health, energy, strength, speed, shield]
+full_life = "Full-Life_boost"
+weapon = "Weapon"
+shield = "Shield"
+aid_types = [health, energy, strength, speed, full_life, weapon, shield]
 amount_of_possible_magnitudes = 5
 
 # Character's symbols

@@ -48,7 +48,7 @@ class Move:
                     number_of_aid_in_list = int(potential_next_move[4:]) - 1
                     aid_to_use = (self.player.items())[number_of_aid_in_list]
                     self.player = use_aid(self.player, aid_to_use)
-                    self.player.remove_item(aid_to_use.name(), aid_to_use.serial_number())
+                    self.player._remove_item(aid_to_use.name(), aid_to_use.serial_number())
                     continue
                 elif potential_next_move.upper() == "ATTACK":
                     fight.player_is_hitting()

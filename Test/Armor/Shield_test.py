@@ -238,7 +238,7 @@ def test_serial_number_beginning(name, weight, material, density, shape, efficie
     Validating that the serial number starts with "Shield".
     """
     shield = Shield(name, weight, material, density, shape, efficient, sound)
-    assert (shield.serial_number())[:6] == "Shield"
+    assert (shield.serial_number())[:6] == cs.shield
 
 
 @pytest.mark.parametrize("name, weight, material, density, shape, efficient, sound, expected",

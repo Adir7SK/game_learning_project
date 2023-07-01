@@ -236,7 +236,7 @@ def test_serial_number_beginning(name, weight, material, density, shape, efficie
     Validating that the serial number starts with "Weapon".
     """
     weapon = Weapon(name, weight, material, density, shape, efficient, sound)
-    assert (weapon.serial_number())[:6] == "Weapon"
+    assert (weapon.serial_number())[:6] == cs.weapon
 
 
 @pytest.mark.parametrize("name, weight, material, density, shape, efficient, sound, expected",
