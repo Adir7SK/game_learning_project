@@ -389,7 +389,7 @@ def test_alive(start_life, damage):
     assert not c.alive
 
 
-@pytest.mark.parametrize("undercover, symbol", [(True, cs.aid), (False, cs.helper_character)])
+@pytest.mark.parametrize("undercover, symbol", [(True, cs.unknown), (False, cs.helper_character)])
 def test_character_symbol(undercover, symbol):
     c = GoodCharacter(100, undercover)
     assert c.symbol() == symbol
