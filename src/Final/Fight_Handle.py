@@ -1,6 +1,3 @@
-import src.Common_general_functionalities.common_strings as cs
-
-
 class Fight:
 
     """
@@ -105,20 +102,7 @@ class Fight:
         else:
             return False
 
-
-def use_aid(player, aid):
-    if aid.serial_number not in player.items:
-        return player
-    aid_type, magnitude = aid.activate()
-    if aid_type == cs.health:
-        player.recharge_life(magnitude)
-    elif aid_type == cs.energy:
-        player.renew_energy()
-    elif aid_type == cs.strength:
-        player.strength += magnitude
-    elif aid_type == cs.speed:
-        player.speed += magnitude
-    elif aid_type == cs.shield:  # this can be for increasing the amount for full life
-        player._shield._strength += magnitude
-    player._remove_item(aid)
-    return player
+    def update_players(self, main_char):
+        self.main_character = main_char
+        # self.additional_good_characters = list(help_char) THIS MEANS THAT CURRENTLY THERE'S NO OPTION TO USE THE AIDS
+        #                                                   ON THE HELPING CHARACTERS

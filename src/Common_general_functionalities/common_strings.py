@@ -62,3 +62,21 @@ path = "O"
 no_path = "|"
 
 amount_of_possible_levels = 5
+
+# Control commands - IF GETTING NEW COMMANDS YOU MUST CHECK THAT SUCH COMMEND DOESN'T ALREADY EXISTS FOR A DIFFERENT ACTION
+one_step = ["GO ", "MOVE ", "STEP "]
+multi_step = ["G", "M", "S"]
+directions = [["NORTH", "UP"], ["SOUTH", "DOWN"], ["EAST", "RIGHT"], ["WEST", "LEFT"]]
+use_aid = ["USE ", "UTILIZE "]
+fight_actions = ["ATTACK", "A", "DEFEND", "D"]
+info = ["INFO ", "INFORMATION ", "TELL ME ABOUT ", "TELL ME ABOUT MY "]
+character = "CHARACTER"
+me = "ME"
+helper = "HELPER"
+aids = "AIDS"
+short_info = "ARMOR"
+specific_info = [character, me, helper, weapon, shield, aids, short_info]
+
+# Data tree
+weapons = "WEAPONS"
+shields = "SHIELDS"

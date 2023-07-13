@@ -1,11 +1,20 @@
 import pytest
+import random
+from unittest import mock
 from src.Intermediate.Assigning_Characters import Assignments
+from src.Intermediate.Universe_Construction import Universe
 from src.Armor.Weapon_Collection import WeaponCollection
 from src.Armor.Shield_Collection import ShieldCollection
 from src.Common_general_functionalities import common_strings as cs
 from src.Armor.Shield import Shield
 from src.Armor.Weapon import Weapon
 from src.Armor.Aid import Aid
+
+
+b_p = (49, 19)
+e_p = [(0, 1), (15, 4), (7, 2), (8, 18)]
+a_p = [(28, 2), (32, 18)]
+h_p = [(41, 10), (13, 15)]
 
 
 @pytest.fixture
@@ -28,24 +37,57 @@ def example_tree():
                                     "Shiing")
     weapon_collection.insert_weapon("Excellent Metal Gun", 0.5, cs.titanium, 99.9, cs.slim + " " + cs.short, True,
                                     "HHH")
-    tree = {"Weapons": weapon_collection, "Shields": shield_collection}
+    tree = {cs.weapons: weapon_collection, cs.shields: shield_collection}
     return tree
 
 
-@pytest.mark.parametrize("enemies_positions, aid_positions, level, last_round_weakest_armor, "
-                         "last_round_strongest_armor",
-                         [([(0, 1), (5, 4), (7, 2), (8, 8)], [(2, 2), (3, 8)], 3, (0, 0), (0, 0)),
-                          ([(0, 1), (5, 4), (7, 2), (8, 8)], [(2, 2), (3, 8)], 3, (400, 400), (600, 600)),
-                          ([(0, 1), (5, 4), (7, 2), (8, 8)], [(2, 2), (3, 8)], 3, (500, 500), (3000, 3000)),
+@pytest.fixture
+def example_universe():
+    return Universe(20, 50, "earth", 3)
+
+
+@pytest.fixture
+def mock_universe():
+    def temp1(x):
+        return b_p, e_p, a_p, h_p
+
+    @property
+    def temp2(x):
+        f = [[cs.no_path] * 20] * 50
+        for p in e_p:
+            f[p[0]][p[1]] = random.choice([cs.regular_enemy, cs.unknown])
+        for p in a_p:
+            f[p[0]][p[1]] = random.choice([cs.aid, cs.unknown])
+        for p in h_p:
+            f[p[0]][p[1]] = random.choice([cs.helper_character, cs.unknown])
+        return f
+    with mock.patch.multiple('src.Intermediate.Universe_Construction.Universe', boss_enemies_aid_help_charter_position=temp1, field=temp2) as mocks:
+        yield mocks
+
+
+@pytest.mark.parametrize("level, last_round_weakest_armor, last_round_strongest_armor",
+                         [(3, (0, 0), (0, 0)),
+                          (3, (400, 400), (600, 600)),
+                          (3, (500, 500), (3000, 3000)),
                           ])
-def test_correct_initiation(example_tree, enemies_positions, aid_positions, level, last_round_weakest_armor,
-                               last_round_strongest_armor):
+def test_correct_initiation(mock_universe, example_universe, example_tree, level,
+                            last_round_weakest_armor, last_round_strongest_armor):
     """Verifying all the types and broad details of the enemies and aids correctly created."""
-    a = Assignments(enemies_positions, aid_positions, level, example_tree,
-                    last_round_weakest_armor=last_round_weakest_armor,
+    a = Assignments(example_universe, level, example_tree, last_round_weakest_armor=last_round_weakest_armor,
                     last_round_strongest_armor=last_round_strongest_armor)
+    enemies_positions, aid_positions, helper_positions = e_p, a_p, h_p
     for pos in enemies_positions:
         enem = a.get_enemy(pos)
+        assert enem.alive
+        assert type(enem.life) == int and enem.life > 0
+        assert isinstance(enem.shield, Shield)
+        assert isinstance(enem.weapon, Weapon)
+        if enem.undercover:
+            assert enem.symbol == cs.unknown
+        else:
+            assert enem.symbol == cs.regular_enemy
+    for pos in helper_positions:
+        enem = a.get_helper_char(pos)
         assert enem.alive
         assert type(enem.life) == int and enem.life > 0
         assert isinstance(enem.shield, Shield)

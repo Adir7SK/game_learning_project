@@ -27,7 +27,7 @@ class DataFromLastSave:
         return shields_data_collection
 
     def get_armor_data(self, shield_file='Shields.csv', weapon_file='Weapons.csv'):
-        return {"Weapons": self.load_weapons(weapon_file), "Shields": self.load_shields(shield_file)}
+        return {cs.weapons: self.load_weapons(weapon_file), cs.shields: self.load_shields(shield_file)}
 
 
 if __name__ == "__main__":

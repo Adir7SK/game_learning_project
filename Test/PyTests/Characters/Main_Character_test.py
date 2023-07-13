@@ -17,8 +17,8 @@ Here we shall test the following:
     6. Validating getter and setter for energy                              v
     7. Validating renew-energy                                              v
 """
-global_weapon = (DataFromLastSave().get_armor_data())["Weapons"].search(Weapon("Wep", 15, cs.inconel, 10, cs.broad + " " + cs.even, False, "Woooh").serial_number_int())  # noqa
-global_shield = (DataFromLastSave().get_armor_data())["Shields"].search(Shield("Wep", 15, cs.inconel, 10, cs.broad + " " + cs.even, False, "Woooh").serial_number_int())  # noqa
+global_weapon = (DataFromLastSave().get_armor_data())[cs.weapons].search(Weapon("Wep", 15, cs.inconel, 10, cs.broad + " " + cs.even, False, "Woooh").serial_number_int())  # noqa
+global_shield = (DataFromLastSave().get_armor_data())[cs.shields].search(Shield("Wep", 15, cs.inconel, 10, cs.broad + " " + cs.even, False, "Woooh").serial_number_int())  # noqa
 global_aid = Aid("Cure", cs.health, 3)
 
 
@@ -166,7 +166,7 @@ def test_weapon_not_changing_in_tree(example_good_character, tree, damage, repet
         example_good_character.weapon.armor_efficiency_update(damage)
     if tree:
         ser = example_good_character.weapon.serial_number_int()
-        assert ((DataFromLastSave().get_armor_data())["Weapons"].search(ser)).armor_efficiency() == expected
+        assert ((DataFromLastSave().get_armor_data())[cs.weapons].search(ser)).armor_efficiency() == expected
     else:
         assert round(example_good_character.weapon.armor_efficiency(), 8) == expected
 
@@ -222,7 +222,7 @@ def test_shield_not_changing_in_tree(example_good_character, tree, damage, repet
         example_good_character.shield.armor_efficiency_update(damage)
     if tree:
         ser = example_good_character.shield.serial_number_int()
-        assert ((DataFromLastSave().get_armor_data())["Weapons"].search(ser)).armor_efficiency() == expected
+        assert ((DataFromLastSave().get_armor_data())[cs.weapons].search(ser)).armor_efficiency() == expected
     else:
         assert round(example_good_character.shield.armor_efficiency(), 8) == expected
 

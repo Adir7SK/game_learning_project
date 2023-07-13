@@ -29,7 +29,7 @@ if __name__ == "__main__":
         u.print_field()
         next_step = input("Next move: ")
         program.step(next_step)
-        program.fight_update()
+        program._fight_update()
 
 
 """
@@ -40,7 +40,7 @@ Last_Save, Live_Actions.
 
 Notice also that we used to have the folder containing this entire project on the desktup, and now we moved it to be
 in some folder instead! maybe this can create some problems. If you delete this text, then the program should run,
-but ater a bit there should come errors (sometimes errors come immediately, then just run again, and it should be fine).
+but after a bit there should come errors (sometimes errors come immediately, then just run again, and it should be fine).
 If this does not work, then move the entire projects folder back to the desktop.
 
 Note that it's impossible to add another item with the same serial number as an item that is already in the items bag
