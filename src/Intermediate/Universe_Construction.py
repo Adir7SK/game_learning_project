@@ -89,6 +89,15 @@ class Universe(Maze):
             if location != (0, 0):
                 helping_character_positions.append(location)
         del potential_hc_positions
+        potential_armor_positions = [(row, col) for row, row_vals in enumerate(maze) for col, cell_val in
+                                      enumerate(row_vals) if cell_val == 3 and (row, col) not in aid_positions and
+                                     (row, col) not in helping_character_positions]
+        armor_positions = []
+        for _ in range(random.choice(list(range(self.level)))):
+            location = random.choice(potential_armor_positions)
+            if location != (0, 0):
+                armor_positions.append(location)
+        del potential_armor_positions
         # From here we start replacing the numbers with the symbols of the game's different characters
         maze[boss_position[0]][boss_position[1]] = cs.boss
         for location in enemies_positions:
@@ -98,6 +107,8 @@ class Universe(Maze):
         for location in helping_character_positions:
             # We give higher chance that it'll be unknown/undercover 66.67% compared to 33.33%
             maze[location[0]][location[1]] = random.choice([cs.helper_character, cs.unknown, cs.unknown])
+        for location in armor_positions:
+            maze[location[0]][location[1]] = random.choice([cs.aid, cs.unknown])
         maze[self.main_character_position[0]][self.main_character_position[1]] = cs.main_character
         for row in range(len(maze)):
             for col in range(len(maze[0])):
@@ -106,8 +117,8 @@ class Universe(Maze):
                 elif maze[row][col] in [1, 3]:
                     maze[row][col] = cs.path
         self._field = maze
-        self._boss_position, self._enemies_position, self._aid_position, self._help_characters_position = \
-            boss_position, enemies_positions, aid_positions, helping_character_positions
+        self._boss_position, self._enemies_position, self._aid_position, self._help_characters_position, self._armor_position = \
+            boss_position, enemies_positions, aid_positions, helping_character_positions, armor_positions
 
     @property
     def energy_spent_per_step(self):
@@ -183,8 +194,9 @@ class Universe(Maze):
     def update_after_fight_victory(self):
         self._field[self.main_character_position[0]][self.main_character_position[1]] = cs.main_character
 
-    def boss_enemies_aid_help_charter_position(self):
-        return self._boss_position, self._enemies_position, self._aid_position, self._help_characters_position
+    def boss_enemies_aid_help_charter_armor_position(self):
+        return self._boss_position, self._enemies_position, self._aid_position, self._help_characters_position, \
+               self._armor_position
 
     def print_field(self):
         init()

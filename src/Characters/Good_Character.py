@@ -165,6 +165,7 @@ class GoodCharacter(Character):
         """Here we return the speed, strength, and shield's efficiency of the shield"""
         return self._shield.speed(), self._shield.strength(), self._shield.armor_efficiency()
 
+    @property
     def symbol(self):
         """
         Most good characters will not have a symbol,

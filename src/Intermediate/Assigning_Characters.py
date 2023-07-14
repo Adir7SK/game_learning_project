@@ -5,6 +5,7 @@ from src.Armor.Shield import Shield
 from src.Armor.Aid import Aid
 from src.Characters.Boss_Enemy import Boss
 from src.Characters.Regular_Enemies import Orc
+from src.Intermediate.Universe_Construction import Universe
 from src.Characters.Good_Character import GoodCharacter
 import src.Common_general_functionalities.common_strings as cs
 from src.Common_general_functionalities.Gaussian_generated_data import scaled_data
@@ -26,17 +27,16 @@ class Assignments:
     """
 
     def __init__(self, field, level, data_tree, last_round_weakest_armor=(0, 0), last_round_strongest_armor=(0, 0)):
-        b_p, enemies_positions, aid_positions, help_characters_position = field.boss_enemies_aid_help_charter_position()
-        if type(enemies_positions) != list or \
-                [e for e in enemies_positions if type(e) != tuple or len(e) != 2 or type(e[0]) != int or
-                                                 type(e[1]) != int] or type(aid_positions) != list or \
-                [e for e in aid_positions if type(e) != tuple or len(e) != 2 or
-                 type(e[0]) != int or type(e[1]) != int] or type(level) != int or type(data_tree) != dict or \
+        if not isinstance(field, Universe):
+            raise TypeError("The field input must be an object type Universe")
+        b_p, enemies_positions, aid_positions, help_characters_position, armor_position = \
+            field.boss_enemies_aid_help_charter_armor_position()
+        if type(level) != int or type(data_tree) != dict or \
                 type(last_round_weakest_armor) != tuple or type(last_round_weakest_armor[0]) != int or \
                 type(last_round_weakest_armor[1]) != int or type(last_round_strongest_armor) != tuple or \
                 type(last_round_strongest_armor[0]) != int or type(last_round_strongest_armor[1]) != int or \
                 len(last_round_weakest_armor) != 2 or len(last_round_strongest_armor) != 2:
-            raise ValueError("Either enemies_positions, aid_positions, level, data_tree, last_round_weakest_armor or "
+            raise TypeError("Either enemies_positions, aid_positions, level, data_tree, last_round_weakest_armor or "
                              "last_round_strongest_armor is from the wrong data type")
         self._enemies = self._initiate_enemies(enemies_positions, level, data_tree, last_round_weakest_armor,
                                                last_round_strongest_armor, field.field)
@@ -45,6 +45,8 @@ class Assignments:
         self._help_characters = self._initiate_help_character(help_characters_position, level, data_tree,
                                                               last_round_weakest_armor, last_round_strongest_armor,
                                                               field.field)
+        self._armors = self._initiate_armor(armor_position, data_tree, last_round_weakest_armor,
+                                            last_round_strongest_armor)
 
     @staticmethod
     def _initiate_enemies(enemies_positions, level, data_tree, last_round_weakest_armor, last_round_strongest_armor,
@@ -57,7 +59,7 @@ class Assignments:
         if last_round_weakest_armor[0] == last_round_strongest_armor[0] != 0:
             average_weapon = int((last_round_weakest_armor[0] + data_tree[cs.weapons].best_weapon()) / 2)
             average_shield = int((last_round_weakest_armor[1] + data_tree[cs.shields].best_shield()) / 2)
-        elif last_round_weakest_armor[0] == 0:
+        elif last_round_weakest_armor[0] == 0  and last_round_strongest_armor[0] == 0:
             average_weapon = 0
             average_shield = 0
         else:
@@ -67,7 +69,7 @@ class Assignments:
         upper_limit = max(int(average_weapon*percentage_above),
                           int(data_tree[cs.weapons].best_weapon()*(percentage_above-1)))
         while len([serial_n for serial_n in range(average_weapon, upper_limit) if
-                   data_tree[cs.weapons].search(serial_n)]) < 2 and average_weapon < data_tree[cs.weapons].best_weapon():
+                   data_tree[cs.weapons].search(serial_n)]) < 2 and upper_limit < data_tree[cs.weapons].best_weapon():
             percentage_above += .05
             upper_limit = max(int(average_weapon * percentage_above),
                               int(data_tree[cs.weapons].best_weapon() * (percentage_above - 1)))
@@ -106,8 +108,8 @@ class Assignments:
         last_round_strongest_armor = (max(last_round_weakest_armor[0], last_round_strongest_armor[0]/2),
                                       max(last_round_weakest_armor[1], last_round_strongest_armor[1]/2))
         if last_round_weakest_armor[0] == last_round_strongest_armor[0] != 0:
-            average_weapon = int((last_round_weakest_armor[0] + data_tree[cs.weapons].best_weapon()) / 2)
-            average_shield = int((last_round_weakest_armor[1] + data_tree[cs.shields].best_shield()) / 2)
+            average_weapon = int(last_round_weakest_armor[0])
+            average_shield = int(last_round_weakest_armor[1])
         elif last_round_weakest_armor[0] == 0:
             average_weapon = 0
             average_shield = 0
@@ -118,7 +120,7 @@ class Assignments:
         upper_limit = max(int(average_weapon * percentage_above),
                           int(data_tree[cs.weapons].best_weapon() * (percentage_above - 1)))
         while len([serial_n for serial_n in range(average_weapon, upper_limit) if
-                   data_tree[cs.weapons].search(serial_n)]) < 2 and average_weapon < data_tree[cs.weapons].best_weapon():
+                   data_tree[cs.weapons].search(serial_n)]) < 2 and upper_limit < data_tree[cs.weapons].best_weapon():
             percentage_above += .05
             upper_limit = max(int(average_weapon * percentage_above),
                               int(data_tree[cs.weapons].best_weapon() * (percentage_above - 1)))
@@ -164,6 +166,70 @@ class Assignments:
                 raise ValueError("Problem in the program.")
             position_to_aid[position] = current_aid
         return position_to_aid
+
+    @staticmethod
+    def _initiate_armor(armor_positions, data_tree, last_round_weakest_armor, last_round_strongest_armor):
+        """
+        This method will return a dictionary type which maps position to an armor. The armor's strength
+        will be a random function depending on the previous strongest and weakest weapons of the enemies.
+        """
+        if not armor_positions:
+            return dict()
+
+        def _bounds(x):
+            if x == cs.weapons:
+                idx = 0
+                best_armor = data_tree[x].best_weapon()
+            elif x == cs.shields:
+                idx = 1
+                best_armor = data_tree[x].best_shield()
+            else:
+                raise AttributeError("Internal wrong function")
+
+            if last_round_weakest_armor[idx] == last_round_strongest_armor[idx] != 0:
+                av = int((last_round_weakest_armor[idx] + best_armor) / 2)
+            elif last_round_weakest_armor[idx] == 0 and last_round_strongest_armor[idx] == 0:
+                av = 0
+            else:
+                av = int((last_round_weakest_armor[idx]+last_round_strongest_armor[idx])/2)
+            percentage_above = 1.2
+            upper_limit = max(int(av*percentage_above),
+                              int(data_tree[cs.weapons].best_weapon()*(percentage_above-1)))
+            while len([serial_n for serial_n in range(av, upper_limit) if
+                       data_tree[x].search(serial_n)]) < 2 and upper_limit < best_armor:
+                percentage_above += .05
+                upper_limit = max(int(av * percentage_above), int(best_armor * (percentage_above - 1)))
+            return av, upper_limit
+
+        position_to_armor = dict()
+        weapon_lower, weapon_upper = _bounds(cs.weapons)
+        shield_lower, shield_upper = _bounds(cs.shields)
+        w_collect = [serial_n for serial_n in range(weapon_lower, weapon_upper) if
+                     data_tree[cs.weapons].search(serial_n)]
+        s_collect = [serial_n for serial_n in range(shield_lower, shield_upper) if
+                     data_tree[cs.shields].search(serial_n)]
+        for position in armor_positions:
+            is_weapon = random.choice([True, False])
+            serial_n = 0
+            if is_weapon:
+                n, cunk = random.choice(scaled_data), int(len(scaled_data) / len(w_collect))
+                for i in range(len(w_collect)):
+                    if n in scaled_data[i*cunk:(i+1)*cunk]:
+                        serial_n = w_collect[i]
+                        break
+            else:
+                n, cunk = random.choice(scaled_data), int(len(scaled_data) / len(s_collect))
+                for i in range(len(s_collect)):
+                    if n in scaled_data[i*cunk:(i+1)*cunk]:
+                        serial_n = s_collect[i]
+                        break
+
+            current_armor = data_tree[cs.weapons].search(serial_n) if is_weapon else \
+                data_tree[cs.shields].search(serial_n)
+            if not isinstance(current_armor, Weapon) and not isinstance(current_armor, Shield):
+                raise ValueError("Problem in the program.")
+            position_to_armor[position] = current_armor
+        return position_to_armor
 
     def create_boss(self, data_tree):
         """
@@ -214,3 +280,15 @@ class Assignments:
             raise ValueError("You tried to call a position that is not a Good Character position")
         else:
             del self._help_characters[position]
+
+    def get_armor(self, position):
+        if position not in self._armors.keys():
+            return False
+        else:
+            return self._armors[position]
+
+    def remove_armor(self, position):
+        if position not in self._armors.keys():
+            raise ValueError("You tried to call a position that is not an Armor position")
+        else:
+            del self._armors[position]
