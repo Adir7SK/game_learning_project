@@ -38,7 +38,7 @@ class Character(metaclass=ABCMeta):
 
     @alive.setter
     def alive(self, resurrect):
-        """Setter method to updates maximum life this character can have."""
+        """Setter method to updates whether character is alive."""
         if type(resurrect) == bool:
             self._alive = resurrect
             if resurrect:

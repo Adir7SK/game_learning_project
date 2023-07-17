@@ -144,11 +144,9 @@ class Move:
 
 """
 Tests:
-In Assigning_character:
-_initiate_help_character, get_helper_char, remove_helper_char
 
 Universe_Construction:
-That _initialize_field also creates good characters - also edit the if __main__ at the end
+Edit the if __main__ at the end
 
 Fight_Handle and this (Movable_Actions):
 Test everything because we have no test

@@ -21,7 +21,7 @@ s_p = [(2, 19), (46, 0)]
 
 @pytest.fixture
 def example_tree():
-    """Creating a shield data collection fixture which will be in the form of an AVL tree."""
+    """Creating an armor data collection fixture which will be in the form of a dictionary to an AVL tree."""
     shield_collection = ShieldCollection("Low Wooden Body Shield", 3, cs.wood_african_mahogany, 50, cs.broad + " " + cs.even, True, "Boom")
     shield_collection.insert_shield("Medium Wooden Hand Shield", 1, cs.wood_african_mahogany, 20, cs.slim + " " + cs.even, False, "Woosh")
     shield_collection.insert_shield("Good Metal Body Shield", 1, cs.iron, 70, cs.slim + " " + cs.even, True, "Baam")
@@ -50,6 +50,7 @@ def example_universe():
 
 @pytest.fixture
 def mock_universe():
+    """ This replaces (mocks) the methods boss_enemies_aid_help_charter_armor_position and field in Universe. """
     def temp1(x):
         return b_p, e_p, a_p, h_p, w_p+s_p
 
@@ -75,7 +76,7 @@ def mock_universe():
                           ])
 def test_correct_initiation(mock_universe, example_universe, example_tree,
                             last_round_weakest_armor, last_round_strongest_armor):
-    """Verifying all the types and broad details of the enemies and aids correctly created."""
+    """Verifying all the types and broad details of the enemies, aids, and boss correctly created."""
     a = Assignments(example_universe, 3, example_tree, last_round_weakest_armor=last_round_weakest_armor,
                     last_round_strongest_armor=last_round_strongest_armor)
     enemies_positions, aid_positions, helper_positions = e_p, a_p, h_p
@@ -177,7 +178,7 @@ def test_get_helper(mock_universe, example_universe, example_tree, exist, pos):
                           (False, [(2, True)]),
                           ])
 def test_get_aid(mock_universe, example_universe, example_tree, exist, pos):
-    """Verifying all the types and broad details of the enemies and aids correctly created."""
+    """Correct aid positions are found and incorrect positions are not."""
     a = Assignments(example_universe, 1, example_tree, last_round_weakest_armor=(0, 0),
                     last_round_strongest_armor=(0, 0))
     if exist:
@@ -193,7 +194,7 @@ def test_get_aid(mock_universe, example_universe, example_tree, exist, pos):
                           (False, [(2, True)]),
                           ])
 def test_get_armor(mock_universe, example_universe, example_tree, exist, pos):
-    """Verifying all the types and broad details of the enemies and aids correctly created."""
+    """Correct armor positions are found and incorrect positions are not."""
     a = Assignments(example_universe, 1, example_tree, last_round_weakest_armor=(0, 0),
                     last_round_strongest_armor=(3000, 3500))
     if exist:
@@ -210,7 +211,7 @@ def test_get_armor(mock_universe, example_universe, example_tree, exist, pos):
                           (False, [(7, True)]),
                           ])
 def test_remove_enemy(mock_universe, example_universe, example_tree, exist, pos):
-    """Verifying all the types and broad details of the enemies and aids correctly created."""
+    """Correct enemy positions are removed and incorrect positions raise ValueError."""
     a = Assignments(example_universe, 4, example_tree, last_round_weakest_armor=(0, 0),
                     last_round_strongest_armor=(3000, 3500))
     e_pos = [p for p in e_p if p not in pos]
@@ -234,7 +235,7 @@ def test_remove_enemy(mock_universe, example_universe, example_tree, exist, pos)
                           (False, [(7, True)]),
                           ])
 def test_remove_helper(mock_universe, example_universe, example_tree, exist, pos):
-    """Verifying all the types and broad details of the enemies and aids correctly created."""
+    """Correct helper character positions are removed and incorrect positions raise ValueError."""
     a = Assignments(example_universe, 4, example_tree, last_round_weakest_armor=(0, 0),
                     last_round_strongest_armor=(3000, 3500))
     h_pos = [p for p in h_p if p not in pos]
@@ -258,7 +259,7 @@ def test_remove_helper(mock_universe, example_universe, example_tree, exist, pos
                           (False, [(7, True)]),
                           ])
 def test_remove_aid(mock_universe, example_universe, example_tree, exist, pos):
-    """Verifying all the types and broad details of the aid and aids correctly created."""
+    """Correct aid positions are removed and incorrect positions raise ValueError."""
     a = Assignments(example_universe, 4, example_tree, last_round_weakest_armor=(2000, 1500),
                     last_round_strongest_armor=(2500, 3000))
     a_pos = [p for p in a_p if p not in pos]
@@ -283,7 +284,7 @@ def test_remove_aid(mock_universe, example_universe, example_tree, exist, pos):
                           (False, [(7, True)]),
                           ])
 def test_remove_armor(mock_universe, example_universe, example_tree, exist, pos):
-    """Verifying all the types and broad details of the aid and aids correctly created."""
+    """Correct armor positions are removed and incorrect positions raise ValueError."""
     a = Assignments(example_universe, 4, example_tree, last_round_weakest_armor=(2000, 1500),
                     last_round_strongest_armor=(2500, 3000))
     a_pos = [p for p in w_p+s_p if p not in pos]

@@ -1,3 +1,10 @@
+from src.Characters.Main_Character import MainCharacter
+from src.Characters.Good_Character import GoodCharacter
+from src.Characters.Regular_Enemies import Orc
+from src.Characters.Boss_Enemy import Boss
+from src.Characters.Bad_Character import BadCharacter
+
+
 class Fight:
 
     """
@@ -10,6 +17,15 @@ class Fight:
     """
 
     def __init__(self, main_character, enemy, print_sound=True, *additional_good_characters):
+        if not (isinstance(main_character, MainCharacter) and isinstance(enemy, (Orc, Boss, BadCharacter))):
+            raise AttributeError("In a fight the characters fighting must consist of main character and an enemy "
+                                 "that's either Orc or Boss.")
+        if len(additional_good_characters) and not all(isinstance(c, GoodCharacter) for c in additional_good_characters):
+            raise AttributeError("All helping characters must be from type GoodCharacter.")
+        if type(print_sound) != bool:
+            raise TypeError("Sound specification must be a boolean type.")
+        if not (main_character.alive and enemy.alive and all(c.alive for c in additional_good_characters)):
+            raise AttributeError("Some or all the input characters are not alive!")
         self.main_character = main_character
         self.enemy = enemy
         self.print_sound = print_sound

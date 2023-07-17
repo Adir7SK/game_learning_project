@@ -84,19 +84,21 @@ class Universe(Maze):
         potential_hc_positions = [(row, col) for row, row_vals in enumerate(maze) for col, cell_val in
                                   enumerate(row_vals) if cell_val == 3 and (row, col) not in aid_positions]
         helping_character_positions = []
-        for _ in range(random.choice(list(range(self.level)))):
-            location = random.choice(potential_hc_positions)
-            if location != (0, 0):
-                helping_character_positions.append(location)
+        if potential_hc_positions:
+            for _ in range(random.choice(list(range(self.level)))):
+                location = random.choice(potential_hc_positions)
+                if location != (0, 0):
+                    helping_character_positions.append(location)
         del potential_hc_positions
         potential_armor_positions = [(row, col) for row, row_vals in enumerate(maze) for col, cell_val in
                                       enumerate(row_vals) if cell_val == 3 and (row, col) not in aid_positions and
                                      (row, col) not in helping_character_positions]
         armor_positions = []
-        for _ in range(random.choice(list(range(self.level)))):
-            location = random.choice(potential_armor_positions)
-            if location != (0, 0):
-                armor_positions.append(location)
+        if potential_armor_positions:
+            for _ in range(random.choice(list(range(self.level)))):
+                location = random.choice(potential_armor_positions)
+                if location != (0, 0):
+                    armor_positions.append(location)
         del potential_armor_positions
         # From here we start replacing the numbers with the symbols of the game's different characters
         maze[boss_position[0]][boss_position[1]] = cs.boss
