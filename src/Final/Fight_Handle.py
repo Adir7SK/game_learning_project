@@ -38,11 +38,11 @@ class Fight:
         player_speed, player_strength, armor_efficiency = self.main_character.attack()
         enemy_speed, enemy_shield_strength = self.enemy.defend()
         if player_speed >= enemy_speed:
-            self.enemy.life = player_strength*armor_efficiency
+            self.enemy.life = float(player_strength*armor_efficiency)
             if self.print_sound:
                 print(self.main_character.weapon.sound())
         else:
-            self.enemy.life = max(1, enemy_shield_strength - player_strength * armor_efficiency)
+            self.enemy.life = float(max(1, enemy_shield_strength - player_strength * armor_efficiency))
             self.main_character.energy = (False, 1) # Indicating to decline the energy specifically for offence action
             # Currently, armor's efficiency doesn't decline every time it's used
             # self.players_character.armor_efficiency_update(0.99)
@@ -52,11 +52,11 @@ class Fight:
         for c in self.additional_good_characters:
             player_speed, player_strength, armor_efficiency = c.attack()
             if player_speed >= enemy_speed:
-                self.enemy.life = player_strength * armor_efficiency
+                self.enemy.life = float(player_strength * armor_efficiency)
                 if self.print_sound:
                     print(c.weapon.sound())
             else:
-                self.enemy.life = max(1, enemy_shield_strength - player_strength * armor_efficiency)
+                self.enemy.life = float(max(1, enemy_shield_strength - player_strength * armor_efficiency))
                 c.energy = (False, 1)
                 if self.print_sound:
                     print(c.weapon.sound())
@@ -74,11 +74,11 @@ class Fight:
         player_speed, player_strength, armor_efficiency = self.main_character.defend()
         enemy_speed, enemy_strength = self.enemy.attack()
         if player_speed < enemy_speed:
-            self.main_character.life = enemy_strength
+            self.main_character.life = float(enemy_strength)
             if self.print_sound:
                 print(self.enemy.weapon.sound())
         else:
-            self.main_character.life = max(1, player_strength * armor_efficiency - enemy_strength)
+            self.main_character.life = float(max(1, player_strength * armor_efficiency - enemy_strength))
             self.main_character.energy = (False, 0)  # Indicating to decline the energy specifically for defence action
             # Currently, armor's efficiency doesn't decline every time it's used
             # self.players_character.armor_efficiency_update(0.99)
@@ -89,11 +89,11 @@ class Fight:
         for c in self.additional_good_characters:
             player_speed, player_strength = c.defend()
             if player_speed < enemy_speed:
-                c.life = enemy_strength
+                c.life = float(enemy_strength)
                 if self.print_sound:
                     print(self.enemy.weapon.sound())
             else:
-                c.life = max(1, player_strength * armor_efficiency - enemy_strength)
+                c.life = float(max(1, player_strength * armor_efficiency - enemy_strength))
                 c.energy = (False, 0)
                 if self.print_sound:
                     print(self.enemy.weapon.sound())

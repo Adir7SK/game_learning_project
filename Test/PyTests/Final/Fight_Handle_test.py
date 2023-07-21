@@ -14,8 +14,8 @@ from src.Armor.Aid import Aid
 
 """
 Tests to do:
-1. Correct initialization.
-2. Incorrect initialization.
+1. Correct initialization.                          v
+2. Incorrect initialization.                        v
 3. Result after n times using player_is_hitting
 4. Result after n times using enemy_is_hitting
 5. Check fight_ongoing.
@@ -28,6 +28,7 @@ w_strength = global_weapon.strength()
 w_speed = global_weapon.speed()
 s_strength = global_shield.strength()
 s_speed = global_shield.speed()
+cond = w_speed >= s_speed
 
 
 @pytest.fixture
@@ -120,6 +121,47 @@ def test_incorrect_initiation(example_main_character, example_good_character, ex
         return
 
 
+@pytest.mark.parametrize("rep, n_helper, result",
+                         [(2, 2, max(0, 50-3*(w_strength if cond else w_strength-s_strength))),
+                          (1, 200, 0),
+                          (2, 0, max(0, 50-2*(w_strength if cond else w_strength-s_strength))),
+                          ])
+def test_player_is_hitting(example_main_character, example_good_character, example_bad_character, rep, n_helper, result):
+    h_charac_list = [example_good_character]*n_helper
+    f = Fight(example_main_character, example_bad_character, False, *h_charac_list)
+    for _ in range(rep):
+        result -= f.main_character.strength
+        f.player_is_hitting()
+    result = max(0, result)
+    assert f.main_character.life == 100
+    assert f.enemy.life == result
+    if f.enemy.life:
+        assert f.enemy.alive
+    else:
+        assert not f.enemy.alive
+
+
+@pytest.mark.parametrize("rep, n_helper, result",
+                         [(2, 2, max(0, 50-3*(w_strength if cond else w_strength-s_strength))),
+                          (1, 200, 0),
+                          (2, 0, max(0, 50-2*(w_strength if cond else w_strength-s_strength))),
+                          ])
+def test_enemy_is_hitting(example_main_character, example_good_character, example_bad_character, rep, n_helper, result):
+    h_charac_list = [example_good_character]*n_helper
+    f = Fight(example_main_character, example_bad_character, False, *h_charac_list)
+    for _ in range(rep):
+        result -= f.main_character.strength
+        f.player_is_hitting()
+    result = max(0, result)
+    assert f.main_character.life == 100
+    assert f.enemy.life == result
+    if f.enemy.life:
+        assert f.enemy.alive
+    else:
+        assert not f.enemy.alive
+
 """
+The last function is not done at all - also use update_players method, to give more life to the main character, so he'll
+survive after the other helper characters died. 
 We have to check that dead good characters (or any dead characters) do not continue to exist.
 """
