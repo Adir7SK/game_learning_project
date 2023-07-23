@@ -1,5 +1,6 @@
 from src.Characters.Good_Character import GoodCharacter
 import src.Common_general_functionalities.common_strings as cs
+from src.Common_general_functionalities import Flexible_Attributes as fa
 from src.Armor.Aid import Aid
 from src.Armor.Shield import Shield
 from src.Armor.Weapon import Weapon
@@ -45,8 +46,8 @@ class MainCharacter(GoodCharacter):
             super().__init__(life, False)
         else:
             super().__init__(life, False, *items)
-        self._strength = 5
-        self._speed = 5
+        self._strength = fa.main_character_start_strength
+        self._speed = fa.main_character_start_speed
 
     def recharge_life(self, recharge_pack):
         """This method gives the option to recharge a character's life, with the upper bound of maximum life."""

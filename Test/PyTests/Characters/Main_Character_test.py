@@ -5,6 +5,7 @@ from src.Armor.Shield import Shield
 from src.Armor.Aid import Aid
 from src.Characters.Main_Character import MainCharacter
 from src.Common_general_functionalities import common_strings as cs
+from src.Common_general_functionalities import Flexible_Attributes as fa
 
 
 """
@@ -509,7 +510,7 @@ def test_change_correctly_and_delete_speed(example_good_character, s_case, c):
             del example_good_character.speed
     elif s_case:
         example_good_character.speed = c
-        assert example_good_character.speed == c + 5
+        assert example_good_character.speed == c + fa.main_character_start_speed
     else:
         with pytest.raises(TypeError):
             example_good_character.speed = c

@@ -40,6 +40,11 @@ class Assignments:
                              "last_round_strongest_armor is from the wrong data type")
         self._enemies = self._initiate_enemies(enemies_positions, level, data_tree, last_round_weakest_armor,
                                                last_round_strongest_armor, field.field)
+        e_g = list(self._enemies)
+        id_eg = [id(i) for i in e_g]
+        if len(id_eg) != len(set(id_eg)):
+            self._enemies = [Orc(i.life, i.undercover, i.weapon, i.shield) for i in e_g]
+            del e_g, id_eg
         self._aids = self._initiate_aids(aid_positions, level)
         self.boss = self.create_boss(data_tree)
         self._help_characters = self._initiate_help_character(help_characters_position, level, data_tree,

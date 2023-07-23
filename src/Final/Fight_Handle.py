@@ -29,7 +29,12 @@ class Fight:
         self.main_character = main_character
         self.enemy = enemy
         self.print_sound = print_sound
-        self.additional_good_characters = list(additional_good_characters)
+        a_g = list(additional_good_characters)
+        id_ag = [id(i) for i in a_g]
+        if len(id_ag) != len(set(id_ag)):
+            a_g = [GoodCharacter(i.life, i.undercover, i.weapon, i.shield) for i in a_g]
+        self.additional_good_characters = a_g
+        del additional_good_characters, a_g, id_ag
 
     def player_is_hitting(self):
         if self.main_character.energy == 0:
@@ -78,7 +83,7 @@ class Fight:
             if self.print_sound:
                 print(self.enemy.weapon.sound())
         else:
-            self.main_character.life = float(max(1, player_strength * armor_efficiency - enemy_strength))
+            self.main_character.life = float(max(1, enemy_strength - player_strength))
             self.main_character.energy = (False, 0)  # Indicating to decline the energy specifically for defence action
             # Currently, armor's efficiency doesn't decline every time it's used
             # self.players_character.armor_efficiency_update(0.99)
@@ -87,13 +92,13 @@ class Fight:
                 print(self.main_character.shield.sound())
         additional_characters_left = []
         for c in self.additional_good_characters:
-            player_speed, player_strength = c.defend()
+            player_speed, player_strength, armor_efficiency = c.defend()
             if player_speed < enemy_speed:
                 c.life = float(enemy_strength)
                 if self.print_sound:
                     print(self.enemy.weapon.sound())
             else:
-                c.life = float(max(1, player_strength * armor_efficiency - enemy_strength))
+                c.life = float(max(1, enemy_strength - player_strength * armor_efficiency))
                 c.energy = (False, 0)
                 if self.print_sound:
                     print(self.enemy.weapon.sound())

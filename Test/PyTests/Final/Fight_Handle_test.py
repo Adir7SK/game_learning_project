@@ -1,7 +1,4 @@
 import pytest
-import random
-from unittest import mock
-from src.Intermediate.Universe_Construction import Universe
 from src.Final.Fight_Handle import Fight
 from src.Common_general_functionalities import common_strings as cs
 from src.Data_Loading.Data_Placement import DataFromLastSave
@@ -16,13 +13,14 @@ from src.Armor.Aid import Aid
 Tests to do:
 1. Correct initialization.                          v
 2. Incorrect initialization.                        v
-3. Result after n times using player_is_hitting
-4. Result after n times using enemy_is_hitting
-5. Check fight_ongoing.
-6. Check update_players.
+3. Result after n times using player_is_hitting     v
+4. Result after n times using enemy_is_hitting      v
+5. Check fight_ongoing.                             v
+6. Check update_players.                            v
+* The last 3 are all checked in the last test
 """
 global_weapon = (DataFromLastSave().get_armor_data())[cs.weapons].search(Weapon("Wep", 15, cs.inconel, 10, cs.broad + " " + cs.even, False, "Woooh").serial_number_int())
-global_shield = (DataFromLastSave().get_armor_data())[cs.shields].search(Shield("Wep", 15, cs.inconel, 10, cs.broad + " " + cs.even, False, "Woooh").serial_number_int())
+global_shield = (DataFromLastSave().get_armor_data())[cs.shields].search(Shield("Shi", 15, cs.wood_abaci, 10, cs.broad + " " + cs.not_even, False, "Woooh").serial_number_int())
 global_aid = Aid("Cure", cs.health, 3)
 w_strength = global_weapon.strength()
 w_speed = global_weapon.speed()
@@ -122,7 +120,8 @@ def test_incorrect_initiation(example_main_character, example_good_character, ex
 
 
 @pytest.mark.parametrize("rep, n_helper, result",
-                         [(2, 2, max(0, 50-3*(w_strength if cond else w_strength-s_strength))),
+                         [(2, 2, max(0, 50-6*(w_strength if cond else w_strength-s_strength))),
+                          (1, 2, max(0, 50-3*(w_strength if cond else w_strength-s_strength))),
                           (1, 200, 0),
                           (2, 0, max(0, 50-2*(w_strength if cond else w_strength-s_strength))),
                           ])
@@ -141,27 +140,45 @@ def test_player_is_hitting(example_main_character, example_good_character, examp
         assert not f.enemy.alive
 
 
-@pytest.mark.parametrize("rep, n_helper, result",
-                         [(2, 2, max(0, 50-3*(w_strength if cond else w_strength-s_strength))),
-                          (1, 200, 0),
-                          (2, 0, max(0, 50-2*(w_strength if cond else w_strength-s_strength))),
+@pytest.mark.parametrize("rep, n_helper, result_helper, result_main",
+                         [(2, 5, 100-2*(w_strength if cond else w_strength-s_strength), max(0, 500-2*(w_strength if cond else w_strength-s_strength))),
+                          (12, 20, 0, max(0, 500-12*(w_strength if cond else w_strength-s_strength))),
+                          (3, 0, 0, max(0, 500-3*(w_strength if cond else w_strength-s_strength))),
                           ])
-def test_enemy_is_hitting(example_main_character, example_good_character, example_bad_character, rep, n_helper, result):
+def test_enemy_is_hitting(example_main_character, example_good_character, example_bad_character, rep, n_helper,
+                          result_helper, result_main):
+    """
+    Here we test that update_player method works (in the first 2 assertions). Then testing that all the helper
+    characters and the main character has a life reduction in accordance with the enemy's hits (and at the end that
+    the enemy is not getting damaged by hitting). At the end, we also make sure that the number of additional
+    character's left after a fight is the number of alive characters (no dead character will be passed on).
+    """
     h_charac_list = [example_good_character]*n_helper
     f = Fight(example_main_character, example_bad_character, False, *h_charac_list)
+    m_c = example_main_character
+    m_c.full_life = 500
+    m_c.recharge_life(10_000)
+    f.update_players(m_c)
+    assert f.main_character.full_life == 500
+    assert f.main_character.life == 500
     for _ in range(rep):
-        result -= f.main_character.strength
-        f.player_is_hitting()
-    result = max(0, result)
-    assert f.main_character.life == 100
-    assert f.enemy.life == result
-    if f.enemy.life:
-        assert f.enemy.alive
+        f.enemy_is_hitting()
+    assert f.enemy.life == 50
+    for h in f.additional_good_characters:
+        if h.alive:
+            assert abs(h.life - result_helper) < 0.0001
+        else:
+            assert h.life == 0
+    if f.main_character.alive:
+        assert abs(f.main_character.life - result_main) < 0.0001
+        assert f.fight_ongoing()
     else:
-        assert not f.enemy.alive
-
-"""
-The last function is not done at all - also use update_players method, to give more life to the main character, so he'll
-survive after the other helper characters died. 
-We have to check that dead good characters (or any dead characters) do not continue to exist.
-"""
+        assert f.main_character.life == 0
+        assert not f.fight_ongoing()
+    assert f.enemy.alive and f.enemy.life == 50
+    if result_helper:
+        assert len(f.additional_good_characters) == n_helper
+        for i in range(n_helper):
+            assert f.additional_good_characters[i].alive
+    else:
+        assert not f.additional_good_characters
