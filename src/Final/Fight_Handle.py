@@ -1,3 +1,7 @@
+import time
+import threading
+import src.Common_general_functionalities.common_strings as cs
+from src.Common_general_functionalities import Flexible_Attributes as fa
 from src.Characters.Main_Character import MainCharacter
 from src.Characters.Good_Character import GoodCharacter
 from src.Characters.Regular_Enemies import Orc
@@ -37,6 +41,10 @@ class Fight:
         del additional_good_characters, a_g, id_ag
 
     def player_is_hitting(self):
+        """
+        Updates the enemy's life after the main character and all the additional helper characters hit it.
+        For each character that hits the enemy, there is a check whether the hit
+        """
         if self.main_character.energy == 0:
             print("The character has no energy to attack or defend.")
             return
@@ -83,13 +91,19 @@ class Fight:
             if self.print_sound:
                 print(self.enemy.weapon.sound())
         else:
-            self.main_character.life = float(max(1, enemy_strength - player_strength))
-            self.main_character.energy = (False, 0)  # Indicating to decline the energy specifically for defence action
-            # Currently, armor's efficiency doesn't decline every time it's used
-            # self.players_character.armor_efficiency_update(0.99)
-            if self.print_sound:
-                print(self.enemy.weapon.sound())
-                print(self.main_character.shield.sound())
+            defended = self.countdown(int((player_speed-enemy_speed)*fa.speed_factor)+1)
+            if defended:
+                self.main_character.life = float(max(1, enemy_strength - player_strength))
+                self.main_character.energy = (False, 0)  # Indicating to decline the energy specifically for defence action
+                # Currently, armor's efficiency doesn't decline every time it's used
+                # self.players_character.armor_efficiency_update(0.99)
+                if self.print_sound:
+                    print(self.enemy.weapon.sound())
+                    print(self.main_character.shield.sound())
+            else:
+                self.main_character.life = float(enemy_strength)
+                if self.print_sound:
+                    print(self.enemy.weapon.sound())
         additional_characters_left = []
         for c in self.additional_good_characters:
             player_speed, player_strength, armor_efficiency = c.defend()
@@ -124,6 +138,27 @@ class Fight:
             return False
 
     def update_players(self, main_char):
+        """
+        In specific actions we need to change the main character that's fighting, and this method is built to do so.
+        """
         self.main_character = main_char
         # self.additional_good_characters = list(help_char) THIS MEANS THAT CURRENTLY THERE'S NO OPTION TO USE THE AIDS
         #                                                   ON THE HELPING CHARACTERS
+
+    @staticmethod
+    def countdown(t):
+        fail = False
+
+        def time_expired():
+            fail = True
+
+        time = threading.Timer(t, time_expired)
+        time.start()
+        prompt = input("You have {} seconds to defend from enemy's attack.\n".format(str(t))).upper()
+
+        if prompt in cs.defend_actions and not fail:
+            time.cancel()
+            return True
+        else:
+            print("Missed your chance to defend. Please press enter to continue.")
+            return False

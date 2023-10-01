@@ -57,7 +57,8 @@ class MainCharacter(GoodCharacter):
             self._life = min(self._full_life, self._life + recharge_pack)
 
     def add_item(self, item):
-        """This gives the possibility for a character to have more items in their bag. Note that it's impossible to add another item with the same serial number as an item that is already in the items bag"""
+        """This gives the possibility for a character to have more items in their bag. Note that it's impossible to add
+        another item with the same serial number as an item that is already in the items bag"""
         if not (isinstance(item, Aid) or isinstance(item, Weapon) or isinstance(item, Shield)):
             raise TypeError("You can only add Aid type items.")
         if item.serial_number() in self.aids.keys():
@@ -138,6 +139,7 @@ class MainCharacter(GoodCharacter):
         This method activates the aid for the benefit of the player.
         """
         if aid_serial not in self.aids.keys():
+            print("The serial number you typed points to an aid you currently don't have in your item collection.")
             return
         aid = self.aids[aid_serial]
         if aid_serial.startswith('Aid'):

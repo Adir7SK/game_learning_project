@@ -124,7 +124,7 @@ class Universe(Maze):
 
     @property
     def energy_spent_per_step(self):
-        return self._planet.gravity / 10
+        return self._planet.gravity() / 10
 
     @energy_spent_per_step.setter
     def energy_spent_per_step(self, val):
@@ -166,7 +166,7 @@ class Universe(Maze):
             return positions
 
         possible_moves = [(1, 0), (-1, 0), (0, 1), (0, -1)]
-        adjusted_legal_position_checker = legal_position(self._field)
+        adjusted_legal_position_checker = legal_position(self.field)
         legal_moves = []
         for pm in possible_moves:
             potential_allowed_position = tuple(map(operator.add, self.main_character_position, pm))

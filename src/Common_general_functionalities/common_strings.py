@@ -66,9 +66,19 @@ amount_of_possible_levels = 5
 # Control commands - IF GETTING NEW COMMANDS YOU MUST CHECK THAT SUCH COMMEND DOESN'T ALREADY EXISTS FOR A DIFFERENT ACTION
 one_step = ["GO ", "MOVE ", "STEP "]
 multi_step = ["G", "M", "S"]
-directions = [["NORTH", "UP"], ["SOUTH", "DOWN"], ["EAST", "RIGHT"], ["WEST", "LEFT"]]
+directions = [["NORTH", "UP", "N", "U"], ["SOUTH", "DOWN", "S", "D"], ["EAST", "RIGHT", "E", "R"],
+              ["WEST", "LEFT", "W", "L"]]
+n_loc = [i for i, d in enumerate(directions) if "NORTH" in d][0]
+s_loc = [i for i, d in enumerate(directions) if "SOUTH" in d][0]
+e_loc = [i for i, d in enumerate(directions) if "EAST" in d][0]
+w_loc = [i for i, d in enumerate(directions) if "WEST" in d][0]
+direction_to_numerics = {tuple(directions[n_loc]): (-1, 0), tuple(directions[s_loc]): (1, 0), tuple(directions[e_loc]): (0, 1),
+                         tuple(directions[w_loc]): (0, -1)}
+dir_map = {i: directions[j] for j in range(len(directions)) for i in directions[j]}
+direction_map = lambda x: direction_to_numerics[tuple(dir_map[x])]
 use_aid = ["USE ", "UTILIZE "]
-fight_actions = ["ATTACK", "A", "DEFEND", "D"]
+attack_actions = ["ATTACK", "A"]
+defend_actions = ["BLOCK", "DEFEND", "D"]
 info = ["INFO ", "INFORMATION ", "TELL ME ABOUT ", "TELL ME ABOUT MY "]
 character = "CHARACTER"
 me = "ME"
@@ -80,3 +90,8 @@ specific_info = [character, me, helper, weapon, shield, aids, short_info]
 # Data tree
 weapons = "WEAPONS"
 shields = "SHIELDS"
+
+# Command type
+stepping = "STEPPING"
+using_aid = "USE_AID"
+get_information = "GET_INFORMATION"
