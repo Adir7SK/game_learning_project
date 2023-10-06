@@ -1,7 +1,6 @@
 import random
 import pytest
 from unittest import mock
-from src.Final.Fight_Handle import Fight
 from src.Armor.Shield_Collection import ShieldCollection
 from src.Armor.Weapon_Collection import WeaponCollection
 from src.Common_general_functionalities import common_strings as cs
@@ -110,6 +109,8 @@ def mock_universe():
 
     @property
     def temp2(x):
+        if x._field:
+            return x._field
         f = [[cs.no_path for _ in range(20)] for _ in range(50)]
         for p in v_p:
             f[p[0]][p[1]] = cs.path
@@ -120,7 +121,8 @@ def mock_universe():
         for p in h_p:
             f[p[0]][p[1]] = random.choice([cs.helper_character, cs.unknown])
         f[0][0] = cs.main_character
-        return f
+        x._field = f
+        return x._field
 
     def temp3(s, x):
         if x not in [(1, 0), (0, 1), (-1, 0), (0, -1)]:
@@ -148,11 +150,44 @@ def mock_universe():
             f[main_pos[0]][main_pos[1]] = cs.path
             f[main_pos[0] + x[0]][main_pos[1] + x[1]] = cs.fight
         s._field = f
+        s.main_character_position = \
+        [(i, j) for i, row in enumerate(f) for j, cell in enumerate(row) if cell in [cs.main_character, cs.fight]][0]
         return
 
     with mock.patch.multiple('src.Intermediate.Universe_Construction.Universe',
                              boss_enemies_aid_help_charter_armor_position=temp1, field=temp2, update_field=temp3) \
             as mocks:
+        yield mocks
+
+
+@pytest.fixture
+def mock_player():
+    """ This replaces (mocks) the methods that print info in MainCharacter """
+    def temp1(x):
+        print("Character")
+
+    def temp2(x):
+        print("Weapon")
+
+    def temp3(x):
+        print("Shield")
+
+    def temp4(x):
+        print("Armor")
+
+    with mock.patch.multiple('src.Characters.Main_Character.MainCharacter',
+                             character_info=temp1, weapon_info=temp2, shield_info=temp3, short_armor_info=temp4) \
+            as mocks:
+        yield mocks
+
+
+@pytest.fixture
+def mock_fight():
+    """ This replaces (mocks) the method _fight_update in Movable_Actions """
+    def temp1(x):
+        return True
+
+    with mock.patch.multiple('src.Final.Movable_Actions.Move', _fight_update=temp1) as mocks:
         yield mocks
 
 
@@ -206,11 +241,12 @@ def test_wrong_initialization(mock_universe, example_universe, example_main_char
                          [(cs.multi_step[0], cs.directions[1][0], str(5)),
                           (cs.one_step[0], cs.directions[2][0], str(1)),
                           (cs.multi_step[1], cs.directions[2][1], str(5)),
+                          (cs.multi_step[1], cs.directions[2][1], str(18)),
                           (cs.one_step[1], cs.directions[1][1], str(1)),
                           (cs.multi_step[1], cs.directions[0][1], str(5)),
                           (cs.one_step[1], cs.directions[3][1], str(1)),
                           ])
-def test_correct_step(mock_universe, example_universe, example_main_character, example_tree, s, d, mag):
+def test_correct_step(mock_universe, mock_fight, example_universe, example_main_character, example_tree, s, d, mag):
     m = Move(example_universe, example_main_character, 2, example_tree, prev_weak_arm=(400, 400),
              prev_strong_arm=(600, 600))
     if s in cs.multi_step:
@@ -223,9 +259,60 @@ def test_correct_step(mock_universe, example_universe, example_main_character, e
         for row in m.field._field:
             assert cs.main_character not in row
     elif d in cs.directions[1]:
+        mag = mag if int(mag) < 7 else str(6)
         assert m.field._field[int(mag)][0] == cs.main_character
+        for i, row in enumerate(m.field._field):
+            assert cs.fight not in row
+            if i != int(mag):
+                assert cs.main_character not in row
     else:
         assert m.field._field[0][0] == cs.main_character
         for row in m.field._field[1:]:
             assert cs.main_character not in row
             assert cs.fight not in row
+
+
+@pytest.mark.parametrize("command", ["Hello", "Move", 5, "Move5", "g5 hi"])
+def test_wrong_step_command(capsys, mock_universe, example_universe, example_main_character, example_tree, command):
+    m = Move(example_universe, example_main_character, 2, example_tree, prev_weak_arm=(400, 400),
+             prev_strong_arm=(600, 600))
+    m.step(command)
+    captured = capsys.readouterr()
+    assert captured.out == "Invalid command. Please type again.\n"
+
+
+@pytest.mark.parametrize("command", [cs.character, cs.me, cs.weapon, cs.shield, cs.short_info])
+def test_get_info(capsys, mock_universe, mock_player, example_universe, example_main_character, example_tree, command):
+    m = Move(example_universe, example_main_character, 2, example_tree, prev_weak_arm=(400, 400),
+             prev_strong_arm=(600, 600))
+    m._print_requested_info(command)
+    captured = capsys.readouterr()
+    res_dict = {cs.character: "Character\n", cs.me: "Character\n", cs.weapon: "Weapon\n", cs.shield: "Shield\n",
+                cs.short_info: "Armor\n"}
+    assert captured.out == res_dict[command]
+
+
+@pytest.mark.parametrize("win", [True, False])
+def test_step_into_fight_and_win_or_lose_with_correct_inputs(monkeypatch, capsys, mock_universe, example_universe, example_main_character, example_tree, win):
+
+    monkeypatch.setattr('builtins.input', lambda _: cs.attack_actions[0])
+    if win:
+        m = Move(example_universe, example_main_character, 2, example_tree, prev_weak_arm=(400, 400),
+                 prev_strong_arm=(600, 600))
+        m.step(cs.one_step[0] + cs.directions[2][0])
+        captured = capsys.readouterr()
+        captured = captured.out.split('\n')[:-1]
+        assert captured[0] == 'You are starting a FIGHT!'
+        assert captured[-3] == 'Enemy has 0 life left!'
+        assert captured[-2] == 'Enemy is defeated!'
+        assert captured[-1] == 'You won the fight!'
+    else:
+        m = Move(example_universe, MainCharacter(2, global_weapon, global_shield), 2, example_tree, prev_weak_arm=(400, 400),
+                 prev_strong_arm=(600, 600))
+        m.step(cs.one_step[0] + cs.directions[2][0])
+        captured = capsys.readouterr()
+        captured = captured.out.split('\n')[:-1]
+        assert captured[0] == 'You are starting a FIGHT!'
+        assert captured[-3] == 'You are defeated!'
+        assert captured[-2] == 'GAME OVER!'
+        assert captured[-1] == 'You lost the fight :( Game Over!'

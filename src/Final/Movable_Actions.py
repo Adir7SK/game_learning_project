@@ -15,7 +15,7 @@ class Move:
     fight results.
     """
 
-    def __init__(self, field, player, level, data_tree, prev_weak_arm=(0, 0), prev_strong_arm=(0, 0)):
+    def __init__(self, field, player, level, data_tree, prev_weak_arm=(0, 0), prev_strong_arm=(0, 0), print_fight_sounds=False):
         if type(level) != int or level < 1:
             raise TypeError("Level must be a positive integer!")
         if not isinstance(field, Universe) or not isinstance(player, GoodCharacter) or not isinstance(data_tree, dict):
@@ -32,10 +32,13 @@ class Move:
                                    last_round_strongest_armor=prev_strong_arm)
         self.player = player
         self.extra_helper_characters = []
+        self._print_fight_sounds = print_fight_sounds if type(print_fight_sounds) == bool else False
 
     def step(self, move_s):
         game_continues = True
         command_result = self._translate_commands(move_s)
+        if command_result is None:
+            return game_continues
         if command_result[0] == cs.use_aid:
             self.player.use_aid(command_result[1])
         elif command_result[0] == cs.get_information:
@@ -71,9 +74,9 @@ class Move:
         if in_fight:
             print("You are starting a FIGHT!")
             if self.mapping.get_enemy(in_fight):
-                fight = Fight(self.player, self.mapping.get_enemy(in_fight), self.extra_helper_characters)
+                fight = Fight(self.player, self.mapping.get_enemy(in_fight), print_sound=self._print_fight_sounds, *self.extra_helper_characters)
             else:
-                fight = Fight(self.player, self.mapping.boss, self.extra_helper_characters)
+                fight = Fight(self.player, self.mapping.boss, print_sound=self._print_fight_sounds, *self.extra_helper_characters)
             while fight.fight_ongoing():
                 """
                 Here it should be clearly expressed the fight scene. At the moment it is very dumb.
@@ -89,7 +92,8 @@ class Move:
                     self._print_requested_info(action)
                 elif type_move == cs.offence:
                     fight.player_is_hitting()
-                fight.enemy_is_hitting()
+                if fight.enemy.alive:
+                    fight.enemy_is_hitting()
 
             if fight.main_character.alive and not fight.enemy.alive:
                 self.mapping.remove_enemy(self.field.main_character_position)
@@ -110,8 +114,11 @@ class Move:
         Converts the input string the player/user types to the information we need. For example it'll check whether
         they've requested to get some information or use some aid. Another example is whether they
         """
+        if type(command) != str:
+            print("Invalid command. Please type again.")
+            return None
+        move_string = command.upper()
         if not in_fight:
-            move_string = command.upper()
             if any(move_string.startswith(s) for s in cs.use_aid):
                 return cs.use_aid, move_string.split()[-1]
             elif any(move_string.startswith(s) for s in cs.info):
@@ -134,8 +141,7 @@ class Move:
             direction = cs.direction_map(move_string.split()[-1])   # The input might need to be changed to tuple type
             return cs.stepping, rep, direction
         elif in_fight:
-            move_string = command.upper()
-            if list(move_string.startswith(s) for s in cs.use_aid):
+            if any(move_string.startswith(s) for s in cs.use_aid):
                 return cs.use_aid, move_string.split()[-1]
             elif any(move_string.startswith(s) for s in cs.info):
                 if move_string.split()[-1] in cs.specific_info:
@@ -145,7 +151,7 @@ class Move:
                     return None
             elif move_string in cs.attack_actions:
                 return cs.offence, cs.attack_actions[0]
-                # Defence commands are taken care of in Fight_Handle in countdown method
+                # Defence commands are taken care of in Fight_Handle with countdown method
 
     def _print_requested_info(self, request):
         if request == cs.character or request == cs.me:
