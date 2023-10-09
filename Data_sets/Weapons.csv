@@ -1,9 +1,42 @@
-Name,Weight,Material,Density,Shape,Efficient,Sound,,,,,,Name,Weapon's name - String
-Heavy Abaci Gun,5,Wood Abaci,20,Broad Even,TRUE,Klook,,,,,,Weight,Weapon's weight - float
-Iron Gun,1,Iron,70,Slim Even,TRUE,Bam,,,,,,Density,Weapon's density - float
-Inconel Heavy Sword,15,Inconel,10,Broad Even,FALSE,Woooh,,,,,,Shape,Weapon's shape - String
-Iron Light Sword,0.15,Iron,50,Slim Even,FALSE,Shiing,,,,,,Efficient,is it a modern weapon - Boolean
-Titanium Gun,0.5,Titanium,99.9,Slim Short,FALSE,Shiii,,,,,,Sound,Weapon's sound when it hits - String
-Ebony Heavy Sword,25,Wood Ebony,1,Medium-length Even,FALSE,Wooh,,,,,,Serial Number,Weapon's unique serial number - String
-Titanium Light Gun,0.1,Titanium,1,Broad Even,TRUE,Baam,,,,,,Strngth,Weapon's strength - float
-Inconel Heavy Gun,30,Inconel,33,Broad Long,TRUE,Baam,,,,,,Speed,Weapon's speed - float
+,Name,Weight,Material,Density,Shape,Efficient,Sound
+0,Weapon0e,3.0100000000000002,Wood Abaci,0.92,Broad Short,True,Sound0
+1,Weapon2e,4.29,Wood Abaci,0.86,Slim Broad,True,Sound2
+2,Weapon1e,0.08,Wood Abaci,0.17,Medium-broad Slim,True,Sound1
+3,Weapon53e,0.03,Wood Hickory,0.64,Short Long,True,Sound53
+4,Weapon74e,0.21,Inconel,0.84,Slim Long,True,Sound74
+5,Weapon102e,0.47000000000000003,Steel,0.98,Even Broad,True,Sound102
+6,Weapon95e,0.1,Titanium,0.66,Not-Even Slim,True,Sound95
+7,Weapon24e,0.02,Wood Chesnut,0.81,Broad Not-Even,True,Sound24
+8,Weapon40e,0.43,Wood Ebony,0.68,Broad Even,True,Sound40
+9,Weapon30e,0.27,Wood Chesnut,0.45,Even Slim,True,Sound30
+10,Weapon3e,0.92,Wood Abaci,0.13,Long Short,True,Sound3
+11,Weapon34e,0.91,Wood Cumaru,0.56,Slim Medium-length,True,Sound34
+12,Weapon71e,0.46,Iron,0.78,Not-Even Medium-length,True,Sound71
+13,Weapon78e,4.54,Inconel,0.99,Even Not-Even,True,Sound78
+14,Weapon14e,4.97,Wood African Mahogany,0.02,Even Short,True,Sound14
+15,Weapon103e,0.63,Steel,0.4,Not-Even Medium-length,True,Sound103
+16,Weapon39e,0.8300000000000001,Wood Cumaru,0.98,Not-Even Medium-broad,True,Sound39
+17,Weapon19e,4.05,Wood Apple,0.43,Long Broad,True,Sound19
+18,Weapon18e,4.0600000000000005,Wood Apple,0.17,Slim Medium-broad,True,Sound18
+19,Weapon16e,4.47,Wood Apple,0.04,Broad Medium-length,True,Sound16
+20,Weapon75e,3.68,Inconel,0.64,Long Even,True,Sound75
+21,Weapon21e,1.7,Wood Apple,0.39,Short Long,True,Sound21
+22,Weapon72e,4.16,Inconel,0.61,Broad Medium-length,True,Sound72
+23,Weapon8e,3.97,Wood African Mahogany,0.37,Broad Not-Even,True,Sound8
+24,Weapon93e,1.75,Titanium,0.9400000000000001,Short Long,True,Sound93
+25,Weapon33e,2.22,Wood Cumaru,0.32,Medium-broad Slim,True,Sound33
+26,Weapon49e,3.69,Wood Hickory,0.14,Medium-broad Not-Even,True,Sound49
+27,Weapon11e,3.1,Wood African Mahogany,0.08,Long Broad,True,Sound11
+28,Weapon66e,2.89,Iron,0.08,Slim Not-Even,True,Sound66
+29,Weapon6e,2.47,Wood Abaci,0.92,Even Medium-broad,True,Sound6
+30,Weapon90e,2.52,Titanium,0.6,Slim Medium-length,True,Sound90
+31,Weapon10e,1.8800000000000001,Wood African Mahogany,0.63,Slim Long,True,Sound10
+32,Weapon87e,2.66,Tungsten,0.84,Not-Even Broad,True,Sound87
+33,Weapon12e,2.25,Wood African Mahogany,0.8,Medium-length Even,True,Sound12
+34,Weapon73e,2.7,Inconel,0.05,Medium-broad Not-Even,True,Sound73
+35,Weapon15e,2.1,Wood African Mahogany,0.81,Not-Even Broad,True,Sound15
+36,Weapon32e,2.15,Wood Cumaru,0.61,Broad Not-Even,True,Sound32
+37,Weapon36e,1.97,Wood Cumaru,0.79,Medium-length Short,True,Sound36
+38,Weapon53,0.03,Wood Hickory,0.64,Short Long,False,Sound53
+39,Weapon30,0.27,Wood Chesnut,0.45,Even Slim,False,Sound30
+40,Hand,1.0,Wood Abaci,1.0,Medium-broad Medium-length,False,hhwee

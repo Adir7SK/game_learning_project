@@ -4,7 +4,7 @@ from unittest import mock
 from src.Armor.Shield_Collection import ShieldCollection
 from src.Armor.Weapon_Collection import WeaponCollection
 from src.Common_general_functionalities import common_strings as cs
-from src.Data_Loading.Data_Placement import DataFromLastSave
+from src.Data_Loading.Data_Placement import GameDetailsData
 from src.Characters.Good_Character import GoodCharacter
 from src.Characters.Main_Character import MainCharacter
 from src.Characters.Bad_Character import BadCharacter
@@ -27,14 +27,9 @@ Test: correct and incorrect = c/i
                     fight_ongoing
         * Fake inputs: main_character, good_character, Orc, field
 """
-global_weapon = (DataFromLastSave().get_armor_data())[cs.weapons].search(Weapon("Wep", 15, cs.inconel, 10, cs.broad + " " + cs.even, False, "Woooh").serial_number_int())
-global_shield = (DataFromLastSave().get_armor_data())[cs.shields].search(Shield("Shi", 15, cs.wood_abaci, 10, cs.broad + " " + cs.not_even, False, "Woooh").serial_number_int())
+global_weapon = Weapon("Wep", 15, cs.inconel, 10, cs.broad + " " + cs.even, False, "Woooh")
+global_shield = Shield("Shi", 15, cs.wood_abaci, 10, cs.broad + " " + cs.not_even, False, "Woooh")
 global_aid = Aid("Cure", cs.health, 3)
-w_strength = global_weapon.strength()
-w_speed = global_weapon.speed()
-s_strength = global_shield.strength()
-s_speed = global_shield.speed()
-cond = w_speed >= s_speed
 
 
 @pytest.fixture

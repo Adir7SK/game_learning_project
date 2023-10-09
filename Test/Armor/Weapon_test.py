@@ -353,4 +353,4 @@ class WeaponTest(unittest.TestCase):
 
     def test_energy(self, armor=wooden_sword):
         """Validating that we get the pre-defined energy."""
-        self.assertEqual(armor.energy(), 100)
+        self.assertEqual(armor.energy, 100)

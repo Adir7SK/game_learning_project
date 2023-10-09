@@ -1,6 +1,6 @@
 import random
 
-from src.Data_Loading.Data_Placement import DataFromLastSave
+from src.Data_Loading.Data_Placement import GameDetailsData
 from src.Data_Loading.Last_Save import LastSave
 
 from src.Characters.Main_Character import MainCharacter
@@ -11,7 +11,7 @@ from src.Final.Movable_Actions import Move
 
 
 if __name__ == "__main__":
-    general_data = DataFromLastSave().get_armor_data('Shields_Copy.csv', 'Weapons_Copy.csv')
+    general_data = GameDetailsData().get_armor_data('Shields_Copy.csv', 'Weapons_Copy.csv')
     save_level, weapon_id, shield_id, save_life = LastSave().load()
     save_level = int(save_level)
     weapon_id = int(weapon_id)

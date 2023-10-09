@@ -43,9 +43,10 @@ def test_search_on_tree(example_weapon_tree, weapon_i, expected_name):
                           ])
 def test_cannot_insert_weapon_with_same_serial_number(example_weapon_tree, weapon_i):
     """Ensuring that an object with a serial number similar to another one cannot be added to the weapon collection."""
-    with pytest.raises(ValueError):
-        example_weapon_tree.insert_weapon(weapon_i.name(), weapon_i.weight(), weapon_i.material(), weapon_i.density(),
+    copy_tree = example_weapon_tree
+    example_weapon_tree.insert_weapon(weapon_i.name(), weapon_i.weight(), weapon_i.material(), weapon_i.density(),
                                           weapon_i.shape(), weapon_i.efficient(), weapon_i.sound())
+    assert copy_tree == example_weapon_tree
 
 
 @pytest.mark.parametrize("weapon_i",

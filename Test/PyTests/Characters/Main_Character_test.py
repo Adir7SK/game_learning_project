@@ -1,5 +1,5 @@
 import pytest
-from src.Data_Loading.Data_Placement import DataFromLastSave
+from src.Data_Loading.Data_Placement import GameDetailsData
 from src.Armor.Weapon import Weapon
 from src.Armor.Shield import Shield
 from src.Armor.Aid import Aid
@@ -18,8 +18,8 @@ Here we shall test the following:
     6. Validating getter and setter for energy                              v
     7. Validating renew-energy                                              v
 """
-global_weapon = (DataFromLastSave().get_armor_data())[cs.weapons].search(Weapon("Wep", 15, cs.inconel, 10, cs.broad + " " + cs.even, False, "Woooh").serial_number_int())  # noqa
-global_shield = (DataFromLastSave().get_armor_data())[cs.shields].search(Shield("Wep", 15, cs.inconel, 10, cs.broad + " " + cs.even, False, "Woooh").serial_number_int())  # noqa
+global_weapon = GameDetailsData().load_weapons().weapon_collection.right.obj
+global_shield = GameDetailsData().load_shields().shield_collection.right.obj
 global_aid = Aid("Cure", cs.health, 3)
 
 
@@ -117,8 +117,8 @@ def test_undercover(example_good_character, setget, value):
 
 
 @pytest.mark.parametrize("setget, correct, relevant_object",
-                         [(True, True, Weapon("Wooden Gun", 5, cs.wood_abaci, 20, cs.broad + " " + cs.even, True, "Klook")),
-                          (True, True, global_weapon),
+                         [(True, True, GameDetailsData().load_weapons().weapon_collection.left.obj),
+                          (True, True, GameDetailsData().load_weapons().weapon_collection.obj),
                           (True, False, Weapon("Low Wooden Gun", 3, cs.wood_african_mahogany, 50, cs.broad + " " + cs.even, True, "Boom")),
                           (True, False, wrong_object),
                           (True, False, global_shield),
@@ -167,14 +167,14 @@ def test_weapon_not_changing_in_tree(example_good_character, tree, damage, repet
         example_good_character.weapon.armor_efficiency_update(damage)
     if tree:
         ser = example_good_character.weapon.serial_number_int()
-        assert ((DataFromLastSave().get_armor_data())[cs.weapons].search(ser)).armor_efficiency() == expected
+        assert ((GameDetailsData().get_armor_data())[cs.weapons].search(ser)).armor_efficiency() == expected
     else:
         assert round(example_good_character.weapon.armor_efficiency(), 8) == expected
 
 
 @pytest.mark.parametrize("setget, correct, relevant_object",
-                         [(True, True, Shield("Wooden Body Shield", 5, cs.wood_abaci, 20, cs.broad + " " + cs.even, True, "Klook")),
-                          (True, True, global_shield),
+                         [(True, True, GameDetailsData().load_shields().shield_collection.left.obj),
+                          (True, True, GameDetailsData().load_shields().shield_collection.obj),
                           (True, False, Shield("Low Wooden Body Shield", 3, cs.wood_african_mahogany, 50, cs.broad + " " + cs.even, True, "Boom")),
                           (True, False, wrong_object),
                           (True, False, global_weapon),
@@ -223,7 +223,7 @@ def test_shield_not_changing_in_tree(example_good_character, tree, damage, repet
         example_good_character.shield.armor_efficiency_update(damage)
     if tree:
         ser = example_good_character.shield.serial_number_int()
-        assert ((DataFromLastSave().get_armor_data())[cs.weapons].search(ser)).armor_efficiency() == expected
+        assert ((GameDetailsData().get_armor_data())[cs.weapons].search(ser)).armor_efficiency() == expected
     else:
         assert round(example_good_character.shield.armor_efficiency(), 8) == expected
 
@@ -231,8 +231,8 @@ def test_shield_not_changing_in_tree(example_good_character, tree, damage, repet
 @pytest.mark.parametrize("step, repetitions, value, expected",
                          [(True, 4, 10, 92),
                           (True, 80, 5.5, 12.0),
-                          (False, 3, 0, 55),
-                          (False, 5, 1, 25),
+                          (False, 3, 0, 98.77),
+                          (False, 5, 1, 99.6),
                           ])
 def test_energy_after_action(example_good_character, step, repetitions, value, expected):
     """

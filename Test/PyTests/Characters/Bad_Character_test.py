@@ -1,4 +1,5 @@
 import pytest
+from src.Data_Loading.Data_Placement import GameDetailsData
 from src.Armor.Weapon import Weapon
 from src.Armor.Shield import Shield
 from src.Armor.Aid import Aid
@@ -13,8 +14,8 @@ Here we shall test the following:
     3. Is undercover getter and setter works                                v
     4. Validating getter and setter for weapon and shield                   v
 """
-global_weapon = Weapon("Wep", 15, cs.inconel, 10, cs.broad + " " + cs.even, False, "Woooh")
-global_shield = Shield("Shi", 15, cs.inconel, 10, cs.broad + " " + cs.even, False, "Woooh")
+global_weapon = GameDetailsData().load_weapons().weapon_collection.right.obj
+global_shield = GameDetailsData().load_shields().shield_collection.right.obj
 global_aid = Aid("Cure", cs.health, 3)
 
 
@@ -99,8 +100,8 @@ def test_undercover(example_bad_character, setget, value):
 
 
 @pytest.mark.parametrize("setget, correct, relevant_object",
-                         [(True, True, Weapon("Wooden Gun", 5, cs.wood_abaci, 20, cs.broad + " " + cs.even, True, "Klook")),
-                          (True, True, global_weapon),
+                         [(True, True, GameDetailsData().load_weapons().weapon_collection.left.obj),
+                          (True, True, GameDetailsData().load_weapons().weapon_collection.obj),
                           (True, False, Weapon("Low Wooden Gun", 3, cs.wood_african_mahogany, 50, cs.broad + " " + cs.even, True, "Boom")),
                           (True, False, global_aid),
                           (True, False, global_shield),
@@ -132,8 +133,8 @@ def test_weapon(example_bad_character, setget, correct, relevant_object):
 
 
 @pytest.mark.parametrize("setget, correct, relevant_object",
-                         [(True, True, Shield("Wooden Body Shield", 5, cs.wood_abaci, 20, cs.broad + " " + cs.even, True, "Klook")),
-                          (True, True, global_shield),
+                         [(True, True, GameDetailsData().load_shields().shield_collection.left.obj),
+                          (True, True, GameDetailsData().load_shields().shield_collection.obj),
                           (True, False, Shield("Low Wooden Body Shield", 3, cs.wood_african_mahogany, 50, cs.broad + " " + cs.even, True, "Boom")),
                           (True, False, global_aid),
                           (True, False, global_weapon),

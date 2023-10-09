@@ -1,12 +1,10 @@
 import pytest
 from src.Final.Fight_Handle import Fight
 from src.Common_general_functionalities import common_strings as cs
-from src.Data_Loading.Data_Placement import DataFromLastSave
+from src.Data_Loading.Data_Placement import GameDetailsData
 from src.Characters.Good_Character import GoodCharacter
 from src.Characters.Main_Character import MainCharacter
 from src.Characters.Bad_Character import BadCharacter
-from src.Armor.Shield import Shield
-from src.Armor.Weapon import Weapon
 from src.Armor.Aid import Aid
 
 """
@@ -19,8 +17,8 @@ Tests to do:
 6. Check update_players.                            v
 * The last 3 are all checked in the last test
 """
-global_weapon = (DataFromLastSave().get_armor_data())[cs.weapons].search(Weapon("Wep", 15, cs.inconel, 10, cs.broad + " " + cs.even, False, "Woooh").serial_number_int())
-global_shield = (DataFromLastSave().get_armor_data())[cs.shields].search(Shield("Shi", 15, cs.wood_abaci, 10, cs.broad + " " + cs.not_even, False, "Woooh").serial_number_int())
+global_weapon = GameDetailsData().load_weapons().weapon_collection.right.obj
+global_shield = GameDetailsData().load_shields().shield_collection.right.obj
 global_aid = Aid("Cure", cs.health, 3)
 w_strength = global_weapon.strength()
 w_speed = global_weapon.speed()

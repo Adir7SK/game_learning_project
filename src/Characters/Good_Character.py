@@ -2,7 +2,7 @@ from src.Armor.Aid import Aid
 from src.Armor.Shield import Shield
 from src.Armor.Weapon import Weapon
 from src.Characters.Character import Character
-from src.Data_Loading.Data_Placement import DataFromLastSave
+from src.Data_Loading.Data_Placement import GameDetailsData
 import src.Common_general_functionalities.common_strings as cs
 
 
@@ -51,13 +51,13 @@ class GoodCharacter(Character):
                 self.aids[item.serial_number()] = item
 
         if not self._weapon:
-            weapons = (DataFromLastSave().get_armor_data())[cs.weapons]
+            weapons = (GameDetailsData().get_armor_data())[cs.weapons]
             i = 1
             while not weapons.search(i):
                 i += 1
             self._weapon = weapons.search(i)
         if not self._shield:
-            shields = (DataFromLastSave().get_armor_data())[cs.shields]
+            shields = (GameDetailsData().get_armor_data())[cs.shields]
             i = 1
             while not shields.search(i):
                 i += 1
@@ -93,7 +93,7 @@ class GoodCharacter(Character):
     def weapon(self, serial_number):
         if serial_number[:6] != cs.weapon:
             raise ValueError("Invalid weapon serial number. Valid example: Weapon460.")
-        weapons = (DataFromLastSave().get_armor_data())[cs.weapons]
+        weapons = (GameDetailsData().get_armor_data())[cs.weapons]
         if weapons.search(int(serial_number[6:])):
             self._weapon = weapons.search(int(serial_number[6:]))
         else:
@@ -111,7 +111,7 @@ class GoodCharacter(Character):
     def shield(self, serial_number):
         if serial_number[:6] != cs.shield:
             raise ValueError("Invalid shield serial number. Valid example: Shield460.")
-        shields = (DataFromLastSave().get_armor_data())[cs.shields]
+        shields = (GameDetailsData().get_armor_data())[cs.shields]
         if shields.search(int(serial_number[6:])):
             self._shield = shields.search(int(serial_number[6:]))
         else:

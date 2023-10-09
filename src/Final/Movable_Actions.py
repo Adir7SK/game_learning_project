@@ -176,13 +176,3 @@ class Move:
 #### The way it should work: this class is initiated at the beginning of each level, and the method step is called
 ####    in a loop until either the boss is defeated (and level is completed) or game is over. This class takes care for
 ####    collecting items, update the field after every action, and starting and handeling a fight
-
-"""
-Tests:
-
-Universe_Construction:
-Edit the if __main__ at the end
-
-Fight_Handle and this (Movable_Actions):
-Test everything because we have no test
-"""

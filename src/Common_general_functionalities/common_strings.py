@@ -37,7 +37,7 @@ short = "Short"
 even = "Even"
 not_even = "Not-Even"
 
-possible_shapes = {broad: 2, medium_broad: 1, slim: 3, long: 2, medium_length: 1, short: 3, even: 2, not_even: 1}
+possible_shapes = {broad: 2, medium_broad: 1, slim: 3, long: 1.8, medium_length: 1.5, short: 2.8, even: 2.9, not_even: 1.1}
 
 # Aid types
 health = "Health-Kit"
@@ -61,7 +61,7 @@ helper_character = 'C'
 path = "O"
 no_path = "|"
 
-amount_of_possible_levels = 5
+amount_of_possible_levels = 10  # 5
 
 # Control commands - IF GETTING NEW COMMANDS YOU MUST CHECK THAT SUCH COMMEND DOESN'T ALREADY EXISTS FOR A DIFFERENT ACTION
 one_step = ["GO ", "MOVE ", "STEP "]

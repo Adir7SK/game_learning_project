@@ -116,7 +116,18 @@ class AVL:
             print(curr_ptr.serial_number, curr_ptr.obj.name)
             self.print_helper(curr_ptr.left, indent, False)
             self.print_helper(curr_ptr.right, indent, True)
-               
+
+    def tree_to_df(self, curr_ptr, df=None):
+        if curr_ptr is None:
+            return df
+        if df is None:
+            df = [['Name', 'Weight', 'Material', 'Density', 'Shape', 'Efficient', 'Sound']]
+        df.append([curr_ptr.obj._name, curr_ptr.obj._weight, curr_ptr.obj._material, curr_ptr.obj._density,
+                   curr_ptr.obj._shape, curr_ptr.obj._efficient, curr_ptr.obj._sound])
+        df = self.tree_to_df(curr_ptr.right, df=df)
+        df = self.tree_to_df(curr_ptr.left, df=df)
+        return df
+
 
 class BasicObject:
     def __init__(self, name):

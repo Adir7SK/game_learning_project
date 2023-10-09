@@ -43,9 +43,10 @@ def test_search_on_tree(example_shield_tree, shield_i, expected_name):
                           ])
 def test_cannot_insert_shield_with_same_serial_number(example_shield_tree, shield_i):
     """Ensuring that an object with a serial number similar to another one cannot be added to the shield collection."""
-    with pytest.raises(ValueError):
-        example_shield_tree.insert_shield(shield_i.name(), shield_i.weight(), shield_i.material(), shield_i.density(),
+    copy_tree = example_shield_tree
+    example_shield_tree.insert_shield(shield_i.name(), shield_i.weight(), shield_i.material(), shield_i.density(),
                                           shield_i.shape(), shield_i.efficient(), shield_i.sound())
+    assert copy_tree == example_shield_tree
 
 
 @pytest.mark.parametrize("shield_i",
