@@ -46,7 +46,7 @@ class Fight:
         For each character that hits the enemy, there is a check whether the hit
         """
         if self.main_character.energy == 0:
-            print("The character has no energy to attack or defend.")
+            print(cs.drained_character)
             return
         player_speed, player_strength, armor_efficiency = self.main_character.attack()
         enemy_speed, enemy_shield_strength = self.enemy.defend()
@@ -76,14 +76,14 @@ class Fight:
                     print(self.enemy.shield.sound())
         print("Enemy has {!r} life left!".format(self.enemy.life))
         if not self.enemy.alive:
-            print("Enemy is defeated!")
+            print(cs.enemy_defeated)
             return True
         else:
             return False
 
     def enemy_is_hitting(self):
         if self.main_character.energy == 0:
-            print("The character has no energy to attack or defend.")
+            print(cs.drained_character)
         player_speed, player_strength, armor_efficiency = self.main_character.defend()
         enemy_speed, enemy_strength = self.enemy.attack()
         if player_speed < enemy_speed:
@@ -121,8 +121,8 @@ class Fight:
                 additional_characters_left.append(c)
         self.additional_good_characters = additional_characters_left
         if not self.main_character.alive:
-            print("You are defeated!")
-            print("GAME OVER!")
+            print(cs.you_lose)
+            print(cs.game_over)
             return False
         else:
             return True
@@ -160,5 +160,5 @@ class Fight:
             time.cancel()
             return True
         else:
-            print("Missed your chance to defend. Please press enter to continue.")
+            print(cs.didnt_defend)
             return False

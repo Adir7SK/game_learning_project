@@ -273,7 +273,7 @@ def test_wrong_step_command(capsys, mock_universe, example_universe, example_mai
              prev_strong_arm=(600, 600))
     m.step(command)
     captured = capsys.readouterr()
-    assert captured.out == "Invalid command. Please type again.\n"
+    assert captured.out == cs.invalid_command + "\n"
 
 
 @pytest.mark.parametrize("command", [cs.character, cs.me, cs.weapon, cs.shield, cs.short_info])
@@ -297,17 +297,17 @@ def test_step_into_fight_and_win_or_lose_with_correct_inputs(monkeypatch, capsys
         m.step(cs.one_step[0] + cs.directions[2][0])
         captured = capsys.readouterr()
         captured = captured.out.split('\n')[:-1]
-        assert captured[0] == 'You are starting a FIGHT!'
+        assert captured[0] == cs.fight_start
         assert captured[-3] == 'Enemy has 0 life left!'
-        assert captured[-2] == 'Enemy is defeated!'
-        assert captured[-1] == 'You won the fight!'
+        assert captured[-2] == cs.enemy_defeated
+        assert captured[-1] == cs.fight_won
     else:
         m = Move(example_universe, MainCharacter(2, global_weapon, global_shield), 2, example_tree, prev_weak_arm=(400, 400),
                  prev_strong_arm=(600, 600))
         m.step(cs.one_step[0] + cs.directions[2][0])
         captured = capsys.readouterr()
         captured = captured.out.split('\n')[:-1]
-        assert captured[0] == 'You are starting a FIGHT!'
-        assert captured[-3] == 'You are defeated!'
-        assert captured[-2] == 'GAME OVER!'
-        assert captured[-1] == 'You lost the fight :( Game Over!'
+        assert captured[0] == cs.fight_start
+        assert captured[-3] == cs.you_lose
+        assert captured[-2] == cs.game_over
+        assert captured[-1] == cs.you_lose + " " + cs.game_over

@@ -50,7 +50,7 @@ class Move:
                     if cs.energy not in [name for (name, s_id) in self.player.items()]:
                         self.player.renew_energy()
                         self.player.energy = (True, 70*5)
-                        print("Character has no energy - small refill of energy granted!")
+                        print(cs.energy_granted)
                     else:
                         print("No energy left - use your {} to refill!".format(cs.energy))
                     break
@@ -72,7 +72,7 @@ class Move:
                     enumerate(row_vals) if cell_val == cs.fight]
         in_fight = in_fight[0] if in_fight else None
         if in_fight:
-            print("You are starting a FIGHT!")
+            print(cs.fight_start)
             if self.mapping.get_enemy(in_fight):
                 fight = Fight(self.player, self.mapping.get_enemy(in_fight), print_sound=self._print_fight_sounds, *self.extra_helper_characters)
             else:
@@ -100,10 +100,10 @@ class Move:
                 self.player = fight.main_character
                 self.extra_helper_characters = fight.additional_good_characters
                 self.field.update_after_fight_victory()
-                print("You won the fight!")
+                print(cs.fight_won)
                 return True
             elif not fight.main_character.alive and fight.enemy.alive:
-                print("You lost the fight :( Game Over!")
+                print(cs.you_lose + " " + cs.game_over)
                 return False
         else:
             return True
@@ -115,7 +115,7 @@ class Move:
         they've requested to get some information or use some aid. Another example is whether they
         """
         if type(command) != str:
-            print("Invalid command. Please type again.")
+            print(cs.invalid_command)
             return None
         move_string = command.upper()
         if not in_fight:
@@ -125,7 +125,7 @@ class Move:
                 if move_string.split()[-1] in cs.specific_info:
                     return cs.get_information, move_string.split()[-1]
                 else:
-                    print("You asked for information about something that we don't have information about.")
+                    print(cs.no_available_info)
                     return None
             all_directions = list(cs.dir_map.keys())
             move_type_len = len(list(s for s in cs.one_step if move_string.startswith(s)))
@@ -136,7 +136,7 @@ class Move:
             rep = num_in_step[0] if slow_move is not None and len(num_in_step) == 1 else 1
             if slow_move is None or len(num_in_step) > 1 or move_string.split()[-1] not in all_directions or \
                     len(move_string) > move_type_len + 3 + max([len(i) for i in all_directions]):
-                print("Invalid command. Please type again.")
+                print(cs.invalid_command)
                 return None
             direction = cs.direction_map(move_string.split()[-1])   # The input might need to be changed to tuple type
             return cs.stepping, rep, direction
@@ -147,7 +147,7 @@ class Move:
                 if move_string.split()[-1] in cs.specific_info:
                     return cs.get_information, move_string.split()[-1]
                 else:
-                    print("You asked for information about something that we don't have information about.")
+                    print(cs.no_available_info)
                     return None
             elif move_string in cs.attack_actions:
                 return cs.offence, cs.attack_actions[0]

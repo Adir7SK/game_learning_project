@@ -62,7 +62,7 @@ class MainCharacter(GoodCharacter):
         if not (isinstance(item, Aid) or isinstance(item, Weapon) or isinstance(item, Shield)):
             raise TypeError("You can only add Aid type items.")
         if item.serial_number() in self.aids.keys():
-            print("You cannot have twice an item with the same serial number.")
+            print(cs.double_item_error)
         else:
             self.aids[item.serial_number()] = item
 
@@ -99,10 +99,7 @@ class MainCharacter(GoodCharacter):
     def speed(self, improvement):
         if type(improvement) not in [int, float]:
             raise TypeError("Strength must be integer or float.")
-        if self._speed + improvement < 0:
-            self._speed = 0
-        else:
-            self._speed += improvement
+        self._speed = max(0, self._speed + improvement)
 
     @speed.deleter
     def speed(self):
@@ -116,10 +113,7 @@ class MainCharacter(GoodCharacter):
     def strength(self, improvement):
         if type(improvement) not in [int, float]:
             raise TypeError("Strength must be integer or float.")
-        if self._strength + improvement < 0:
-            self._strength = 0
-        else:
-            self._strength += improvement
+        self._strength = max(0, self._strength + improvement)
 
     @strength.deleter
     def strength(self):
@@ -139,7 +133,7 @@ class MainCharacter(GoodCharacter):
         This method activates the aid for the benefit of the player.
         """
         if aid_serial not in self.aids.keys():
-            print("The serial number you typed points to an aid you currently don't have in your item collection.")
+            print(cs.serial_aid_not_there)
             return
         aid = self.aids[aid_serial]
         if aid_serial.startswith('Aid'):

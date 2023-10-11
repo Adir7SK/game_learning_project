@@ -98,7 +98,6 @@ def test_item_function(example_good_character, fixture):
         ite = example_good_character.items()
     else:
         ite = GoodCharacter(1200, True).items()
-    print(ite)
     for i in ite:
         if (i[1])[:6] not in [cs.weapon, cs.shield] and (i[1])[:3] != "Aid":
             raise ValueError("There is an invalid item in among the items: {!r}".format(i))
@@ -121,7 +120,6 @@ def test_undercover(example_good_character, setget, value):
                 example_good_character.undercover = value
     else:
         undercover_value = example_good_character.undercover
-        print(undercover_value)
 
 
 @pytest.mark.parametrize("setget, correct, relevant_object",
@@ -209,7 +207,6 @@ def test_shield(example_good_character, setget, correct, relevant_object):
                 del example_good_character.shield
         else:
             shield_value = example_good_character.shield
-            print(shield_value)
 
 
 @pytest.mark.parametrize("tree, damage, repetitions, expected",

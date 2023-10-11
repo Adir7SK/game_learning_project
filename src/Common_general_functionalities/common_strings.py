@@ -95,3 +95,31 @@ shields = "SHIELDS"
 stepping = "STEPPING"
 using_aid = "USE_AID"
 get_information = "GET_INFORMATION"
+
+# Inner file names and strings
+weapons_csv = "Weapons.csv"
+shields_csv = "Shields.csv"
+game_csv = "Game_Save.csv"
+data_sets = 'Data_sets'
+user = 'User'
+password = 'Password'
+splitting_char = ';'
+small_split = '^'
+
+# Message strings (interfacing with users)
+user_already_exists = "There is already a user with this name!"
+user_doesnt_exist = "No such user!"
+wrong_password = "Wrong Password!"
+password_length_error = "Password's length must be greater than 5 characters."
+double_item_error = "You cannot have twice an item with the same serial number."
+serial_aid_not_there = "The serial number you typed points to an aid you currently don't have in your item collection."
+drained_character = "The character has no energy to attack or defend."
+energy_granted = "Character has no energy - small refill of energy granted!"
+enemy_defeated = "Enemy is defeated!"
+you_lose = "You are defeated!"
+game_over = "GAME OVER!"
+didnt_defend = "Missed your chance to defend. Please press enter to continue."
+fight_start = "You are starting a FIGHT!"
+fight_won = "You won the fight!"
+invalid_command = "Invalid command. Please type again."
+no_available_info = "You asked for information about something that we don't have information about."

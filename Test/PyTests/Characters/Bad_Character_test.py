@@ -96,7 +96,6 @@ def test_undercover(example_bad_character, setget, value):
                 example_bad_character.undercover = value
     else:
         undercover_value = example_bad_character.undercover
-        print(undercover_value)
 
 
 @pytest.mark.parametrize("setget, correct, relevant_object",
@@ -129,7 +128,6 @@ def test_weapon(example_bad_character, setget, correct, relevant_object):
                 del example_bad_character.weapon
         else:
             weapon_value = example_bad_character.weapon
-            print(weapon_value)
 
 
 @pytest.mark.parametrize("setget, correct, relevant_object",
@@ -162,7 +160,6 @@ def test_shield(example_bad_character, setget, correct, relevant_object):
                 del example_bad_character.shield
         else:
             shield_value = example_bad_character.shield
-            print(shield_value)
 
 
 @pytest.mark.parametrize("legal, damage, expected",

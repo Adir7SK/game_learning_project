@@ -91,7 +91,6 @@ def test_item_function(example_good_character, fixture):
         ite = example_good_character.items()
     else:
         ite = MainCharacter(1200).items()
-    print(ite)
     for i in ite:
         if (i[1])[:6] not in [cs.weapon, cs.shield] and (i[1])[:3] != "Aid":
             raise ValueError("There is an invalid item in among the items: {!r}".format(i))
@@ -202,7 +201,6 @@ def test_shield(example_good_character, setget, correct, relevant_object):
                 del example_good_character.shield
         else:
             shield_value = example_good_character.shield
-            print(shield_value)
 
 
 @pytest.mark.parametrize("tree, damage, repetitions, expected",
