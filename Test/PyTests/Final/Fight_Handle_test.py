@@ -1,6 +1,7 @@
 import pytest
 from src.Final.Fight_Handle import Fight
 from src.Common_general_functionalities import common_strings as cs
+from src.Common_general_functionalities import Flexible_Attributes as fa
 from src.Data_Loading.Data_Placement import GameDetailsData
 from src.Characters.Good_Character import GoodCharacter
 from src.Characters.Main_Character import MainCharacter
@@ -17,14 +18,15 @@ Tests to do:
 6. Check update_players.                            v
 * The last 3 are all checked in the last test
 """
-global_weapon = GameDetailsData().load_weapons().weapon_collection.right.obj
-global_shield = GameDetailsData().load_shields().shield_collection.right.obj
+global_weapon = GameDetailsData().load_weapons().search(fa.min_weapon_strength)
+global_shield = GameDetailsData().load_shields().search(fa.min_shield_strength)
 global_aid = Aid("Cure", cs.health, 3)
 w_strength = global_weapon.strength()
 w_speed = global_weapon.speed()
 s_strength = global_shield.strength()
 s_speed = global_shield.speed()
 cond = w_speed >= s_speed
+cond_main = w_speed >= s_speed + fa.main_character_start_speed
 
 
 @pytest.fixture
@@ -139,19 +141,20 @@ def test_player_is_hitting(example_main_character, example_good_character, examp
 
 
 @pytest.mark.parametrize("rep, n_helper, result_helper, result_main",
-                         [(2, 5, 100-2*(w_strength if cond else w_strength-s_strength), max(0, 500-2*(w_strength if cond else w_strength-s_strength))),
-                          (12, 20, 0, max(0, 500-12*(w_strength if cond else w_strength-s_strength))),
-                          (3, 0, 0, max(0, 500-3*(w_strength if cond else w_strength-s_strength))),
+                         [(2, 5, 100-2*(w_strength if cond else w_strength-s_strength), max(0, 500-2*(w_strength if cond_main else (w_strength-s_strength if w_strength-s_strength > 0 else 1)))),
+                          (12, 20, 0, max(0, 500-12*(w_strength if cond_main else (w_strength-s_strength if w_strength-s_strength > 0 else 1)))),
+                          (3, 0, 0, max(0, 500-3*(w_strength if cond_main else (w_strength-s_strength if w_strength-s_strength > 0 else 1)))),
                           ])
-def test_enemy_is_hitting(example_main_character, example_good_character, example_bad_character, rep, n_helper,
-                          result_helper, result_main):
+def test_enemy_is_hitting(monkeypatch, example_main_character, example_good_character, example_bad_character, rep,
+                          n_helper, result_helper, result_main):
     """
     Here we test that update_player method works (in the first 2 assertions). Then testing that all the helper
     characters and the main character has a life reduction in accordance with the enemy's hits (and at the end that
     the enemy is not getting damaged by hitting). At the end, we also make sure that the number of additional
     character's left after a fight is the number of alive characters (no dead character will be passed on).
     """
-    h_charac_list = [example_good_character]*n_helper
+    monkeypatch.setattr('builtins.input', lambda _: cs.defend_actions[0])
+    h_charac_list = [example_good_character for _ in range(n_helper)]
     f = Fight(example_main_character, example_bad_character, False, *h_charac_list)
     m_c = example_main_character
     m_c.full_life = 500

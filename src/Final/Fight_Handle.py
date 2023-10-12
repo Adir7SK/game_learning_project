@@ -107,7 +107,7 @@ class Fight:
         additional_characters_left = []
         for c in self.additional_good_characters:
             player_speed, player_strength, armor_efficiency = c.defend()
-            if player_speed < enemy_speed:
+            if player_speed <= enemy_speed:
                 c.life = float(enemy_strength)
                 if self.print_sound:
                     print(self.enemy.weapon.sound())

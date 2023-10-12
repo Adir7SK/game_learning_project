@@ -1,4 +1,3 @@
-from src.Data_Loading.Data_Placement import GameDetailsData
 import src.Common_general_functionalities.common_strings as cs
 
 flexible_in_armor = ['_armor_efficiency', '_energy']
@@ -7,10 +6,10 @@ main_character_start_strength = 5  # Careful changing it - tests might fail
 
 # Speed factor for defending
 speed_factor = 10
-min_weapon_strength = GameDetailsData().load_weapons().worst_weapon().search(int(GameDetailsData().load_weapons().worst_weapon()[len(cs.weapon):])).strength()
-min_shield_strength = GameDetailsData().load_shields().worst_shield().search(int(GameDetailsData().load_shields().worst_shield()[len(cs.shield):])).strength()
-min_weapon_serial = cs.weapons + str(GameDetailsData().load_weapons().worst_weapon())
-min_shield_serial = cs.shield + str(GameDetailsData().load_shields().worst_shield())
+min_weapon_strength = 398
+min_shield_strength = 398
+min_weapon_serial = cs.weapon + str(min_weapon_strength)
+min_shield_serial = cs.shield + str(min_shield_strength)
 possible_weight = 500
 possible_densities = 100
 beginner_full_life = 50

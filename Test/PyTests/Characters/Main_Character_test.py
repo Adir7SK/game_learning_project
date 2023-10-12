@@ -229,8 +229,8 @@ def test_shield_not_changing_in_tree(example_good_character, tree, damage, repet
 @pytest.mark.parametrize("step, repetitions, value, expected",
                          [(True, 4, 10, 92),
                           (True, 80, 5.5, 12.0),
-                          (False, 3, 0, 98.77),
-                          (False, 5, 1, 99.6),
+                          (False, 3, 0, 97.72),
+                          (False, 5, 1, 93.3),
                           ])
 def test_energy_after_action(example_good_character, step, repetitions, value, expected):
     """

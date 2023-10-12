@@ -1,45 +1,42 @@
 ,Name,Weight,Material,Density,Shape,Efficient,Sound
-0,Shield3e,3.96,Wood Abaci,0.73,Long Medium-length,True,Sound3
-1,Shield1e,0.41000000000000003,Wood Abaci,0.35000000000000003,Medium-broad Not-Even,True,Sound1
-2,Shield13e,0.36,Wood African Mahogany,0.76,Short Long,True,Sound13
-3,Shield30e,0.3,Wood Chesnut,0.93,Even Slim,True,Sound30
-4,Shield101e,0.58,Steel,0.67,Short Long,True,Sound101
-5,Shield85e,0.63,Tungsten,0.91,Short Medium-length,True,Sound85
-6,Shield50e,0.21,Wood Hickory,0.67,Slim Long,True,Sound50
-7,Shield20e,0.23,Wood Apple,0.96,Medium-length Slim,True,Sound20
-8,Shield52e,0.38,Wood Hickory,0.68,Medium-length Even,True,Sound52
-9,Shield56e,0.34,Wood Ipe,0.56,Broad Medium-broad,True,Sound56
-10,Shield5e,1.02,Wood Abaci,0.99,Short Even,True,Sound5
-11,Shield63e,0.88,Wood Ipe,0.1,Not-Even Even,True,Sound63
-12,Shield39e,0.6,Wood Cumaru,0.61,Not-Even Medium-length,True,Sound39
-13,Shield58e,4.57,Wood Ipe,0.39,Slim Even,True,Sound58
-14,Shield53e,1.6400000000000001,Wood Hickory,0.42,Short Broad,True,Sound53
-15,Shield37e,4.65,Wood Cumaru,0.86,Short Broad,True,Sound37
-16,Shield82e,3.95,Tungsten,0.78,Slim Even,True,Sound82
-17,Shield91e,1.25,Titanium,0.98,Long Broad,True,Sound91
-18,Shield4e,4.48,Wood Abaci,0.72,Medium-length Even,True,Sound4
-19,Shield98e,3.93,Steel,0.88,Slim Medium-length,True,Sound98
-20,Shield51e,4.13,Wood Hickory,0.59,Long Broad,True,Sound51
-21,Shield71e,4.64,Iron,0.9,Not-Even Broad,True,Sound71
-22,Shield7e,3.95,Wood Abaci,0.73,Not-Even Even,True,Sound7
-23,Shield74e,3.29,Inconel,0.8200000000000001,Slim Broad,True,Sound74
-24,Shield17e,2.59,Wood Apple,0.03,Medium-broad Broad,True,Sound17
-25,Shield24e,3.11,Wood Chesnut,0.72,Broad Medium-length,True,Sound24
-26,Shield0e,3.2800000000000002,Wood Abaci,0.06,Broad Medium-length,True,Sound0
-27,Shield2e,3.0100000000000002,Wood Abaci,0.09,Slim Short,True,Sound2
-28,Shield81e,1.74,Tungsten,0.9400000000000001,Medium-broad Even,True,Sound81
-29,Shield61e,3.0300000000000002,Wood Ipe,0.06,Short Not-Even,True,Sound61
-30,Shield68e,2.93,Iron,0.38,Medium-length Even,True,Sound68
-31,Shield15e,2.85,Wood African Mahogany,0.49,Not-Even Short,True,Sound15
-32,Shield72e,3.15,Inconel,0.45,Broad Not-Even,True,Sound72
-33,Shield23e,2.61,Wood Apple,0.68,Not-Even Even,True,Sound23
-34,Shield83e,2.77,Tungsten,0.61,Long Medium-broad,True,Sound83
-35,Shield16e,1.99,Wood Apple,0.98,Broad Medium-length,True,Sound16
-36,Shield34e,1.97,Wood Cumaru,0.39,Slim Medium-length,True,Sound34
-37,Shield99e,2.43,Steel,0.86,Long Medium-broad,True,Sound99
-38,Shield70e,2.34,Iron,0.34,Even Long,True,Sound70
-39,Shield18e,2.2,Wood Apple,0.14,Slim Medium-broad,True,Sound18
-40,Shield42e,2.12,Wood Ebony,0.51,Slim Medium-broad,True,Sound42
-41,Shield30,0.3,Wood Chesnut,0.93,Even Slim,False,Sound30
-42,Shield92e,2.0,Titanium,0.65,Medium-length Medium-broad,True,Sound92
-43,Hand,1.0,Wood Abaci,1.0,Medium-broad Medium-length,False,hhwee
+0,Shield4e,3.45,Wood Abaci,0.87,Medium-length Even,True,Sound4
+1,Shield1e,0.76,Wood Abaci,0.16,Medium-broad Long,True,Sound1
+2,Shield2e,0.18,Wood Abaci,0.03,Slim Short,True,Sound2
+3,Shield42e,0.21,Wood Ebony,0.86,Slim Long,True,Sound42
+4,Shield74e,0.35000000000000003,Inconel,0.72,Slim Even,True,Sound74
+5,Shield101e,0.47000000000000003,Steel,0.81,Short Even,True,Sound101
+6,Shield54e,0.13,Wood Hickory,0.96,Even Not-Even,True,Sound54
+7,Shield20e,0.23,Wood Apple,0.8200000000000001,Medium-length Even,True,Sound20
+8,Shield60e,0.25,Wood Ipe,0.53,Medium-length Slim,True,Sound60
+9,Shield13e,0.4,Wood African Mahogany,0.87,Short Medium-broad,True,Sound13
+10,Shield51e,0.39,Wood Hickory,0.37,Long Medium-broad,True,Sound51
+11,Shield40e,0.52,Wood Ebony,0.9500000000000001,Broad Not-Even,True,Sound40
+12,Shield61e,1.18,Wood Ipe,0.77,Short Medium-length,True,Sound61
+13,Shield19e,0.6900000000000001,Wood Apple,0.44,Long Medium-broad,True,Sound19
+14,Shield52e,1.22,Wood Hickory,0.77,Medium-length Slim,True,Sound52
+15,Shield22e,3.5100000000000002,Wood Apple,0.06,Even Short,True,Sound22
+16,Shield66e,4.5600000000000005,Iron,0.86,Slim Not-Even,True,Sound66
+17,Shield88e,4.09,Titanium,0.79,Broad Slim,True,Sound88
+18,Shield3e,1.22,Wood Abaci,0.27,Long Medium-broad,True,Sound3
+19,Shield90e,1.57,Titanium,0.5700000000000001,Slim Medium-broad,True,Sound90
+20,Shield17e,1.61,Wood Apple,0.63,Medium-broad Short,True,Sound17
+21,Shield24e,1.6600000000000001,Wood Chesnut,0.18,Broad Slim,True,Sound24
+22,Shield78e,3.45,Inconel,0.93,Even Short,True,Sound78
+23,Shield71e,3.79,Iron,0.8300000000000001,Not-Even Short,True,Sound71
+24,Shield32e,1.9100000000000001,Wood Cumaru,0.49,Broad Medium-length,True,Sound32
+25,Shield0e,2.62,Wood Abaci,0.5700000000000001,Broad Even,True,Sound0
+26,Shield21e,3.2,Wood Apple,0.34,Short Medium-broad,True,Sound21
+27,Shield16e,3.17,Wood Apple,0.71,Broad Slim,True,Sound16
+28,Shield100e,3.3200000000000003,Steel,0.77,Medium-length Short,True,Sound100
+29,Shield33e,3.11,Wood Cumaru,0.67,Medium-broad Short,True,Sound33
+30,Shield99e,3.06,Steel,0.6,Long Medium-length,True,Sound99
+31,Shield5e,2.47,Wood Abaci,0.03,Short Broad,True,Sound5
+32,Shield98e,1.9000000000000001,Steel,0.09,Slim Long,True,Sound98
+33,Shield11e,2.0,Wood African Mahogany,0.35000000000000003,Long Medium-broad,True,Sound11
+34,Shield53e,2.1,Wood Hickory,0.37,Short Even,True,Sound53
+35,Shield36e,2.25,Wood Cumaru,0.67,Medium-length Even,True,Sound36
+36,Shield91e,2.23,Titanium,0.02,Long Medium-length,True,Sound91
+37,Shield62e,2.0100000000000002,Wood Ipe,0.5,Even Slim,True,Sound62
+38,Shield74,0.35000000000000003,Inconel,0.72,Slim Even,False,Sound74
+39,Shield2,0.18,Wood Abaci,0.03,Slim Short,False,Sound2
+40,Hand,1.0,Wood Abaci,1.0,Medium-broad Medium-length,False,hhwee

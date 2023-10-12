@@ -63,7 +63,7 @@ no_path = "|"
 
 amount_of_possible_levels = 10  # 5
 
-# Control commands - IF GETTING NEW COMMANDS YOU MUST CHECK THAT SUCH COMMEND DOESN'T ALREADY EXISTS FOR A DIFFERENT ACTION
+# Control commands - IF GETTING NEW COMMANDS YOU MUST CHECK THAT SUCH COMMAND DOESN'T ALREADY EXISTS FOR A DIFFERENT ACTION
 one_step = ["GO ", "MOVE ", "STEP "]
 multi_step = ["G", "M", "S"]
 directions = [["NORTH", "UP", "N", "U"], ["SOUTH", "DOWN", "S", "D"], ["EAST", "RIGHT", "E", "R"],
