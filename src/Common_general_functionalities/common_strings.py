@@ -86,6 +86,8 @@ helper = "HELPER"
 aids = "AIDS"
 short_info = "ARMOR"
 specific_info = [character, me, helper, weapon, shield, aids, short_info]
+yes = ['YES', 'Y', 'YEAH', 'JA', 'YEP', 'JEP']
+no = ['NO', 'N', 'NOPE', 'NAA']
 
 # Data tree
 weapons = "WEAPONS"
@@ -123,3 +125,9 @@ fight_start = "You are starting a FIGHT!"
 fight_won = "You won the fight!"
 invalid_command = "Invalid command. Please type again."
 no_available_info = "You asked for information about something that we don't have information about."
+new_player = "Are you a new? "
+enter_user = "Please enter user: "
+enter_password = "Please enter password: "
+sound_question = "Would you like to play with sound? "
+to_finish = "Would you like to finish the game? "
+instructions = ""

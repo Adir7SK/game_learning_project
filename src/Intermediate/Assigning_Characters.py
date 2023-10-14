@@ -8,6 +8,7 @@ from src.Characters.Regular_Enemies import Orc
 from src.Intermediate.Universe_Construction import Universe
 from src.Characters.Good_Character import GoodCharacter
 import src.Common_general_functionalities.common_strings as cs
+import src.Common_general_functionalities.Flexible_Attributes as fa
 from src.Common_general_functionalities.Gaussian_generated_data import scaled_data
 
 
@@ -29,6 +30,7 @@ class Assignments:
     def __init__(self, field, level, data_tree, last_round_weakest_armor=(0, 0), last_round_strongest_armor=(0, 0)):
         if not isinstance(field, Universe):
             raise TypeError("The field input must be an object type Universe")
+        f = field.field
         b_p, enemies_positions, aid_positions, help_characters_position, armor_position = \
             field.boss_enemies_aid_help_charter_armor_position()
         if type(level) != int or type(data_tree) != dict or \
@@ -249,6 +251,15 @@ class Assignments:
             highest_life = max(highest_life, character.life)
         return Boss(highest_life*1.1, data_tree[cs.weapons].search(best_weapon_number),
                     data_tree[cs.shields].search(best_shield_number))
+
+    def worst_enemy_weapons(self):
+        """ Returns the worst weapons used at current object """
+        worst_weapon_number = fa.above_absolute_max
+        worst_shield_number = fa.above_absolute_max
+        for character in self._enemies.values():
+            worst_weapon_number = min(worst_weapon_number, character.weapon.serial_number_int())
+            worst_shield_number = min(worst_shield_number, character.shield.serial_number_int())
+        return worst_weapon_number, worst_shield_number
 
     def get_enemy(self, position):
         if position not in self._enemies.keys():

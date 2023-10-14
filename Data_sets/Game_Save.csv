@@ -1,1 +1,2 @@
-User,Password,Level,Weapon_ID,Shield_ID,Life,full_life,aids,helping_characters,strength,speed,dim_x,dim_y
+,User,Password,Level,Weapon_ID,Shield_ID,Life,full_life,aids,helping_characters,strength,speed,dim_x,dim_y
+0,Adir,Danielle,1,398,398,50,50,,,5,0.35,10,10

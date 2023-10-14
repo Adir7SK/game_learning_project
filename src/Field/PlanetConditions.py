@@ -82,15 +82,15 @@ class Planet(metaclass=DescriptorNamingMeta):
     temprature_kelvin = Positive()
 
 
-# Here we create the planets we will need
+# Here we create the planets we will need - in order from easiest planet to hardest
 planets = {
     "pluto": Planet(name='Pluto', radius=1184e3, mass=1.309e22, temperature_kelvin=50),
-    "jupiter": Planet(name='Jupiter', radius=69911e3, mass=1.898e27, temperature_kelvin=165),
-    "earth": Planet(name='Earth', radius=6371e3, mass=5.972e24, temperature_kelvin=288),
     "mars": Planet(name='Mars', radius=3389.5e3, mass=6.39e23, temperature_kelvin=210),
-    "venus": Planet(name='Venus', radius=6052e3, mass=4.867e24, temperature_kelvin=737),
     "mercury": Planet(name='Mercury', radius=2439.7e3, mass=3.285e23, temperature_kelvin=440),
-    "saturn": Planet(name='Saturn', radius=58232e3, mass=5.683e26, temperature_kelvin=134),
+    "venus": Planet(name='Venus', radius=6052e3, mass=4.867e24, temperature_kelvin=737),
+    "earth": Planet(name='Earth', radius=6371e3, mass=5.972e24, temperature_kelvin=288),
     "uranus": Planet(name='Uranus', radius=25362e3, mass=8.681e25, temperature_kelvin=76),
-    "neptune": Planet(name='Neptune', radius=24622e3, mass=1.024e26, temperature_kelvin=72)
+    "saturn": Planet(name='Saturn', radius=58232e3, mass=5.683e26, temperature_kelvin=134),
+    "neptune": Planet(name='Neptune', radius=24622e3, mass=1.024e26, temperature_kelvin=72),
+    "jupiter": Planet(name='Jupiter', radius=69911e3, mass=1.898e27, temperature_kelvin=165),
 }

@@ -168,11 +168,3 @@ class Move:
         if request == cs.short_info:
             self.player.short_armor_info()
 
-
-
-#### HERE WE SAW THAT THE WAY OF USING AND AID IS TYPING "use AID_SERIAL_NUMBER"
-#### WE ALSO SAW THAT MOVING IS WITH TYPING EITHER "GO NORTH/SOUTH/EAST/WEST" OR "G5 NORTH/..." THEN IT TAKES 5 STEPS
-#### WE ALSO SEE THAT THE WAY TO ATTACK AND DEFEND IS SIMPLY BY TYPING ATTACK AND DEFEND RESPECTIVELY
-#### The way it should work: this class is initiated at the beginning of each level, and the method step is called
-####    in a loop until either the boss is defeated (and level is completed) or game is over. This class takes care for
-####    collecting items, update the field after every action, and starting and handeling a fight
