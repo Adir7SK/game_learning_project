@@ -75,6 +75,7 @@ class Fight:
                     print(c.weapon.sound())
                     print(self.enemy.shield.sound())
         print("Enemy has {!r} life left!".format(self.enemy.life))
+        print("You have {!r} life left!".format(self.main_character.life))
         if not self.enemy.alive:
             print(cs.enemy_defeated)
             return True

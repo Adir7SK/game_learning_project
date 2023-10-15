@@ -187,7 +187,7 @@ class Universe(Maze):
             return
         previous_position = self.main_character_position
         self.main_character_position = tuple(map(operator.add, self.main_character_position, move))
-        if self._field[self.main_character_position[0]][self.main_character_position[1]] in [cs.regular_enemy, cs.boss]:
+        if self.main_character_position in self._enemies_position or self.main_character_position == self._boss_position:
             self._field[self.main_character_position[0]][self.main_character_position[1]] = cs.fight
         else:
             self._field[self.main_character_position[0]][self.main_character_position[1]] = cs.main_character

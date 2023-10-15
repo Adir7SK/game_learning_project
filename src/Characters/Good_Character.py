@@ -35,7 +35,7 @@ class GoodCharacter(Character):
             if not isinstance(item, (Aid, Shield, Weapon)):
                 raise AttributeError("Attributes after undercover must be either Aid, Weapon, or Shield type.")
             serial_number = item.serial_number()
-            if serial_number[:6] not in [cs.weapon, cs.shield] and serial_number[:3] != "Aid":
+            if serial_number[:6] not in [cs.weapon, cs.shield] and serial_number[:3] != cs.aid_ser:
                 raise AttributeError("The items a character can carry are either a Weapon, Shield, or an Aid.")
             if serial_number[:6] == cs.weapon:
                 if self._weapon:

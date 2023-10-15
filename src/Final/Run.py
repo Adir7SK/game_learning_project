@@ -46,6 +46,9 @@ def get_data(save_object):
         player_is_added = False
         while not player_is_added:
             player_is_added = save_object.add_user(user, password)
+            if not player_is_added:
+                user = input(cs.enter_user)
+                password = input(cs.enter_password)
     res = False
     entire_armor_tree = GameDetailsData().get_armor_data()
     while not res:
@@ -66,7 +69,7 @@ if __name__ == "__main__":
         inp = input(cs.sound_question).upper()
     inp = inp in cs.yes
     game_continues = True
-    strongest_arm, weakest_arm = (0, 0), (0, 0)
+    strongest_arm, weakest_arm = (500, 500), (0, 0)
     while game_continues:
         game_continues = play_level(level, (dim_x, dim_y), armor_tree, main_char, helpers, strongest_arm, weakest_arm, inp)
         if game_continues:
@@ -75,8 +78,8 @@ if __name__ == "__main__":
                                                              game_continues[5]
             level += 1
             saving_obj.save(level, main_char.weapon.serial_number_int(), main_char.shield.serial_number_int(),
-                            main_char.life, main_char.full_life, main_char.aids, helpers, main_char.strength,
-                            main_char.speed, dim_x, dim_y)
+                            main_char.life, main_char.full_life, list(main_char.aids.values()), helpers,
+                            main_char.strength, main_char.speed, dim_x, dim_y)
             game_continues = input(cs.to_finish).upper()
             while game_continues not in cs.yes and game_continues not in cs.no:
                 game_continues = input(cs.to_finish).upper()

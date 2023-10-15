@@ -3,6 +3,7 @@ from src.Final.Fight_Handle import Fight
 import src.Common_general_functionalities.common_strings as cs
 import re
 from src.Characters.Good_Character import GoodCharacter
+from src.Armor.Aid import Aid
 from src.Intermediate.Universe_Construction import Universe
 
 
@@ -164,7 +165,12 @@ class Move:
         if request == cs.shield:
             self.player.shield_info()
         if request == cs.aids:
-            self.player.items()
+            for item in self.player.aids.values():
+                print("Item Details:")
+                print("Name:            ", item.name())
+                print("Serial ID:       ", item.serial_number())
+                if isinstance(item, Aid):
+                    print("Aid type:        ", item.aid_type)
         if request == cs.short_info:
             self.player.short_armor_info()
 

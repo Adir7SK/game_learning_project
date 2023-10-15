@@ -12,5 +12,5 @@ min_weapon_serial = str(min_weapon_strength)    # cs.weapon + str(min_weapon_str
 min_shield_serial = str(min_shield_strength)
 possible_weight = 500
 possible_densities = 100
-beginner_full_life = 50
+beginner_full_life = 100
 above_absolute_max = 10e9

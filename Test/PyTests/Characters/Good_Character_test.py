@@ -99,7 +99,7 @@ def test_item_function(example_good_character, fixture):
     else:
         ite = GoodCharacter(1200, True).items()
     for i in ite:
-        if (i[1])[:6] not in [cs.weapon, cs.shield] and (i[1])[:3] != "Aid":
+        if (i[1])[:6] not in [cs.weapon, cs.shield] and (i[1])[:3] != cs.aid_ser:
             raise ValueError("There is an invalid item in among the items: {!r}".format(i))
 
 

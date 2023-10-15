@@ -23,7 +23,7 @@ class Aid:
         upper = lower + episode
         value = random.choice(scaled_data[lower:upper])
         self._magnitude = round(value * 100, 2)
-        self._serial_number = "Aid" + str(round(self._magnitude, 2))
+        self._serial_number = cs.aid_ser + str(int(round(self._magnitude, 2)*100))
         self._name = name
         self._aid_type = aidtype
 

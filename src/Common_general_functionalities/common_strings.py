@@ -40,13 +40,14 @@ not_even = "Not-Even"
 possible_shapes = {broad: 2, medium_broad: 1, slim: 3, long: 1.8, medium_length: 1.5, short: 2.8, even: 2.9, not_even: 1.1}
 
 # Aid types
+aid_ser = "AID"
 health = "Health-Kit"
 energy = "Energy-Kit"
 strength = "Strength-Boost"
 speed = "Speed-Boost"
 full_life = "Full-Life_boost"
-weapon = "Weapon"
-shield = "Shield"
+weapon = "WEAPON"
+shield = "SHIELD"
 aid_types = [health, energy, strength, speed, full_life, weapon, shield]
 amount_of_possible_magnitudes = 5
 

@@ -42,13 +42,18 @@ class Assignments:
                              "last_round_strongest_armor is from the wrong data type")
         self._enemies = self._initiate_enemies(enemies_positions, level, data_tree, last_round_weakest_armor,
                                                last_round_strongest_armor, field.field)
+        while not self._enemies:
+            self._enemies = self._initiate_enemies(enemies_positions, level, data_tree, last_round_weakest_armor,
+                                                   last_round_strongest_armor, field.field)
         e_g = list(self._enemies)
         id_eg = [id(i) for i in e_g]
         if len(id_eg) != len(set(id_eg)):
             self._enemies = [Orc(i.life, i.undercover, i.weapon, i.shield) for i in e_g]
             del e_g, id_eg
-        self._aids = self._initiate_aids(aid_positions, level)
+        self._aids, a = self._initiate_aids(aid_positions, level)
+        armor_position.extend(a)
         self.boss = self.create_boss(data_tree)
+        self._enemies[b_p] = self.boss
         self._help_characters = self._initiate_help_character(help_characters_position, level, data_tree,
                                                               last_round_weakest_armor, last_round_strongest_armor,
                                                               field.field)
@@ -165,14 +170,18 @@ class Assignments:
         This is not efficient. Please adjust in the future.
         """
         position_to_aid = dict()
+        potential_armor_ext = []
         for position in aids_positions:
             chosen_aid = random.choice(cs.aid_types)
+            if chosen_aid in [cs.weapon, cs.shield]:
+                potential_armor_ext.append(position)
+                continue
             current_aid = Aid(chosen_aid, chosen_aid, random.choice(range(1, min(level + 1,
                                                                                  cs.amount_of_possible_magnitudes))))
-            if not isinstance(current_aid, Aid):
+            if not isinstance(current_aid, Aid) or not isinstance(current_aid, Weapon) or not isinstance(current_aid, Shield):
                 raise ValueError("Problem in the program.")
             position_to_aid[position] = current_aid
-        return position_to_aid
+        return position_to_aid, potential_armor_ext
 
     @staticmethod
     def _initiate_armor(armor_positions, data_tree, last_round_weakest_armor, last_round_strongest_armor):
@@ -274,10 +283,10 @@ class Assignments:
             del self._enemies[position]
 
     def get_aid(self, position):
-        if position not in self._aids.keys():
-            return False
-        else:
+        if position in self._aids.keys():
             return self._aids[position]
+        else:
+            return self.get_armor(position)
 
     def remove_aid(self, position):
         if position not in self._aids.keys():

@@ -41,14 +41,14 @@ class LastSave:
         if len(relevant_df) > 1:
             ValueError("There is more than one user with this User name and Password!")
         self.user = user
-        row = relevant_df.iloc[0][1:]
-        helpers = [] if math.isnan(row[8]) else [t.split(cs.small_split) for t in row[8].split(cs.splitting_char)]
+        row = relevant_df.iloc[0]
+        helpers = [] if row[8] is None or math.isnan(row[8]) else [t.split(cs.small_split) for t in row[8].split(cs.splitting_char)]
         good_characters = []
         for h in helpers:
             g = GoodCharacter(float(h[1]), [h[2], h[3]])
             g.life = float(h[1]) - float(h[0])
             good_characters.append(g)
-        aids = [] if math.isnan(row[7]) else [t.split(cs.small_split) for t in row[8].split(cs.splitting_char)]
+        aids = [] if row[7] is None or math.isnan(row[7]) else [t.split(cs.small_split) for t in row[8].split(cs.splitting_char)]
         a = []
         for h in aids:
             a.append(Aid(float(h[1]), h[2], h[3]))
@@ -71,7 +71,7 @@ class LastSave:
                                                fa.beginner_full_life, fa.beginner_full_life, None, None,
                                                fa.main_character_start_strength, fa.main_character_start_speed,
                                                10, 10]
-        self.data.to_csv(self.data_files_location / file)
+        self.data.to_csv(self.data_files_location / file, index=False)
         return True
 
     def save(self, level, weapon_id, shield_id, life, full_life, aids, help_characters, strength, speed, dim_x, dim_y,
@@ -84,10 +84,10 @@ class LastSave:
             new.append(cs.small_split.join(p))
         aids_save = []
         for a in aids:
-            aids_save.append(cs.small_split.join([a.name]+a.activate()))
-        password = self.data.loc[self.data[cs.user] == self.user][cs.password]
+            aids_save.append(cs.small_split.join([a.name()]+list(a.activate())))
+        password = self.data.loc[self.data[cs.user] == self.user][cs.password].values[0]
         self.data.loc[self.data[cs.user] == self.user] = [[self.user, password, level, weapon_id, shield_id, life,
                                                            full_life, cs.splitting_char.join(aids_save),
                                                            cs.splitting_char.join(new), strength, speed, dim_x, dim_y]]
-        self.data.to_csv(self.data_files_location / file)
+        self.data.to_csv(self.data_files_location / file, index=False)
     
