@@ -159,7 +159,7 @@ class Universe(Maze):
             and returns False if a position is out of boundaries.
             """
             def positions(p):
-                if 0 <= p[0] < self.dim_x and 0 <= p[1] < self.dim_y and g[p[0]][p[1]] != cs.no_path:
+                if 0 <= p[0] < len(g) and 0 <= p[1] < len(g[0]) and g[p[0]][p[1]] != cs.no_path:
                     return True
                 else:
                     return False
@@ -182,11 +182,15 @@ class Universe(Maze):
         if type(move) != tuple or len(move) != 2 or move[0] not in [-1, 0, 1] or move[1] not in [-1, 0, 1]:
             raise AssertionError("Illegal move. Move must be a tuple of two integers: -1, 0, or 1.")
         if not self.legal_moves() or move not in self.legal_moves():
-            print("This is an illegal move. The legal moves are: {!r}. Your position is: {!r}."
-                  .format(self.legal_moves(), self.main_character_position))
             return
         previous_position = self.main_character_position
         self.main_character_position = tuple(map(operator.add, self.main_character_position, move))
+        if previous_position in self._enemies_position:
+            self._enemies_position.remove(previous_position)
+        elif previous_position in self._help_characters_position:
+            self._help_characters_position.remove(previous_position)
+        elif previous_position in self._aid_position:
+            self._aid_position.remove(previous_position)
         if self.main_character_position in self._enemies_position or self.main_character_position == self._boss_position:
             self._field[self.main_character_position[0]][self.main_character_position[1]] = cs.fight
         else:

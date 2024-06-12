@@ -28,7 +28,8 @@ def play_level(level, last_dim, data_tree, main_character, helpers, last_stronge
     game.field.print_field()
     while game.mapping.boss.alive and game_continues:
         game_continues = game.step(input().upper())
-        game.field.print_field()
+        if game.print_field_str:
+            game.field.print_field()
     if game.mapping.boss.alive and not game_continues:
         return False
     best_weapons = (game.mapping.boss.weapon.serial_number_int(), game.mapping.boss.shield.serial_number_int())
@@ -61,8 +62,17 @@ def get_data(save_object):
 
 
 if __name__ == "__main__":
+    print(cs.welcome_message)
     print(cs.instructions)
     saving_obj = LastSave()
+    to_delete_character = input(cs.delete_user_message)
+    while to_delete_character in cs.yes:
+        user = input(cs.enter_user)
+        password = input(cs.enter_password)
+        to_delete_character = saving_obj.delete_user(user, password)
+        if not to_delete_character:
+            print(cs.unseccessful_delete)
+        to_delete_character = input(cs.delete_user_message)
     armor_tree, level, main_char, helpers, dim_x, dim_y = get_data(saving_obj)
     inp = input(cs.sound_question).upper()
     while inp not in cs.yes and inp not in cs.no:
@@ -84,10 +94,8 @@ if __name__ == "__main__":
             while game_continues not in cs.yes and game_continues not in cs.no:
                 game_continues = input(cs.to_finish).upper()
             game_continues = game_continues in cs.no
-
-#### HERE WE SAW THAT THE WAY OF USING AND AID IS TYPING "use AID_SERIAL_NUMBER"
-#### WE ALSO SAW THAT MOVING IS WITH TYPING EITHER "GO NORTH/SOUTH/EAST/WEST" OR "G5 NORTH/..." THEN IT TAKES 5 STEPS
-#### WE ALSO SEE THAT THE WAY TO ATTACK AND DEFEND IS SIMPLY BY TYPING ATTACK AND DEFEND RESPECTIVELY
-#### The way it should work: this class is initiated at the beginning of each level, and the method step is called
-####    in a loop until either the boss is defeated (and level is completed) or game is over. This class takes care for
-####    collecting items, update the field after every action, and starting and handeling a fight
+        else:
+            inp = input(cs.restart_level).upper()
+            while inp not in cs.yes and inp not in cs.no:
+                inp = input(cs.sound_question).upper()
+            game_continues = inp in cs.yes

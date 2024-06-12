@@ -20,7 +20,7 @@ class Fight:
     The last input attributes are optional to have the additional good character's that are helping the main character.
     """
 
-    def __init__(self, main_character, enemy, print_sound=True, *additional_good_characters):
+    def __init__(self, main_character, enemy, additional_good_characters, print_sound=True):
         if not (isinstance(main_character, MainCharacter) and isinstance(enemy, (Orc, Boss, BadCharacter))):
             raise AttributeError("In a fight the characters fighting must consist of main character and an enemy "
                                  "that's either Orc or Boss.")
@@ -49,13 +49,16 @@ class Fight:
             print(cs.drained_character)
             return
         player_speed, player_strength, armor_efficiency = self.main_character.attack()
+        player_speed += 5
         enemy_speed, enemy_shield_strength = self.enemy.defend()
+        print("Player hitting speed: {}, and strength: {}".format(player_speed, player_strength))
+        print("Enemy defending speed: {}, and defense strength: {}".format(enemy_speed, enemy_shield_strength))
         if player_speed >= enemy_speed:
             self.enemy.life = float(player_strength*armor_efficiency)
             if self.print_sound:
                 print(self.main_character.weapon.sound())
         else:
-            self.enemy.life = float(max(1, enemy_shield_strength - player_strength * armor_efficiency))
+            self.enemy.life = float(max(1, player_strength * armor_efficiency - enemy_shield_strength))
             self.main_character.energy = (False, 1) # Indicating to decline the energy specifically for offence action
             # Currently, armor's efficiency doesn't decline every time it's used
             # self.players_character.armor_efficiency_update(0.99)
@@ -64,12 +67,14 @@ class Fight:
                 print(self.enemy.shield.sound())
         for c in self.additional_good_characters:
             player_speed, player_strength, armor_efficiency = c.attack()
+            print("Helper character hitting speed: ", player_speed)
+            print("Enemy defending speed: ", enemy_speed)
             if player_speed >= enemy_speed:
                 self.enemy.life = float(player_strength * armor_efficiency)
                 if self.print_sound:
                     print(c.weapon.sound())
             else:
-                self.enemy.life = float(max(1, enemy_shield_strength - player_strength * armor_efficiency))
+                self.enemy.life = float(max(1, player_strength * armor_efficiency - enemy_shield_strength))
                 c.energy = (False, 1)
                 if self.print_sound:
                     print(c.weapon.sound())
@@ -87,11 +92,14 @@ class Fight:
             print(cs.drained_character)
         player_speed, player_strength, armor_efficiency = self.main_character.defend()
         enemy_speed, enemy_strength = self.enemy.attack()
+        print("Player defending speed: {}, and strength: {}".format(player_speed, player_strength))
+        print("Enemy hitting speed: {}, and strength: {}".format(enemy_speed, enemy_strength))
         if player_speed < enemy_speed:
             self.main_character.life = float(enemy_strength)
             if self.print_sound:
                 print(self.enemy.weapon.sound())
         else:
+            print("Count down should start: ")
             defended = self.countdown(int((player_speed-enemy_speed)*fa.speed_factor)+1)
             if defended:
                 self.main_character.life = float(max(1, enemy_strength - player_strength))

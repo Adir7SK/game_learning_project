@@ -131,4 +131,17 @@ enter_user = "Please enter user: "
 enter_password = "Please enter password: "
 sound_question = "Would you like to play with sound? "
 to_finish = "Would you like to finish the game? "
-instructions = ""
+restart_level = "Would you like to restart the level? "
+unseccessful_delete = 'Unsuccessful in deleting user.'
+next_during_fight = "Next Move: "
+delete_user_message = "Would you like to delete any of the existing users? "
+instructions = "Control keys: for moving in some direction, start with one of the following key words; {}, {}, or {}, then choose direction, which can be by screen version (up, down, left, right) or polar (south, north, east, west) \n" \
+               "There's a shortcut for these; do many steps in one direction by typing gn, where n is the number of steps (e.g. if we want to do 5 steps, then g5) and then direction. Shortcut for direction is the first letter of the direction (e.g. s instead of south -> so could be 'g5 s' to go 5 steps south).\n" \
+               "To get info, type 'info' or 'tell me about', then about what, e.g. about your character do 'info me' or 'tell me about me'. You can get info about 'me', 'helper' (all the helper characters that are with you), 'Weapon', 'Shield', 'Instructions' (to print this message again). \n" \
+               "To use a certain aid you collected (you can see all the aids you collected and get info about them by start doing info me, then info aid[AID_NUMBER]) type '{} aid[AID_NUMBER]' or '{}...'.\n" \
+               "When in a fight with enemy/boss, use attack (or just a) to attack, and defend (or just d) to defend.\n".format(one_step[0], one_step[1], one_step[2], use_aid[0], use_aid[1])
+welcome_message = "WELCOME TO OUR EXPERIMENTAL GAME!!\n " \
+               "Here you have to pass as many levels as you can. " \
+               "Each level is a maze, and at its end there's a boss. After defeating the boss, you pass on to the next level.\n" \
+               "The main character (you) is marked with {}, boss with {}, enemy with {}, aid with {}, adding an additional character that will help you in your journey with {}, and unknown (which can be an enemy, aid) in {}.\n" \
+               "GOOD LUCK!!".format(main_character, boss, regular_enemy, aid, helper_character, unknown)
