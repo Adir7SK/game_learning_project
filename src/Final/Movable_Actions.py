@@ -80,7 +80,7 @@ class Move:
         if in_fight:
             print(cs.fight_start)
             if self.mapping.get_enemy(in_fight):
-                fight = Fight(self.player, self.mapping.get_enemy(in_fight), self.extra_helper_characters, print_sound=self._print_fight_sounds)
+                fight = Fight(self.player, self.mapping.get_enemy(in_fight), print_sound=self._print_fight_sounds, *self.extra_helper_characters)
             else:
                 fight = Fight(self.player, self.mapping.boss, print_sound=self._print_fight_sounds, *self.extra_helper_characters)
             while fight.fight_ongoing():

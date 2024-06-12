@@ -41,6 +41,10 @@ class GoodCharacter(Character):
                 self._weapon = item
             elif serial_number[:6] == cs.shield and not self._shield:
                 self._shield = item
+            elif serial_number[:6] == cs.shield and self._shield and not self._weapon:
+                raise AttributeError("Got a few shields before any weapon.")
+            elif serial_number[:6] == cs.weapon and self._weapon and not self._shield:
+                raise AttributeError("Got a few weapons before any shield.")
             else:
                 self.aids[item.serial_number()] = item
 

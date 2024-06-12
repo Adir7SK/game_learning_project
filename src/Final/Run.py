@@ -99,3 +99,6 @@ if __name__ == "__main__":
             while inp not in cs.yes and inp not in cs.no:
                 inp = input(cs.sound_question).upper()
             game_continues = inp in cs.yes
+
+# Current ToDos: Most enemies get the same speed and strength at all levels. Sometimes after completing a level and
+# wanting to continue, the game gets stuck. There's still a limit of up to level 5.

@@ -20,7 +20,7 @@ class Fight:
     The last input attributes are optional to have the additional good character's that are helping the main character.
     """
 
-    def __init__(self, main_character, enemy, additional_good_characters, print_sound=True):
+    def __init__(self, main_character, enemy, print_sound=True, *additional_good_characters):
         if not (isinstance(main_character, MainCharacter) and isinstance(enemy, (Orc, Boss, BadCharacter))):
             raise AttributeError("In a fight the characters fighting must consist of main character and an enemy "
                                  "that's either Orc or Boss.")

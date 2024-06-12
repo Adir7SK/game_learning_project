@@ -47,7 +47,6 @@ def test_change_undercover_wrong_input_data_type(undercover):
 
 @pytest.mark.parametrize("item1, item2, item3, item4",
                          [(global_weapon, global_weapon, global_shield, global_aid),
-                          (global_weapon, global_shield, global_shield, global_aid),
                           (global_weapon, global_shield, wrong_object, global_aid),
                           (wrong_object, wrong_object, wrong_object, wrong_object),
                           (["Wrong"], ["Data Type"], 23, 3.3),

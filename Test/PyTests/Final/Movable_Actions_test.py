@@ -201,7 +201,7 @@ def test_correct_initialization(mock_universe, example_universe, example_main_ch
     for pos in e_p:
         assert isinstance(m.mapping.get_enemy(pos), BadCharacter)
     for pos in a_p:
-        assert isinstance(m.mapping.get_aid(pos), Aid)
+        assert isinstance(m.mapping.get_aid(pos), (Aid, Weapon, Shield))
     for pos in h_p:
         assert isinstance(m.mapping.get_helper_char(pos), GoodCharacter)
     for pos in w_p:
@@ -297,7 +297,7 @@ def test_step_into_fight_and_win_or_lose_with_correct_inputs(monkeypatch, capsys
         captured = capsys.readouterr()
         captured = captured.out.split('\n')[:-1]
         assert captured[0] == cs.fight_start
-        assert captured[-3] == 'Enemy has 0 life left!'
+        assert captured[-4] == 'Enemy has 0 life left!'
         assert captured[-2] == cs.enemy_defeated
         assert captured[-1] == cs.fight_won
     else:

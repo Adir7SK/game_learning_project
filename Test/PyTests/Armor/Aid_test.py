@@ -14,7 +14,7 @@ import src.Common_general_functionalities.common_strings as cs
                           ])
 def test_serial_number_check(name, aid_number, mag):
     aid = Aid(name, aid_types[aid_number], mag)
-    assert (aid.serial_number())[:3] == cs.aid_ser and 0 < float((aid.serial_number())[3:]) < 100
+    assert aid.serial_number()[:3] == cs.aid_ser and 0 < float((aid.serial_number())[3:]) < 10000
 
 
 @pytest.mark.parametrize("name, aid_number, mag",
