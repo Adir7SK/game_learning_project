@@ -47,7 +47,6 @@ def test_change_undercover_wrong_input_data_type(undercover):
 
 @pytest.mark.parametrize("item1, item2, item3, item4",
                          [(global_weapon, global_weapon, global_shield, global_aid),
-                          (global_weapon, global_shield, global_shield, global_aid),
                           (global_weapon, global_shield, wrong_object, global_aid),
                           (wrong_object, wrong_object, wrong_object, wrong_object),
                           (["Wrong"], ["Data Type"], 23, 3.3),
@@ -92,7 +91,7 @@ def test_item_function(example_good_character, fixture):
     else:
         ite = MainCharacter(1200).items()
     for i in ite:
-        if (i[1])[:6] not in [cs.weapon, cs.shield] and (i[1])[:3] != "Aid":
+        if (i[1])[:6] not in [cs.weapon, cs.shield] and (i[1])[:3] != cs.aid_ser:
             raise ValueError("There is an invalid item in among the items: {!r}".format(i))
 
 

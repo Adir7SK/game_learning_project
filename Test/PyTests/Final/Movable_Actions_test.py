@@ -4,7 +4,7 @@ from unittest import mock
 from src.Armor.Shield_Collection import ShieldCollection
 from src.Armor.Weapon_Collection import WeaponCollection
 from src.Common_general_functionalities import common_strings as cs
-from src.Data_Loading.Data_Placement import GameDetailsData
+from src.Armor.Aid import Aid
 from src.Characters.Good_Character import GoodCharacter
 from src.Characters.Main_Character import MainCharacter
 from src.Characters.Bad_Character import BadCharacter
@@ -201,7 +201,7 @@ def test_correct_initialization(mock_universe, example_universe, example_main_ch
     for pos in e_p:
         assert isinstance(m.mapping.get_enemy(pos), BadCharacter)
     for pos in a_p:
-        assert isinstance(m.mapping.get_aid(pos), Aid)
+        assert isinstance(m.mapping.get_aid(pos), (Aid, Weapon, Shield))
     for pos in h_p:
         assert isinstance(m.mapping.get_helper_char(pos), GoodCharacter)
     for pos in w_p:
@@ -289,7 +289,6 @@ def test_get_info(capsys, mock_universe, mock_player, example_universe, example_
 
 @pytest.mark.parametrize("win", [True, False])
 def test_step_into_fight_and_win_or_lose_with_correct_inputs(monkeypatch, capsys, mock_universe, example_universe, example_main_character, example_tree, win):
-
     monkeypatch.setattr('builtins.input', lambda _: cs.attack_actions[0])
     if win:
         m = Move(example_universe, example_main_character, 2, example_tree, prev_weak_arm=(400, 400),
@@ -298,7 +297,7 @@ def test_step_into_fight_and_win_or_lose_with_correct_inputs(monkeypatch, capsys
         captured = capsys.readouterr()
         captured = captured.out.split('\n')[:-1]
         assert captured[0] == cs.fight_start
-        assert captured[-3] == 'Enemy has 0 life left!'
+        assert captured[-4] == 'Enemy has 0 life left!'
         assert captured[-2] == cs.enemy_defeated
         assert captured[-1] == cs.fight_won
     else:
@@ -311,3 +310,13 @@ def test_step_into_fight_and_win_or_lose_with_correct_inputs(monkeypatch, capsys
         assert captured[-3] == cs.you_lose
         assert captured[-2] == cs.game_over
         assert captured[-1] == cs.you_lose + " " + cs.game_over
+
+
+def test_use_aid(example_universe, example_tree, example_main_character):
+    a = Aid(cs.health, cs.health, 2)
+    main_char = example_main_character
+    main_char.add_item(a)
+    m = Move(example_universe, main_char, 2, example_tree, prev_weak_arm=(400, 400),
+             prev_strong_arm=(600, 600))
+    m.step("use "+a.serial_number())
+    assert (a.name(), a.serial_number()) not in m.player.items()

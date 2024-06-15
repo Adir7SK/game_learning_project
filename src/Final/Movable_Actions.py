@@ -3,6 +3,7 @@ from src.Final.Fight_Handle import Fight
 import src.Common_general_functionalities.common_strings as cs
 import re
 from src.Characters.Good_Character import GoodCharacter
+from src.Armor.Aid import Aid
 from src.Intermediate.Universe_Construction import Universe
 
 
@@ -33,17 +34,22 @@ class Move:
         self.player = player
         self.extra_helper_characters = []
         self._print_fight_sounds = print_fight_sounds if type(print_fight_sounds) == bool else False
+        self.print_field_str = True
 
     def step(self, move_s):
         game_continues = True
         command_result = self._translate_commands(move_s)
         if command_result is None:
+            self.print_field_str = False
             return game_continues
         if command_result[0] == cs.use_aid:
+            self.print_field_str = False
             self.player.use_aid(command_result[1])
         elif command_result[0] == cs.get_information:
+            self.print_field_str = False
             self._print_requested_info(command_result[1])
         elif command_result[0] == cs.stepping:
+            self.print_field_str = True
             rep, direction = command_result[1], command_result[2]
             for _ in range(rep):
                 if not self.player.energy:
@@ -83,8 +89,10 @@ class Move:
                 In the future, there should be a count down, that gives the player time to defend with shield.
                 Right now it automatically defends.
                 """
-                type_move, action = self._translate_commands(input("Next move: ").upper(), in_fight=True)
-                if type_move == cs.use_aid:
+                type_move, action = self._translate_commands(input(cs.next_during_fight).upper(), in_fight=True)
+                if type_move is None:
+                    print(cs.invalid_command)
+                elif type_move == cs.use_aid:
                     pl = fight.main_character
                     pl.use_aid(action)
                     fight.update_players(pl)
@@ -148,10 +156,13 @@ class Move:
                     return cs.get_information, move_string.split()[-1]
                 else:
                     print(cs.no_available_info)
-                    return None
+                    return None, None
             elif move_string in cs.attack_actions:
                 return cs.offence, cs.attack_actions[0]
                 # Defence commands are taken care of in Fight_Handle with countdown method
+            else:
+                print(cs.invalid_command)
+                return None, None
 
     def _print_requested_info(self, request):
         if request == cs.character or request == cs.me:
@@ -164,15 +175,12 @@ class Move:
         if request == cs.shield:
             self.player.shield_info()
         if request == cs.aids:
-            self.player.items()
+            for item in self.player.aids.values():
+                print("Item Details:")
+                print("Name:            ", item.name())
+                print("Serial ID:       ", item.serial_number())
+                if isinstance(item, Aid):
+                    print("Aid type:        ", item.aid_type)
         if request == cs.short_info:
             self.player.short_armor_info()
 
-
-
-#### HERE WE SAW THAT THE WAY OF USING AND AID IS TYPING "use AID_SERIAL_NUMBER"
-#### WE ALSO SAW THAT MOVING IS WITH TYPING EITHER "GO NORTH/SOUTH/EAST/WEST" OR "G5 NORTH/..." THEN IT TAKES 5 STEPS
-#### WE ALSO SEE THAT THE WAY TO ATTACK AND DEFEND IS SIMPLY BY TYPING ATTACK AND DEFEND RESPECTIVELY
-#### The way it should work: this class is initiated at the beginning of each level, and the method step is called
-####    in a loop until either the boss is defeated (and level is completed) or game is over. This class takes care for
-####    collecting items, update the field after every action, and starting and handeling a fight

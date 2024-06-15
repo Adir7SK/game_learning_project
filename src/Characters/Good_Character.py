@@ -35,18 +35,16 @@ class GoodCharacter(Character):
             if not isinstance(item, (Aid, Shield, Weapon)):
                 raise AttributeError("Attributes after undercover must be either Aid, Weapon, or Shield type.")
             serial_number = item.serial_number()
-            if serial_number[:6] not in [cs.weapon, cs.shield] and serial_number[:3] != "Aid":
+            if serial_number[:6] not in [cs.weapon, cs.shield] and serial_number[:3] != cs.aid_ser:
                 raise AttributeError("The items a character can carry are either a Weapon, Shield, or an Aid.")
-            if serial_number[:6] == cs.weapon:
-                if self._weapon:
-                    raise AttributeError("Character must have one weapon at most.")
-                else:
-                    self._weapon = item
-            elif serial_number[:6] == cs.shield:
-                if self._shield:
-                    raise AttributeError("Character must have one shield at most.")
-                else:
-                    self._shield = item
+            if serial_number[:6] == cs.weapon and not self._weapon:
+                self._weapon = item
+            elif serial_number[:6] == cs.shield and not self._shield:
+                self._shield = item
+            elif serial_number[:6] == cs.shield and self._shield and not self._weapon:
+                raise AttributeError("Got a few shields before any weapon.")
+            elif serial_number[:6] == cs.weapon and self._weapon and not self._shield:
+                raise AttributeError("Got a few weapons before any shield.")
             else:
                 self.aids[item.serial_number()] = item
 
@@ -73,7 +71,12 @@ class GoodCharacter(Character):
         for item in self.aids.values():
             available_items.append((item.name(), item.serial_number()))
         return available_items
-    
+
+    @property
+    def full_life(self):
+        """Getter method - returns the maximum life this character can have."""
+        return self._full_life
+
     @property
     def undercover(self):
         return self._undercover

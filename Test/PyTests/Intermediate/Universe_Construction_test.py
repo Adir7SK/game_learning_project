@@ -232,6 +232,10 @@ def test_repetitive_moves_multiple_directions(example_universe, move_1, repetiti
         for i in range(repetitions):
             # override field (guarantee there's a path in the place we will test)
             example_universe._field[last_stop[0] + (i+1)*move[0]][last_stop[1] + (i+1)*move[1]] = cs.path
+            if (last_stop[0] + (i+1)*move[0], last_stop[1] + (i+1)*move[1]) in example_universe._enemies_position:
+                example_universe._enemies_position.remove((last_stop[0] + (i+1)*move[0], last_stop[1] + (i+1)*move[1]))
+            if (last_stop[0] + (i + 1) * move[0], last_stop[1] + (i + 1) * move[1]) == example_universe._boss_position:
+                example_universe._boss_position == (0, 0)
             example_universe.update_field(move)
         last_stop = (last_stop[0] + move[0]*repetitions, last_stop[1] + move[1]*repetitions)
     assert example_universe.main_character_position == expected

@@ -8,6 +8,7 @@ from src.Characters.Regular_Enemies import Orc
 from src.Intermediate.Universe_Construction import Universe
 from src.Characters.Good_Character import GoodCharacter
 import src.Common_general_functionalities.common_strings as cs
+import src.Common_general_functionalities.Flexible_Attributes as fa
 from src.Common_general_functionalities.Gaussian_generated_data import scaled_data
 
 
@@ -29,24 +30,30 @@ class Assignments:
     def __init__(self, field, level, data_tree, last_round_weakest_armor=(0, 0), last_round_strongest_armor=(0, 0)):
         if not isinstance(field, Universe):
             raise TypeError("The field input must be an object type Universe")
+        f = field.field
         b_p, enemies_positions, aid_positions, help_characters_position, armor_position = \
             field.boss_enemies_aid_help_charter_armor_position()
         if type(level) != int or type(data_tree) != dict or \
-                type(last_round_weakest_armor) != tuple or type(last_round_weakest_armor[0]) != int or \
-                type(last_round_weakest_armor[1]) != int or type(last_round_strongest_armor) != tuple or \
-                type(last_round_strongest_armor[0]) != int or type(last_round_strongest_armor[1]) != int or \
+                type(last_round_weakest_armor) != tuple or type(last_round_weakest_armor[0]) not in [int, float] or \
+                type(last_round_weakest_armor[1]) not in [int, float] or type(last_round_strongest_armor) != tuple or \
+                type(last_round_strongest_armor[0]) not in [int, float] or type(last_round_strongest_armor[1]) not in [int, float] or \
                 len(last_round_weakest_armor) != 2 or len(last_round_strongest_armor) != 2:
             raise TypeError("Either enemies_positions, aid_positions, level, data_tree, last_round_weakest_armor or "
                              "last_round_strongest_armor is from the wrong data type")
         self._enemies = self._initiate_enemies(enemies_positions, level, data_tree, last_round_weakest_armor,
                                                last_round_strongest_armor, field.field)
+        while not self._enemies:
+            self._enemies = self._initiate_enemies(enemies_positions, level, data_tree, last_round_weakest_armor,
+                                                   last_round_strongest_armor, field.field)
         e_g = list(self._enemies)
         id_eg = [id(i) for i in e_g]
         if len(id_eg) != len(set(id_eg)):
             self._enemies = [Orc(i.life, i.undercover, i.weapon, i.shield) for i in e_g]
             del e_g, id_eg
-        self._aids = self._initiate_aids(aid_positions, level)
+        self._aids, a = self._initiate_aids(aid_positions, level)
+        armor_position.extend(a)
         self.boss = self.create_boss(data_tree)
+        self._enemies[b_p] = self.boss
         self._help_characters = self._initiate_help_character(help_characters_position, level, data_tree,
                                                               last_round_weakest_armor, last_round_strongest_armor,
                                                               field.field)
@@ -89,12 +96,14 @@ class Assignments:
             random_s = random.choice(normal_data)
             e_w = int(len(normal_data)/len(possible_weapons))
             e_s = int(len(normal_data)/len(possible_shields))
-            current_enemy_weapon = data_tree[cs.weapons].search([possible_weapons[i] for i in
-                                                                range(len(possible_weapons)) if
-                                                                random_w in normal_data[i*e_w:(i+1)*e_w]][0])
-            current_enemy_shield = data_tree[cs.shields].search([possible_shields[i] for i in
-                                                                range(len(possible_shields)) if
-                                                                random_s in normal_data[i*e_s:(i+1)*e_s]][0])
+            current_enemy_weapon = data_tree[cs.weapons].search([possible_weapons[i]
+                                                                 for i in range(len(possible_weapons))
+                                                                 if random_w in normal_data[i*e_w:i*(e_w+1)]
+                                                                 or i == (len(possible_weapons)-1)][0])
+            current_enemy_shield = data_tree[cs.shields].search([possible_shields[i]
+                                                                 for i in range(len(possible_shields))
+                                                                 if random_s in normal_data[i*e_s:i*(e_s+1)]
+                                                                 or i == (len(possible_shields)-1)][0])
             if not isinstance(current_enemy_weapon, Weapon) or not isinstance(current_enemy_shield, Shield):
                 raise ValueError("Problem in the program.")
             undercover = True if field[position[0]][position[1]] == cs.unknown else False
@@ -140,12 +149,14 @@ class Assignments:
             random_s = random.choice(normal_data)
             e_w = int(len(normal_data) / len(possible_weapons))
             e_s = int(len(normal_data) / len(possible_shields))
-            current_helper_weapon = data_tree[cs.weapons].search([possible_weapons[i] for i in
-                                                                range(len(possible_weapons)) if
-                                                                random_w in normal_data[i * e_w:(i + 1) * e_w]][0])
-            current_helper_shield = data_tree[cs.shields].search([possible_shields[i] for i in
-                                                                range(len(possible_shields)) if
-                                                                random_s in normal_data[i * e_s:(i + 1) * e_s]][0])
+            current_helper_weapon = data_tree[cs.weapons].search([possible_weapons[i]
+                                                                 for i in range(len(possible_weapons))
+                                                                 if random_w in normal_data[i * e_w:i * (e_w + 1)]
+                                                                 or i == (len(possible_weapons) - 1)][0])
+            current_helper_shield = data_tree[cs.shields].search([possible_shields[i]
+                                                                 for i in range(len(possible_shields))
+                                                                 if random_s in normal_data[i * e_s:i * (e_s + 1)]
+                                                                 or i == (len(possible_shields) - 1)][0])
             if not isinstance(current_helper_weapon, Weapon) or not isinstance(current_helper_shield, Shield):
                 raise ValueError("Problem in the program.")
             undercover = True if field[position[0]][position[1]] == cs.unknown else False
@@ -163,14 +174,18 @@ class Assignments:
         This is not efficient. Please adjust in the future.
         """
         position_to_aid = dict()
+        potential_armor_ext = []
         for position in aids_positions:
             chosen_aid = random.choice(cs.aid_types)
+            if chosen_aid in [cs.weapon, cs.shield]:
+                potential_armor_ext.append(position)
+                continue
             current_aid = Aid(chosen_aid, chosen_aid, random.choice(range(1, min(level + 1,
                                                                                  cs.amount_of_possible_magnitudes))))
-            if not isinstance(current_aid, Aid):
+            if not isinstance(current_aid, Aid) or not isinstance(current_aid, Weapon) or not isinstance(current_aid, Shield):
                 raise ValueError("Problem in the program.")
             position_to_aid[position] = current_aid
-        return position_to_aid
+        return position_to_aid, potential_armor_ext
 
     @staticmethod
     def _initiate_armor(armor_positions, data_tree, last_round_weakest_armor, last_round_strongest_armor):
@@ -250,6 +265,15 @@ class Assignments:
         return Boss(highest_life*1.1, data_tree[cs.weapons].search(best_weapon_number),
                     data_tree[cs.shields].search(best_shield_number))
 
+    def worst_enemy_weapons(self):
+        """ Returns the worst weapons used at current object """
+        worst_weapon_number = fa.above_absolute_max
+        worst_shield_number = fa.above_absolute_max
+        for character in self._enemies.values():
+            worst_weapon_number = min(worst_weapon_number, character.weapon.serial_number_int())
+            worst_shield_number = min(worst_shield_number, character.shield.serial_number_int())
+        return worst_weapon_number, worst_shield_number
+
     def get_enemy(self, position):
         if position not in self._enemies.keys():
             return False
@@ -263,14 +287,14 @@ class Assignments:
             del self._enemies[position]
 
     def get_aid(self, position):
-        if position not in self._aids.keys():
-            return False
-        else:
+        if position in self._aids.keys():
             return self._aids[position]
+        else:
+            return self.get_armor(position)
 
     def remove_aid(self, position):
         if position not in self._aids.keys():
-            raise ValueError("You tried to call a position that is not an Aid position")
+            self.remove_armor(position)
         else:
             del self._aids[position]
 

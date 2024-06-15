@@ -19,11 +19,11 @@ class Aid:
             raise ValueError("The magnitude must be between 0-{!r} (including), and the aid type must be a known aid.".format(self.amount_of_possible_magnitudes - 1))
         # The following 3 lines takes appropriate block of random numbers from scaled_data corresponding to magnitude
         episode = int(len(scaled_data)/self.amount_of_possible_magnitudes)
-        lower = episode*magnitude
-        upper = lower + episode
+        lower = int(episode*magnitude/100)
+        upper = int(lower + episode)
         value = random.choice(scaled_data[lower:upper])
         self._magnitude = round(value * 100, 2)
-        self._serial_number = "Aid" + str(round(self._magnitude, 2))
+        self._serial_number = cs.aid_ser + str(int(round(self._magnitude, 2)*100))
         self._name = name
         self._aid_type = aidtype
 

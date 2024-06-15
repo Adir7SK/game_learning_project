@@ -109,7 +109,7 @@ def test_correct_initiation(mock_universe, example_universe, example_tree,
     assert enem.symbol == cs.boss
 
     for pos in aid_positions:
-        assert isinstance(a.get_aid(pos), Aid)
+        assert isinstance(a.get_aid(pos), (Aid, Weapon, Shield))
 
     for pos in w_p:
         assert isinstance(a.get_armor(pos), Weapon)
@@ -253,7 +253,7 @@ def test_remove_helper(mock_universe, example_universe, example_tree, exist, pos
 @pytest.mark.parametrize("exist, pos",
                          [(True, a_p),
                           (True, [a_p[1]]),
-                          (False, w_p),
+                          (True, w_p),
                           (False, [(2, 2), (7, 2), (8, 8)]),
                           (False, [(0, "1"), (7, 2), (8, 8)]),
                           (False, [(7, True)]),
@@ -272,6 +272,8 @@ def test_remove_aid(mock_universe, example_universe, example_tree, exist, pos):
         for p in pos:
             with pytest.raises(ValueError):
                 a.remove_aid(p)
+
+                h=1
 
 
 @pytest.mark.parametrize("exist, pos",

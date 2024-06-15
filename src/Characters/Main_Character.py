@@ -136,8 +136,9 @@ class MainCharacter(GoodCharacter):
             print(cs.serial_aid_not_there)
             return
         aid = self.aids[aid_serial]
-        if aid_serial.startswith('Aid'):
+        if aid_serial.startswith(cs.aid_ser):
             aid_type, magnitude = aid.activate()
+            magnitude = float(magnitude)
             if aid_type == cs.health:
                 self.recharge_life(magnitude)
             elif aid_type == cs.energy:
