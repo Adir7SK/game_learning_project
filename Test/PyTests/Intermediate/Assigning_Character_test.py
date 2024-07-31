@@ -273,8 +273,6 @@ def test_remove_aid(mock_universe, example_universe, example_tree, exist, pos):
             with pytest.raises(ValueError):
                 a.remove_aid(p)
 
-                h=1
-
 
 @pytest.mark.parametrize("exist, pos",
                          [(True, w_p+s_p),

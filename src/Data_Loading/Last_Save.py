@@ -46,16 +46,16 @@ class LastSave:
         self.user = user
         row = relevant_df.iloc[0]
         try:
-            row[8] = None if math.isnan(row[8]) else row[8]
+            row['helping_characters'] = None if row['helping_characters'] is None else row['helping_characters']
         except TypeError:
             pass
-        helpers = [] if row[8] is None else [t.split(cs.small_split) for t in row[8].split(cs.splitting_char)]
+        helpers = [] if row['helping_characters'] is None else [t.split(cs.small_split) for t in row['helping_characters'].split(cs.splitting_char)]
         good_characters = []
         for h in helpers:
             g = GoodCharacter(float(h[1]), False, armor_tree[cs.weapons].search(int(h[2])), armor_tree[cs.shields].search(int(h[3])))
             g.life = float(h[1]) - float(h[0])
             good_characters.append(g)
-        aids = [t.split(cs.small_split) for t in row[7].split(cs.splitting_char)] if type(row[7]) == str else []
+        aids = [t.split(cs.small_split) for t in row['aids'].split(cs.splitting_char)] if type(row['aids']) == str else []
         a = []
         for h in aids:
             if h[0] == cs.weapons:
@@ -64,12 +64,12 @@ class LastSave:
                 a.append(armor_tree[cs.shields].search(int(h[2])))
             else:
                 a.append(Aid(h[0], h[1], float(h[2])))
-        w, s = armor_tree[cs.weapons].search(int(row[3])), armor_tree[cs.shields].search(int(row[4]))
-        m = MainCharacter(float(row[6]), w, s, *a)
-        m.life = float(row[6]) - float(row[5])
-        m.strength = float(row[9]) - fa.main_character_start_strength
-        m.speed = float(row[10]) - fa.main_character_start_speed
-        return int(row[2]), m, good_characters, int(row[11]), int(row[12])
+        w, s = armor_tree[cs.weapons].search(int(row['Weapon_ID'])), armor_tree[cs.shields].search(int(row['Shield_ID']))
+        m = MainCharacter(float(row['full_life']), w, s, *a)
+        m.life = float(row['full_life']) - float(row['Life'])
+        m.strength = float(row['strength']) - fa.main_character_start_strength
+        m.speed = float(row['speed']) - fa.main_character_start_speed
+        return int(row['Level']), m, good_characters, int(row['dim_x']), int(row['dim_y'])
 
     def add_user(self, user, password, file=cs.game_csv):
         if len(self.data[self.data[cs.user] == user]):

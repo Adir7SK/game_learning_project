@@ -125,7 +125,7 @@ class Maze:
             winning_path.append(pointer_position)
             destination = pointer_position
             # print("Path current place is: [{!r}, {!r}]".format(pointer_position[1], pointer_position[0]))
-        start_time = time.clock()
+        start_time = time.perf_counter()
         while sum(sum(row) for row in zero_grid) < (self.dim_x * self.dim_y) * 2:  # number of paths including the winning path      # Here we build other paths which don't lead to the destination
             saved_pointer_position = random.choice(winning_path)
             pointer_position = saved_pointer_position
@@ -143,7 +143,7 @@ class Maze:
                     if self.in_neighborhood(pointer_position, destination):
                         pointer_position = saved_pointer_position
                         impass_counter = -1
-                    if time.clock() - start_time > self.time_limit:
+                    if time.perf_counter() - start_time > self.time_limit:
                         zero_grid[destination[0]][destination[1]] = 2
                         return zero_grid
                 if zero_grid[pointer_position[0]][pointer_position[1]] != 1:
